@@ -1,0 +1,37 @@
+{
+   "expo": {
+      "name": "client",
+      "slug": "client",
+      "version": "1.0.0",
+      "orientation": "portrait",
+      "icon": "./assets/icon.png",
+      "userInterfaceStyle": "light",
+      "splash": {
+         "image": "./assets/splash.png",
+         "resizeMode": "contain",
+         "backgroundColor": "#ffffff"
+      },
+      "assetBundlePatterns": ["**/*"],
+      "ios": {
+         "supportsTablet": true
+      },
+      "android": {
+         "adaptiveIcon": {
+            "googleServicesFile": "./google-services.json",
+            "foregroundImage": "./assets/adaptive-icon.png",
+            "backgroundColor": "#ffffff"
+         },
+         "package": "dev.jeflr.educationalApp"
+      },
+      "web": {
+         "favicon": "./assets/favicon.png"
+      },
+      "plugins": ["@react-native-google-signin/google-signin"],
+      "extra": {
+         "eas": {
+            "projectId": "9a6eb660-a6a5-4a3b-9b07-ec33c628a04c"
+         }
+      },
+      "scheme": "navigation-test"
+   }
+}

@@ -1,0 +1,41 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/Sora-Bold.ttf",
+      "sha1": "34256bc34281fd98b79f1831caffa5fb488fbbcb"
+    },
+    {
+      "path": "assets/fonts/Sora-ExtraBold.ttf",
+      "sha1": "9026b1669b534be2b28ae6d1d53788635be04645"
+    },
+    {
+      "path": "assets/fonts/Sora-ExtraLight.ttf",
+      "sha1": "9e80f3a58df781f02bcc9547654fd25ff9c42a49"
+    },
+    {
+      "path": "assets/fonts/Sora-Light.ttf",
+      "sha1": "9600b6bc8970090fc07fee518acdd8c6be1fb786"
+    },
+    {
+      "path": "assets/fonts/Sora-Medium.ttf",
+      "sha1": "b7f98444ddcf0db8b8d07dab317cef6c154d748a"
+    },
+    {
+      "path": "assets/fonts/Sora-Regular.ttf",
+      "sha1": "700024d4267334e6cec28523f213bf5c69c5a222"
+    },
+    {
+      "path": "assets/fonts/Sora-SemiBold.ttf",
+      "sha1": "4c51809302b5ccfe357c2d3cef713e196c2bdc3a"
+    },
+    {
+      "path": "assets/fonts/Sora-Thin.ttf",
+      "sha1": "212f3f6c25b77a47579e1986a63b926aa72b22d8"
+    },
+    {
+      "path": "assets/fonts/Sora.ttf",
+      "sha1": "921f25170eed3d2b309b5109df5f54a4fb29eeca"
+    }
+  ]
+}
