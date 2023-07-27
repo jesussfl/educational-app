@@ -1,51 +1,43 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
-import { auth, googleProvider } from "../../config/firebase";
+import React from "react";
+
+import { StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/core";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { SemanticColors } from "../../utilities/Theme";
+
 import Button from "../button/Button";
-const Auth = ({ propmtAsync }) => {
-   const [email, setEmail] = useState("");
-   const [password, setPassword] = useState("");
+import Icon from "react-native-remix-icon";
 
+const Auth = () => {
    const navigation = useNavigation();
-   const handleSignUp = async () => {
-      try {
-         await createUserWithEmailAndPassword(auth, email, password);
-      } catch (error) {
-         console.log(error);
-      }
-   };
-
-   const handleLogin = async () => {
-      try {
-         await signInWithEmailAndPassword(auth, email, password);
-         navigation.replace("Home");
-      } catch (error) {
-         console.log(error);
-      }
-   };
 
    return (
-      <View>
-         <TextInput placeholder="Email" value={email} onChangeText={(text) => setEmail(text)} style={styles.input} />
-         <TextInput
-            placeholder="Password"
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            style={styles.input}
-            secureTextEntry
-         />
-         <TouchableOpacity onPress={handleLogin} style={styles.button}>
-            <Text style={styles.buttonText}>Login</Text>
-         </TouchableOpacity>
-         <TouchableOpacity onPress={handleSignUp} style={[styles.button, styles.buttonOutline]}>
-            <Text style={styles.buttonOutlineText}>Register</Text>
-         </TouchableOpacity>
-         <TouchableOpacity onPress={() => propmtAsync()} style={[styles.button, styles.buttonOutline]}>
-            <Text style={styles.buttonOutlineText}>Login With Google</Text>
-         </TouchableOpacity>
-         <Button />
+      <View style={{ flex: 1, justifyContent: "space-around", gap: 32 }}>
+         <View style={{ alignItems: "center" }}>
+            <Text style={{ fontFamily: "Sora-SemiBold", color: SemanticColors.text.normal, fontSize: 24, textAlign: "center" }}>
+               ¡Bienvenido!
+            </Text>
+            <Text style={{ fontFamily: "Sora-Regular", color: SemanticColors.text.subdued_normal, fontSize: 16, textAlign: "center" }}>
+               Continuemos con una de las siguientes opciones
+            </Text>
+         </View>
+         <View style={{ gap: 16 }}>
+            <Button
+               variant={"secondary"}
+               text="Continuar con Google"
+               onPress={() => console.log("Login")}
+               rightIcon={<Icon name="google-fill" size="20"></Icon>}
+            />
+            <Button
+               variant={"secondary"}
+               text="Continuar con correo"
+               onPress={() => console.log("Login")}
+               rightIcon={<Icon name="mail-fill" size="20"></Icon>}
+            />
+         </View>
+         <View style={{ gap: 16 }}>
+            <Button variant={"primary"} text="Comenzar" onPress={() => navigation.replace("Home")} />
+            <Button variant={"secondary"} text="Crear una cuenta" onPress={() => navigation.replace("Signup")} />
+         </View>
       </View>
    );
 };

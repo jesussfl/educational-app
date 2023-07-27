@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./src/screens/LogginScreen";
 import HomeScreen from "./src/screens/HomeScreen";
+import SignupScreen from "./src/screens/SignupScreen";
 import * as WebBrowser from "expo-web-browser";
 import { useFonts } from "expo-font";
 
@@ -12,12 +13,12 @@ const Stack = createNativeStackNavigator();
 export default function App() {
    const [fontsLoaded, error] = useFonts({
       "Sora-Bold": require("./assets/fonts/Sora-Bold.ttf"),
-      // "Sora-Regular": require("./assets/fonts/Sora-Regular.ttf"),
-      // "Sora-Medium": require("./assets/fonts/Sora-Medium.ttf"),
-      // "Sora-Light": require("./assets/fonts/Sora-Light.ttf"),
-      // "Sora-SemiBold": require("./assets/fonts/Sora-SemiBold.ttf"),
-      // "Sora-ExtraLight": require("./assets/fonts/Sora-ExtraLight.ttf"),
-      // "Sora-ExtraBold": require("./assets/fonts/Sora-ExtraBold.ttf"),
+      "Sora-Regular": require("./assets/fonts/Sora-Regular.ttf"),
+      "Sora-Medium": require("./assets/fonts/Sora-Medium.ttf"),
+      "Sora-Light": require("./assets/fonts/Sora-Light.ttf"),
+      "Sora-SemiBold": require("./assets/fonts/Sora-SemiBold.ttf"),
+      "Sora-ExtraLight": require("./assets/fonts/Sora-ExtraLight.ttf"),
+      "Sora-ExtraBold": require("./assets/fonts/Sora-ExtraBold.ttf"),
    });
 
    if (!fontsLoaded) {
@@ -32,6 +33,7 @@ export default function App() {
             <Stack.Navigator>
                <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
                <Stack.Screen name="Home" component={HomeScreen} />
+               <Stack.Screen name="Signup" component={SignupScreen} />
             </Stack.Navigator>
          </NavigationContainer>
       );

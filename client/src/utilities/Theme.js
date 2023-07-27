@@ -72,5 +72,10 @@ const SemanticColors = {
       primary_disabled: Colors.gray_100,
       secondary_normal: Colors.gray_200,
    },
+   text: {
+      normal: Colors.gray_700,
+      subdued_normal: Colors.gray_500,
+      primary_active: Colors.primary_500,
+   },
 };
 export { Colors, SemanticColors };
