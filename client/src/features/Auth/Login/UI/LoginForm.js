@@ -1,14 +1,16 @@
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
-import TextField from "../../../../components/textField/TextField";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import Icon from "react-native-remix-icon";
+import TextField from "../../../../components/textField/TextField";
 import { Colors, SemanticColors } from "../../../../utilities/Theme";
 import Button from "../../../../components/button/Button";
-import { useNavigation, useRoute } from "@react-navigation/native";
+
 const LoginForm = () => {
    const navigation = useNavigation();
    const route = useRoute();
-   React.useEffect(() => {
+
+   useEffect(() => {
       if (route.params?.isFromSignup) {
          navigation.setOptions({
             animation: "fade",
