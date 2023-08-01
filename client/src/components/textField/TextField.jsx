@@ -2,14 +2,14 @@ import { StyleSheet, Text, View, TextInput } from "react-native";
 import React from "react";
 import { Colors, SemanticColors } from "../../utilities/Theme";
 
-const TextField = ({ label = "Label", placeholder = "Placeholder", leftIcon, rightIcon }) => {
+const TextField = ({ label = "Label", placeholder = "Placeholder", leftIcon, rightIcon, value, onChangeText }) => {
    return (
       <View style={styles.container}>
          <Text style={styles.label}>{label}</Text>
          <View style={styles.inputContainer}>
             <View style={styles.leftInputContainer}>
                {leftIcon}
-               <TextInput style={styles.input} placeholder={placeholder}></TextInput>
+               <TextInput style={styles.input} placeholder={placeholder} value={value} onChangeText={onChangeText} />
             </View>
             {rightIcon}
          </View>
