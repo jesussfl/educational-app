@@ -1,8 +1,8 @@
 // import React from "react";
 import { KeyboardAvoidingView, StyleSheet } from "react-native";
-import Auth from "../components/auth/Auth";
-import * as Google from "expo-auth-session/providers/google";
 import * as React from "react";
+import * as Google from "expo-auth-session/providers/google";
+import Auth from "../components/auth/Auth";
 import { GoogleAuthProvider, onAuthStateChanged, signInWithCredential } from "firebase/auth";
 import { auth } from "../config/firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
