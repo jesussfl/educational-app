@@ -1,16 +1,14 @@
 import { useNavigation } from "@react-navigation/core";
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { auth } from "../config/firebase";
 
-const HomeScreen = () => {
-   const navigation = useNavigation();
-
+const HomeScreen = ({ navigation }) => {
    const handleSignOut = () => {
       auth
          .signOut()
          .then(() => {
-            navigation.replace("Login");
+            navigation.navigate("Login");
          })
          .catch((error) => alert(error.message));
    };

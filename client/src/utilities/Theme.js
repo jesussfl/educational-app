@@ -73,7 +73,7 @@ const SemanticColors = {
       secondary_normal: Colors.gray_200,
    },
    text: {
-      normal: Colors.gray_700,
+      normal: Colors.gray_600,
       subdued_normal: Colors.gray_500,
       primary_active: Colors.primary_500,
    },

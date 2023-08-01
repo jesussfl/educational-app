@@ -1,43 +1,38 @@
 import React from "react";
 
-import { StyleSheet, Text, View } from "react-native";
-import { useNavigation } from "@react-navigation/core";
+import { StyleSheet, View } from "react-native";
 import { SemanticColors } from "../../utilities/Theme";
 
-import Button from "../button/Button";
+import Button from "../../components/button/Button";
 import Icon from "react-native-remix-icon";
-
-const Auth = () => {
-   const navigation = useNavigation();
-
+import GoogleIcon from "../../../assets/google.svg";
+import FacebookIcon from "../../../assets/facebook.svg";
+import Headings from "../../components/headings/Headings";
+const WelcomeScreen = ({ navigation }) => {
    return (
-      <View style={{ flex: 1, justifyContent: "space-around", gap: 32 }}>
-         <View style={{ alignItems: "center" }}>
-            <Text style={{ fontFamily: "Sora-SemiBold", color: SemanticColors.text.normal, fontSize: 24, textAlign: "center" }}>
-               ¡Bienvenido!
-            </Text>
-            <Text style={{ fontFamily: "Sora-Regular", color: SemanticColors.text.subdued_normal, fontSize: 16, textAlign: "center" }}>
-               Continuemos con una de las siguientes opciones
-            </Text>
-         </View>
+      <View style={{ flex: 1, justifyContent: "space-around", gap: 32, padding: 24 }}>
+         <Headings title="Bienvenido" description="Continuemos con una de las siguientes opciones"></Headings>
          <View style={{ gap: 16 }}>
             <Button
                variant={"secondary"}
                text="Continuar con Google"
+               size="medium"
                onPress={() => console.log("Login")}
-               rightIcon={<Icon name="google-fill" size="20"></Icon>}
+               rightIcon={<GoogleIcon></GoogleIcon>}
             />
             <Button
                variant={"secondary"}
                text="Continuar con Facebook"
+               size="medium"
                onPress={() => console.log("Login")}
-               rightIcon={<Icon name="facebook-fill" size="20"></Icon>}
+               rightIcon={<FacebookIcon></FacebookIcon>}
             />
             <Button
+               onPress={() => navigation.navigate("Login")}
                variant={"secondary"}
                text="Continuar con correo"
-               onPress={() => console.log("Login")}
-               rightIcon={<Icon name="mail-fill" size="20"></Icon>}
+               size="medium"
+               rightIcon={<Icon name="mail-fill" size="20" color={SemanticColors.text.normal}></Icon>}
             />
          </View>
          <View style={{ gap: 16 }}>
@@ -48,7 +43,7 @@ const Auth = () => {
    );
 };
 
-export default Auth;
+export default WelcomeScreen;
 
 const styles = StyleSheet.create({
    container: {
