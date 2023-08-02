@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Colors } from "../../../../utilities/Theme";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { emailValidations, loginPasswordValidations } from "../../utils/inputValidations";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
@@ -11,7 +11,7 @@ import { auth } from "../../../../config/firebase";
 import Icon from "react-native-remix-icon";
 import TextField from "../../../../components/textField/TextField";
 import Button from "../../../../components/button/Button";
-
+import Spinner from "react-native-loading-spinner-overlay";
 const LoginForm = () => {
    const navigation = useNavigation();
    const route = useRoute();
@@ -20,11 +20,13 @@ const LoginForm = () => {
       handleSubmit,
       formState: { errors },
    } = useForm();
-
+   const [isLoading, setIsLoading] = useState(false);
    onSigninPressed = async ({ email, password }) => {
       console.log(email, password);
+      setIsLoading(true);
       try {
          await signInWithEmailAndPassword(auth, email, password);
+         setIsLoading(false);
          navigation.navigate("Home");
       } catch (error) {
          console.log(error);
@@ -40,6 +42,7 @@ const LoginForm = () => {
    }, []);
    return (
       <View style={styles.container}>
+         <Spinner visible={isLoading} />
          <View>
             <TextField {...emailValidations} control={control} leftIcon={<Icon name="mail-fill" size="20" color={Colors.gray_300} />} />
             <TextField
