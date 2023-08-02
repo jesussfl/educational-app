@@ -49,7 +49,7 @@ const LoginForm = () => {
             />
             <Button variant={"ghost"} text="Olvidé mi contraseña" size="small" style={{ alignSelf: "flex-end" }} />
          </View>
-         <View style={{ gap: 16 }}></View>
+         <View style={{ gap: 16 }}>
             <Button variant={"primary"} text="Iniciar Sesión" size="medium" onPress={handleSubmit(onSigninPressed)} />
             <Button
                variant={"secondary"}
