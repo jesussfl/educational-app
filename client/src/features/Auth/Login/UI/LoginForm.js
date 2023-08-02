@@ -47,8 +47,9 @@ const LoginForm = () => {
                control={control}
                leftIcon={<Icon name="lock-fill" size="20" color={Colors.gray_300} />}
             />
+            <Button variant={"ghost"} text="Olvidé mi contraseña" size="small" style={{ alignSelf: "flex-end" }} />
          </View>
-         <View style={{ gap: 16 }}>
+         <View style={{ gap: 16 }}></View>
             <Button variant={"primary"} text="Iniciar Sesión" size="medium" onPress={handleSubmit(onSigninPressed)} />
             <Button
                variant={"secondary"}
