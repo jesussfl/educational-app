@@ -51,6 +51,12 @@ const Button = ({ variant, text = "Button", leftIcon, rightIcon, onPress, size =
                borderColor: SemanticColors.elevation.secondary_normal,
                borderBottomWidth: isPressed ? 3 : 7,
             };
+         case buttonVariants.GHOST:
+            return {
+               backgroundColor: SemanticColors.app.bg_normal,
+               borderColor: SemanticColors.app.bg_normal,
+            };
+
          default:
             return {};
       }
@@ -77,6 +83,11 @@ const Button = ({ variant, text = "Button", leftIcon, rightIcon, onPress, size =
                fontSize,
             };
          case buttonVariants.SECONDARY:
+            return {
+               color: isPressed ? SemanticColors.text.primary_active : SemanticColors.text.subdued_normal,
+               fontSize,
+            };
+         case buttonVariants.GHOST:
             return {
                color: isPressed ? SemanticColors.text.primary_active : SemanticColors.text.subdued_normal,
                fontSize,
