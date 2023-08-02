@@ -25,6 +25,7 @@ const routes = [
    { name: "Welcome", component: Screens.WelcomeScreen, headerShown: false },
    { name: "Login", component: Screens.LoginScreen, headerShown: true, headerTitle: "" },
    { name: "Signup", component: Screens.SignupScreen, headerShown: true, headerTitle: "" },
+   { name: "Home", component: Screens.HomeScreen, headerShown: true, headerTitle: "Inicio" },
 ];
 
 export default function App() {

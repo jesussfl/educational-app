@@ -33,6 +33,7 @@ const SignupForm = () => {
       console.log(email, password);
       try {
          await createUserWithEmailAndPassword(auth, email, password);
+         navigation.navigate("Home");
       } catch (error) {
          console.log(error);
       }

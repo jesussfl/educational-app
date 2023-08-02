@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useEffect } from "react";
+import { StyleSheet, View } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Colors } from "../../../../utilities/Theme";
 import { useForm } from "react-hook-form";
@@ -25,6 +25,7 @@ const LoginForm = () => {
       console.log(email, password);
       try {
          await signInWithEmailAndPassword(auth, email, password);
+         navigation.navigate("Home");
       } catch (error) {
          console.log(error);
       }
@@ -53,7 +54,7 @@ const LoginForm = () => {
                variant={"secondary"}
                text="No tengo una cuenta"
                size="medium"
-               onPress={() => navigation.replace("Login", { isFromSignup: true })}
+               onPress={() => navigation.replace("Signup", { isFromLogin: true })}
             />
          </View>
       </View>
