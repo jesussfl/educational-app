@@ -51,7 +51,7 @@ const WelcomeScreen = ({ navigation }) => {
             />
          </View>
          <View style={{ gap: 16 }}>
-            <Button variant={"primary"} text="Comenzar" onPress={() => navigation.navigate("Home")} />
+            <Button variant={"primary"} text="Comenzar" onPress={() => navigation.navigate("Main", { screen: "Lessons" })} />
             <Button variant={"secondary"} text="Crear una cuenta" onPress={() => navigation.navigate("Signup")} />
          </View>
       </View>

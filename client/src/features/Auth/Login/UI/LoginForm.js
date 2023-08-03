@@ -29,6 +29,7 @@ const LoginForm = () => {
          setIsLoading(false);
          navigation.navigate("Home");
       } catch (error) {
+         setIsLoading(false);
          console.log(error);
       }
    };

@@ -8,7 +8,7 @@ const Walkthrough1 = ({ navigation }) => {
       <View style={{ flex: 1, justifyContent: "space-between", padding: 24 }}>
          <View style={{ backgroundColor: SemanticColors.elevation.secondary_normal, height: 300 }}></View>
          <Headings
-            title="¡Bienvenido a [nombre de tu aplicación]!"
+            title="¡Bienvenido a [nombre de la aplicación]!"
             description="Aprende a tomar el control de tus finanzas de manera divertida y educativa"></Headings>
          <View style={{ gap: 16, flexDirection: "row-reverse" }}>
             <Button
