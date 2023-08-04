@@ -1,14 +1,14 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SemanticColors } from "../../utilities/Theme";
-import { BottomTabScreens } from "./bottomTab";
+import { BottomTabScreens } from "./BottomTab";
 
 import * as Screens from "../index";
 
 const Stack = createNativeStackNavigator();
 
 const commonScreenOptions = {
-   gestureEnabled: true,
+   gestureEnabled: false,
    animationTypeForReplace: "pop",
    animation: "slide_from_right",
 };
@@ -19,6 +19,9 @@ const routes = [
    { name: "Welcome", component: Screens.WelcomeScreen, headerShown: false },
    { name: "Login", component: Screens.LoginScreen, headerShown: true, headerTitle: "" },
    { name: "Signup", component: Screens.SignupScreen, headerShown: true, headerTitle: "" },
+   { name: "RecoverPasswordStep1", component: Screens.RecoverPasswordStep1, headerShown: true, headerTitle: "" },
+   { name: "RecoverPasswordStep2", component: Screens.RecoverPasswordStep2, headerShown: true, headerTitle: "" },
+   { name: "RecoverPasswordStep3", component: Screens.RecoverPasswordStep3, headerShown: true, headerTitle: "" },
    { name: "Main", component: BottomTabScreens, headerShown: false, headerTitle: "" },
 ];
 export const IntroductoryStackNavigator = () => {
