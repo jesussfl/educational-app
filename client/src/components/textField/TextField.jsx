@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
-import { Colors, SemanticColors } from "../../utilities/Theme";
+import { Colors, SemanticColors } from "@utils/Theme";
 import { Controller } from "react-hook-form";
 import RemixIcon from "react-native-remix-icon";
 

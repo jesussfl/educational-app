@@ -2,9 +2,9 @@ import React from "react";
 
 import { StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/core";
-import { SemanticColors } from "../../utilities/Theme";
+import { SemanticColors } from "@utils/Theme";
 
-import Button from "../button/Button";
+import Button from "@components";
 import Icon from "react-native-remix-icon";
 
 const Auth = () => {

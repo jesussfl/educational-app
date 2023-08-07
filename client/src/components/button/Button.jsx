@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
-import { SemanticColors } from "../../utilities/Theme";
+import { SemanticColors } from "@utils/Theme";
 
 const buttonVariants = {
    PRIMARY: "primary",

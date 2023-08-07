@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import { SemanticColors } from "../../utilities/Theme";
+import { SemanticColors } from "@utils/Theme";
 import React from "react";
 
 const Headings = ({ title, description }) => {
