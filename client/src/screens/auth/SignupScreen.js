@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import SignupForm from "../../features/Auth/Signup/UI/SignupForm";
-import { SemanticColors } from "../../utilities/Theme";
-import Headings from "../../components/headings/Headings";
+import { SemanticColors } from "@utils/Theme";
+import { Headings } from "@components";
 const SignupScreen = () => {
    return (
       <View style={styles.container}>

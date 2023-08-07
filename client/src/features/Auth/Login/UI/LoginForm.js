@@ -9,7 +9,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../../config/firebase";
 //components
 import Icon from "react-native-remix-icon";
-import { TextField, Button } from "@components/index";
+import { TextField, Button } from "@components";
 import Spinner from "react-native-loading-spinner-overlay";
 const LoginForm = () => {
    const navigation = useNavigation();

@@ -1,14 +1,15 @@
+import React from "react";
+
 import { StyleSheet, Text, View } from "react-native";
-import Headings from "../../../components/headings/Headings";
-import Button from "../../../components/button/Button";
-import TextField from "../../../components/textField/TextField";
+import { useNavigation } from "@react-navigation/native";
+
 import { emailValidations } from "../../../features/Auth/utils/inputValidations";
 import { useForm } from "react-hook-form";
-import { useNavigation } from "@react-navigation/native";
-import { Colors } from "../../../utilities/Theme";
-import Icon from "react-native-remix-icon";
 
-import React from "react";
+import { Button, TextField, Headings } from "@components";
+import { Colors } from "@utils/Theme";
+
+import Icon from "react-native-remix-icon";
 
 const RecoverPasswordStep1 = () => {
    const navigation = useNavigation();

@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { View } from "react-native";
 
-import { StyleSheet, View } from "react-native";
-import { SemanticColors } from "../../utilities/Theme";
+//Components
+import { SemanticColors } from "@utils/Theme";
+import { Headings, Button } from "@components";
+import { FacebookIcon, GoogleIcon } from "@assets/icons/index";
 
-import Button from "../../components/button/Button";
-import Icon from "react-native-remix-icon";
-import GoogleIcon from "../../../assets/google.svg";
-import FacebookIcon from "../../../assets/facebook.svg";
-import Headings from "../../components/headings/Headings";
-import * as Google from "expo-auth-session/providers/google";
+//Firebase Imports
 import { GoogleAuthProvider, onAuthStateChanged, signInWithCredential } from "firebase/auth";
 import { auth } from "../../config/firebase";
+import * as Google from "expo-auth-session/providers/google";
+
+//Remix Icons
+import Icon from "react-native-remix-icon";
 const WelcomeScreen = ({ navigation }) => {
    const [userInfo, setUserInfo] = useState();
    const [request, response, promptAsync] = Google.useAuthRequest({
@@ -59,11 +61,3 @@ const WelcomeScreen = ({ navigation }) => {
 };
 
 export default WelcomeScreen;
-
-const styles = StyleSheet.create({
-   container: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-   },
-});

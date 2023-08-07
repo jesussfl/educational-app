@@ -1,8 +1,7 @@
-import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import Button from "../../components/button/Button";
-import Headings from "../../components/headings/Headings";
-import { SemanticColors } from "../../utilities/Theme";
+import { StyleSheet, View } from "react-native";
+import { Headings, Button } from "@components";
+import { SemanticColors } from "@utils/Theme";
 const Walkthrough3 = ({ navigation }) => {
    return (
       <View style={{ flex: 1, justifyContent: "space-between", padding: 24 }}>

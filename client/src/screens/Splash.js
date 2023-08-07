@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Animated, StyleSheet } from "react-native";
-import { SemanticColors } from "../utilities/Theme";
+import { SemanticColors } from "@utils/Theme";
 
 export function WithSplashScreen({ children, isAppReady }) {
    return (

@@ -1,10 +1,9 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React from "react";
-import TextField from "../../components/textField/TextField";
 import LoginForm from "../../features/Auth/Login/UI/LoginForm";
-import { SemanticColors } from "../../utilities/Theme";
-import Headings from "../../components/headings/Headings";
-const LoginScreen = ({ navigation }) => {
+import { SemanticColors } from "@utils/Theme";
+import { Headings } from "@components";
+const LoginScreen = () => {
    return (
       <View style={styles.container}>
          <Headings title="Inicia Sesión" description="Completa la información para acceder a tu cuenta"></Headings>

@@ -1,9 +1,12 @@
-import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+
+import { StyleSheet, Text, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Home, Weight, Signpost, Notification, UserOctagon } from "iconsax-react-native";
-import * as Screens from "../index";
-import { Colors, SemanticColors } from "../../utilities/Theme";
+
+import { SemanticColors } from "@utils/Theme";
+import * as Screens from "@screens";
+
 const Tab = createBottomTabNavigator();
 
 export const BottomTabScreens = () => {

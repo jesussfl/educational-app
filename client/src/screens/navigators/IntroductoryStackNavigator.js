@@ -1,6 +1,6 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { SemanticColors } from "../../utilities/Theme";
+import { SemanticColors } from "@utils/Theme";
 import { BottomTabScreens } from "./BottomTab";
 
 import * as Screens from "../index";
