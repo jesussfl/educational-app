@@ -9,7 +9,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../../config/firebase";
 //components
 import Icon from "react-native-remix-icon";
-import { TextField, Button } from "../../../../components/index";
+import { TextField, Button } from "@components/index";
 import Spinner from "react-native-loading-spinner-overlay";
 const LoginForm = () => {
    const navigation = useNavigation();
@@ -26,7 +26,7 @@ const LoginForm = () => {
       try {
          await signInWithEmailAndPassword(auth, email, password);
          setIsLoading(false);
-         navigation.navigate("Home");
+         navigation.navigate("Main", { screen: "Lessons" });
       } catch (error) {
          setIsLoading(false);
          console.log(error);
