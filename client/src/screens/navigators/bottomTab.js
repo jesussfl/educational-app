@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Home, Weight, Signpost, Notification, UserOctagon } from "iconsax-react-native";
 
-import { SemanticColors } from "@utils/Theme";
+import { SemanticColors, Colors } from "@utils/Theme";
 import * as Screens from "@screens";
 
 const Tab = createBottomTabNavigator();
@@ -68,7 +68,7 @@ export const BottomTabScreens = () => {
                   />
                ),
             }}
-            component={Screens.ReviewsScreen}
+            component={Screens.LevelsScreen}
          />
          <Tab.Screen
             name="Notifications"

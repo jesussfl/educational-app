@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "worlds",
+  "info": {
+    "singularName": "world",
+    "pluralName": "worlds",
+    "displayName": "world"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100,
+      "minLength": 1
+    },
+    "description": {
+      "type": "text",
+      "required": true,
+      "maxLength": 255,
+      "minLength": 1
+    },
+    "image": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false,
+      "required": false
+    }
+  }
+}
