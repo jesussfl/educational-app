@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
-import { API_URL } from "../../config/config";
+import { API_URL } from "@env";
 import { Card } from "@components";
 
 const getWorldsFromStrapi = async () => {
-   const res = await fetch(`${API_URL}/worlds`);
+   const res = await fetch(API_URL + "/worlds");
    if (!res.ok) {
       throw new Error("Something went wrong");
    }
@@ -15,7 +15,6 @@ const getWorldsFromStrapi = async () => {
 const LevelsScreen = () => {
    const [worlds, setWorlds] = useState([]);
    const [isLoading, setLoading] = useState(true);
-
    useEffect(() => {
       const fetchWorlds = async () => {
          try {

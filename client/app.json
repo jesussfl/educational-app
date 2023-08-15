@@ -32,6 +32,8 @@
       },
       "plugins": ["@react-native-google-signin/google-signin"],
       "extra": {
+         "API_URL": "@env:API_URL",
+
          "eas": {
             "projectId": "9a6eb660-a6a5-4a3b-9b07-ec33c628a04c"
          }
