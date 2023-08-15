@@ -4,7 +4,8 @@
   "info": {
     "singularName": "world",
     "pluralName": "worlds",
-    "displayName": "world"
+    "displayName": "World",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -24,12 +25,18 @@
       "minLength": 1
     },
     "image": {
-      "allowedTypes": [
-        "images"
-      ],
       "type": "media",
       "multiple": false,
-      "required": false
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "modules": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::module.module",
+      "mappedBy": "world"
     }
   }
 }
