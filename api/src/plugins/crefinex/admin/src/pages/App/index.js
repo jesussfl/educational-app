@@ -5,13 +5,14 @@
  *
  */
 
-import React from 'react';
-import { Switch, Route } from 'react-router-dom';
-import { AnErrorOccurred } from '@strapi/helper-plugin';
-import pluginId from '../../pluginId';
-import HomePage from '../HomePage';
+import React from "react";
+import { Switch, Route } from "react-router-dom";
+// @ts-ignore
+import { AnErrorOccurred } from "@strapi/helper-plugin";
+import pluginId from "../../pluginId";
+import HomePage from "../HomePage";
 
-const App = () => {
+function App() {
   return (
     <div>
       <Switch>
@@ -20,6 +21,6 @@ const App = () => {
       </Switch>
     </div>
   );
-};
+}
 
 export default App;

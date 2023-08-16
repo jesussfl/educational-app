@@ -1,6 +1,8 @@
 {
-  "parser": "babel-eslint",
-  "extends": "eslint:recommended",
+  "parser": "@babel/eslint-parser",
+
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+
   "env": {
     "commonjs": true,
     "es6": true,
@@ -8,6 +10,10 @@
     "browser": false
   },
   "parserOptions": {
+    "requireConfigFile": false,
+    "babelOptions": {
+      "presets": ["@babel/preset-react"]
+    },
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true,
       "jsx": false
@@ -21,7 +27,26 @@
     "indent": ["error", 2, { "SwitchCase": 1 }],
     "linebreak-style": ["error", "unix"],
     "no-console": 0,
-    "quotes": ["error", "single"],
-    "semi": ["error", "always"]
+    "disallowTypeAnnotations": false,
+    // "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "react/prop-types": 0,
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "vars": "all",
+        "args": "none",
+        "ignoreRestSiblings": true,
+        // Add a specific exception for imports
+        "varsIgnorePattern": "^_"
+      }
+    ]
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["node_modules", "src/"]
+      }
+    }
   }
 }

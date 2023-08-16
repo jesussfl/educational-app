@@ -9,7 +9,7 @@
     "displayName": "Crefinex"
   },
   "dependencies": {
-    "@strapi/design-system": "^1.6.3",
+    "@strapi/design-system": "^1.9.0",
     "@strapi/helper-plugin": "^4.6.0",
     "@strapi/icons": "^1.6.3",
     "nanoid": "^4.0.2",

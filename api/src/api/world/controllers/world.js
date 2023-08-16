@@ -1,4 +1,4 @@
-'use strict';
+
 
 /**
  * world controller

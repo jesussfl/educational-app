@@ -13,16 +13,18 @@ import {
   CreatableCombobox,
 } from "@strapi/design-system";
 
-export default function ExerciseModal({ setShowModal, addExercise }) {
-  const [name, setName] = useState("");
-  const [value, setValue] = useState();
+export default function ModuleModal({ setShowModal, addModule, worldData }) {
+  const [description, setDescription] = useState("");
+  const [world, setWorld] = useState();
   const handleSubmit = async (e) => {
     // Prevent submitting parent form
     e.preventDefault();
     e.stopPropagation();
 
     try {
-      await addExercise({ name: name });
+      await addModule({
+        data: { description: description, order: 3, world: world },
+      });
       setShowModal(false);
     } catch (e) {
       console.log("error", e);
@@ -32,7 +34,7 @@ export default function ExerciseModal({ setShowModal, addExercise }) {
   const getError = () => {
     // Form validation error
 
-    if (name.length > 40) {
+    if (description.length > 40) {
       return "Content is too long";
     }
 
@@ -48,34 +50,33 @@ export default function ExerciseModal({ setShowModal, addExercise }) {
     >
       <ModalHeader>
         <Typography fontWeight="bold" textColor="neutral800" as="h2" id="title">
-          Add exercise
+          Add a module
         </Typography>
       </ModalHeader>
 
       <ModalBody>
         <TextInput
-          placeholder="What do you need to do?"
-          label="Name"
-          name="text"
+          placeholder="Add a description here"
+          label="Description"
+          name="description"
           hint="Max 40 characters"
           error={getError()}
-          onChange={(e) => setName(e.target.value)}
-          value={name}
+          onChange={(e) => setDescription(e.target.value)}
+          value={description}
         />
         <Combobox
-          placeholder="My favourite fruit is..."
-          label="Fruits"
-          value={value}
-          onChange={setValue}
-          onClear={() => setValue("")}
+          placeholder="Select the world of this module"
+          label="World"
+          value={world}
+          onChange={setWorld}
+          onClear={() => setWorld("")}
         >
-          <ComboboxOption value="apple">Apple</ComboboxOption>
-          <ComboboxOption value="avocado">Avocado</ComboboxOption>
-          <ComboboxOption value="banana">Banana</ComboboxOption>
-          <ComboboxOption value="kiwi">Kiwi</ComboboxOption>
-          <ComboboxOption value="mango">Mango</ComboboxOption>
-          <ComboboxOption value="orange">Orange</ComboboxOption>
-          <ComboboxOption value="strawberry">Strawberry</ComboboxOption>
+          {worldData.map((world) => (
+            <ComboboxOption
+              key={world.id}
+              value={world.id}
+            >{`${world.id} - ${world.attributes.name}`}</ComboboxOption>
+          ))}
         </Combobox>
         ;
       </ModalBody>
@@ -86,7 +87,7 @@ export default function ExerciseModal({ setShowModal, addExercise }) {
             Cancel
           </Button>
         }
-        endActions={<Button type="submit">Add exercise</Button>}
+        endActions={<Button type="submit">Add Module</Button>}
       />
     </ModalLayout>
   );

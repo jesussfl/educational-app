@@ -1,4 +1,4 @@
-'use strict';
+
 
 /**
  * selection-exercise controller
