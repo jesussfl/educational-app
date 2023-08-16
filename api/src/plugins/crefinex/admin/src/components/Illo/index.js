@@ -1,9 +1,9 @@
 // admin/src/components/Illo/index.js
 
-import React from "react";
+import React from 'react';
 
-export const Illo = () => (
-  <svg
+export function Illo() {
+  return <svg
     width="159"
     height="88"
     viewBox="0 0 159 88"
@@ -61,5 +61,5 @@ export const Illo = () => (
       strokeLinecap="round"
       strokeLinejoin="round"
     />
-  </svg>
-);
+  </svg>;
+}

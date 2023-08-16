@@ -7,17 +7,29 @@ import {
   Tr,
   Td,
   Th,
+  // @ts-ignore
 } from "@strapi/design-system/Table";
+// @ts-ignore
 import { Box } from "@strapi/design-system/Box";
+// @ts-ignore
 import { Flex } from "@strapi/design-system/Flex";
+// @ts-ignore
 import { Button } from "@strapi/design-system/Button";
+// @ts-ignore
 import { Typography } from "@strapi/design-system/Typography";
+// @ts-ignore
 import { IconButton } from "@strapi/design-system/IconButton";
+// @ts-ignore
 import { VisuallyHidden } from "@strapi/design-system/VisuallyHidden";
+// @ts-ignore
 import { BaseCheckbox } from "@strapi/design-system/BaseCheckbox";
+// @ts-ignore
 import { TextInput } from "@strapi/design-system/TextInput";
+// @ts-ignore
 import Pencil from "@strapi/icons/Pencil";
+// @ts-ignore
 import Trash from "@strapi/icons/Trash";
+// @ts-ignore
 import Plus from "@strapi/icons/Plus";
 
 function ExerciseCheckbox({ value, checkboxID, callback, disabled }) {
@@ -52,27 +64,27 @@ function ExerciseInput({ value, onChange }) {
   );
 }
 
-export default function TodoTable({
-  exerciseData,
-  toogleExercise,
-  deleteExercise,
-  editExercise,
+export default function ModuleTable({
+  moduleData,
+  toogleModule,
+  deleteModule,
+  editModule,
   setShowModal,
 }) {
   return (
     <Box
       background="neutral0"
-      hasRadius={true}
+      hasRadius
       shadow="filterShadow"
       padding={8}
       style={{ marginTop: "10px" }}
     >
       <Table
-        colCount={4}
+        colCount={6}
         rowCount={10}
         footer={
           <TFooter onClick={() => setShowModal(true)} icon={<Plus />}>
-            Add a exercise
+            Add a module
           </TFooter>
         }
       >
@@ -81,15 +93,18 @@ export default function TodoTable({
             <Th>
               <Typography variant="sigma">ID</Typography>
             </Th>
-
             <Th>
-              <Typography variant="sigma">Exercise</Typography>
+              <Typography variant="sigma">Description</Typography>
             </Th>
-
             <Th>
-              <Typography variant="sigma">Status</Typography>
+              <Typography variant="sigma">World</Typography>
             </Th>
-
+            <Th>
+              <Typography variant="sigma">Lessons Amount</Typography>
+            </Th>
+            <Th>
+              <Typography variant="sigma">Order</Typography>
+            </Th>
             <Th>
               <VisuallyHidden>Actions</VisuallyHidden>
             </Th>
@@ -97,15 +112,18 @@ export default function TodoTable({
         </Thead>
 
         <Tbody>
-          {exerciseData.map((exercise) => {
-            const [inputValue, setInputValue] = useState(exercise.name);
+          {moduleData.map((module) => {
+            console.log(module);
+            const [inputValue, setInputValue] = useState(
+              module.attributes.description
+            );
 
             const [isEdit, setIsEdit] = useState(false);
 
             return (
-              <Tr key={exercise.id}>
+              <Tr key={module.id}>
                 <Td>
-                  <Typography textColor="neutral800">{exercise.id}</Typography>
+                  <Typography textColor="neutral800">{module.id}</Typography>
                 </Td>
 
                 <Td>
@@ -116,26 +134,29 @@ export default function TodoTable({
                     />
                   ) : (
                     <Typography textColor="neutral800">
-                      {exercise.name}
+                      {module.attributes.description}
                     </Typography>
                   )}
                 </Td>
-
                 <Td>
-                  <ExerciseCheckbox
-                    value={exercise.isDone}
-                    checkboxID={exercise.id}
-                    callback={toogleExercise}
-                    disabled={isEdit}
-                  />
+                  <Typography textColor="neutral800">
+                    {module.attributes.world.data.attributes.name}
+                  </Typography>
                 </Td>
-
+                <Td>
+                  <Typography textColor="neutral800">{0}</Typography>
+                </Td>
+                <Td>
+                  <Typography textColor="neutral800">
+                    {module.attributes.order}
+                  </Typography>
+                </Td>
                 <Td>
                   {isEdit ? (
                     <Flex style={{ justifyContent: "end" }}>
                       <Button
                         onClick={() =>
-                          editExercise(exercise.id, { name: inputValue })
+                          editModule(module.id, { name: inputValue })
                         }
                       >
                         Save
@@ -152,7 +173,7 @@ export default function TodoTable({
 
                       <Box paddingLeft={1}>
                         <IconButton
-                          onClick={() => deleteExercise(exercise)}
+                          onClick={() => deleteModule(module)}
                           label="Delete"
                           noBorder
                           icon={<Trash />}

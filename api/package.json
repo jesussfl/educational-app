@@ -7,14 +7,18 @@
     "develop": "strapi develop",
     "start": "strapi start",
     "build": "strapi build",
-    "strapi": "strapi"
+    "strapi": "strapi",
+    "lint": "eslint --ext .js src",
+    "lint:fix": "eslint --ext .js src --fix"
   },
-  "devDependencies": {},
   "dependencies": {
-    "@strapi/strapi": "4.12.4",
-    "@strapi/plugin-users-permissions": "4.12.4",
+    "@strapi/design-system": "^1.8.2",
+    "@strapi/eslint-config": "^0.2.0",
     "@strapi/plugin-i18n": "4.12.4",
-    "better-sqlite3": "8.5.0"
+    "@strapi/plugin-users-permissions": "4.12.4",
+    "@strapi/strapi": "4.12.4",
+    "better-sqlite3": "8.5.0",
+    "eslint-plugin-import": "^2.28.0"
   },
   "author": {
     "name": "A Strapi developer"
@@ -26,5 +30,11 @@
     "node": ">=16.0.0 <=20.x.x",
     "npm": ">=6.0.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.22.10",
+    "@babel/preset-react": "^7.22.5",
+    "eslint": "^8.47.0",
+    "eslint-plugin-react": "^7.33.2"
+  }
 }
