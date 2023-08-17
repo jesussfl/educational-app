@@ -2,15 +2,18 @@
 
 const moduleRequests = {
   getAllModules: async () => {
-    const data = await fetch("http://localhost:1337/api/modules?populate=*", {
-      method: "GET",
-    }).then((response) => response.json());
+    const data = await fetch(
+      `http://${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/modules?populate=*`,
+      {
+        method: "GET",
+      }
+    ).then((response) => response.json());
     return data;
   },
 
   getModuleById: async (moduleId) => {
     const data = await fetch(
-      `http://localhost:1337/api/modules/${moduleId}?populate=*`,
+      `http://${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/modules/${moduleId}?populate=*`,
       {
         method: "GET",
       }
@@ -19,13 +22,16 @@ const moduleRequests = {
   },
 
   createModule: async (moduleData) => {
-    const response = await fetch("http://localhost:1337/api/modules", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(moduleData),
-    });
+    const response = await fetch(
+      `http://${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/modules`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(moduleData),
+      }
+    );
     const data = await response.json();
     console.log("module created ", data);
     return data;
@@ -33,7 +39,7 @@ const moduleRequests = {
 
   updateModule: async (moduleId, moduleData) => {
     const response = await fetch(
-      `http://localhost:1337/api/modules/${moduleId}`,
+      `http:${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/modules/${moduleId}`,
       {
         method: "PUT",
         headers: {
@@ -48,7 +54,7 @@ const moduleRequests = {
 
   deleteModule: async (moduleId) => {
     const response = await fetch(
-      `http://localhost:1337/api/modules/${moduleId}`,
+      `http://${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/modules/${moduleId}`,
       {
         method: "DELETE",
       }

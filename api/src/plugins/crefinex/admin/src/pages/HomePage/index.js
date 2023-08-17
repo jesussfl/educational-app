@@ -15,7 +15,7 @@ import Plus from "@strapi/icons/Plus";
 import { Illo } from "../../components/Illo";
 
 import ModuleModal from "../../components/Modal/ModuleModal";
-import ExerciseCount from "../../components/ExerciseCount";
+import ModuleCount from "../../components/ModuleCounter";
 import ModuleTable from "../../components/Tables/ModuleTable";
 import moduleRequests from "../../api/module/services/modules";
 import worldRequests from "../../api/world/services/worlds";
@@ -26,7 +26,6 @@ function HomePage() {
   const [worldData, setWorld] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
   // @ts-ignore
   useEffect(() => {
     async function fetchData() {
@@ -60,13 +59,13 @@ function HomePage() {
   return (
     <>
       <BaseHeaderLayout
-        title="Exercise Plugin"
-        subtitle="All your exercises in one place."
+        title="Crefinex Panel"
+        subtitle="Add content for the app here"
         as="h2"
       />
 
       <ContentLayout>
-        {moduleData.length === 0 ? (
+        {!moduleData || moduleData.length === 0 ? (
           <EmptyStateLayout
             icon={<Illo />}
             content="You don't have any Modules yet..."
@@ -82,7 +81,7 @@ function HomePage() {
           />
         ) : (
           <>
-            <ExerciseCount count={moduleData.length} />
+            <ModuleCount count={moduleData.length} />
 
             <ModuleTable
               moduleData={moduleData}
@@ -94,7 +93,6 @@ function HomePage() {
           </>
         )}
       </ContentLayout>
-
       {showModal && (
         <ModuleModal
           setShowModal={setShowModal}
