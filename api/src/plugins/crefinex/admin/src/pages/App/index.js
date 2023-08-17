@@ -10,7 +10,7 @@ import { Switch, Route } from "react-router-dom";
 // @ts-ignore
 import { AnErrorOccurred } from "@strapi/helper-plugin";
 import pluginId from "../../pluginId";
-import HomePage from "../HomePage";
+import HomePage from "../Home/HomePage";
 import LessonPage from "../Lesson/LessonPage";
 
 function App() {

@@ -9,70 +9,43 @@ import {
   Flex,
   Breadcrumbs,
   Crumb,
+  Typography,
 } from "@strapi/design-system";
 import { useParams } from "react-router-dom";
 
-import { Plus, ArrowLeft } from "@strapi/icons";
+import { Plus, ArrowLeft, Pencil } from "@strapi/icons";
 import { Illo } from "../../components/Illo";
 
-import ModuleModal from "../../components/Modal/ModuleModal";
+import LessonModal from "../../components/Modal/LessonModal";
 import LessonTable from "../../components/Tables/LessonTable";
-import moduleRequests from "../../api/module/services/modules";
 import lessonRequests from "../../api/lesson/services/lessons";
-import worldRequests from "../../api/world/services/worlds";
+import moduleRequests from "../../api/module/services/modules";
 import pluginId from "../../pluginId";
 
 // import PropTypes from 'prop-types';
 
 function LessonPage() {
   const { moduleId } = useParams();
-
-  const [worldData, setWorld] = useState([]);
   const [lessonData, setLesson] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
-    async function fetchData() {
-      const worldData = await worldRequests.getAllWorlds();
-      const lessonData = await lessonRequests.getLessonsByModuleId(moduleId);
+    fetchLessonData();
+  }, [showModal]);
 
-      console.log(lessonData.data);
-      setWorld(worldData.data);
-      setLesson(lessonData.data);
+  const fetchLessonData = async () => {
+    setIsLoading(true);
+    const lessonData = await lessonRequests.getLessonsByModuleId(moduleId);
+    setLesson(lessonData.data);
+    console.log(lessonData);
+    setIsLoading(false);
+  };
+  const handleDelete = async (lessonId) => {
+    await lessonRequests.deleteLesson(lessonId);
+    await fetchLessonData();
+  };
 
-      setIsLoading(false);
-    }
-    fetchData();
-  }, []);
-
-  async function addModule(data) {
-    await moduleRequests.createModule(data);
-  }
-  async function toogleModule(data) {
-    alert("Add Toggle Todo in API");
-  }
-
-  async function deleteModule(data) {
-    alert("Add Delete Todo in API");
-  }
-
-  async function editModule(id, data) {
-    alert("Add Edit Todo in API");
-  }
-
-  if (isLoading)
-    return (
-      <Flex
-        style={{
-          Flex: 1,
-          justifyContent: "center",
-          height: "100vh",
-          alignItems: "center",
-        }}
-      >
-        <Loader>Loading...</Loader>
-      </Flex>
-    );
   return (
     <>
       <BaseHeaderLayout
@@ -81,11 +54,15 @@ function LessonPage() {
             Go back
           </Link>
         }
+        primaryAction={<Button startIcon={<Plus />}>Add a lesson</Button>}
         title="Lessons Panel"
         subtitle={
           <Breadcrumbs label="folders">
             <Crumb>Lessons</Crumb>
-            <Crumb>Lesson ID: {moduleId} and Description: </Crumb>
+            {/* <Crumb>
+              {!isLoading &&
+                `Module: ID: ${moduleId} - ${lessonData[0].attributes.module.data.attributes.description}`}
+            </Crumb> */}
           </Breadcrumbs>
         }
         as="h2"
@@ -108,21 +85,32 @@ function LessonPage() {
           />
         ) : (
           <>
+            {isLoading && (
+              <Flex
+                style={{
+                  Flex: 1,
+                  justifyContent: "center",
+                  height: "100vh",
+                  alignItems: "center",
+                }}
+              >
+                <Loader>Loading...</Loader>
+              </Flex>
+            )}
             <LessonTable
               lessonData={lessonData}
               setShowModal={setShowModal}
-              toogleModule={toogleModule}
-              editModule={editModule}
-              deleteModule={deleteModule}
+              handleDelete={handleDelete}
             />
           </>
         )}
       </ContentLayout>
       {showModal && (
-        <ModuleModal
+        <LessonModal
           setShowModal={setShowModal}
-          addModule={addModule}
-          worldData={worldData}
+          createLesson={lessonRequests.createLesson}
+          moduleID={moduleId}
+          lessonData={lessonData}
         />
       )}
     </>
