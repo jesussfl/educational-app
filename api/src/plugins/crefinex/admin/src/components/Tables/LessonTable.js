@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -20,25 +20,7 @@ import {
 import pluginId from "../../pluginId";
 
 import { Pencil, Trash, Plus, ArrowRight } from "@strapi/icons";
-
-function ExerciseCheckbox({ value, checkboxID, callback, disabled }) {
-  const [isChecked, setIsChecked] = useState(value);
-
-  function handleChange() {
-    setIsChecked(!isChecked);
-    {
-      callback && callback({ id: checkboxID, value: !isChecked });
-    }
-  }
-
-  return (
-    <BaseCheckbox
-      checked={isChecked}
-      onChange={handleChange}
-      disabled={disabled}
-    />
-  );
-}
+import { DeleteDialog } from "../Modal/Dialog/CustomDialogs";
 
 function ExerciseInput({ value, onChange }) {
   return (
@@ -53,13 +35,13 @@ function ExerciseInput({ value, onChange }) {
   );
 }
 
-export default function ModuleTable({
+export default function LessonTable({
   lessonData,
-  toogleModule,
-  deleteModule,
-  editModule,
   setShowModal,
+  handleDelete,
 }) {
+  const [lessonIdToDelete, setLessonIdToDelete] = useState(null);
+
   return (
     <Box
       background="neutral0"
@@ -73,7 +55,7 @@ export default function ModuleTable({
         rowCount={10}
         footer={
           <TFooter onClick={() => setShowModal(true)} icon={<Plus />}>
-            Add a module
+            Add a lesson
           </TFooter>
         }
       >
@@ -102,7 +84,6 @@ export default function ModuleTable({
 
         <Tbody>
           {lessonData.map((lesson) => {
-            console.log(lesson);
             const [inputValue, setInputValue] = useState(
               lesson.attributes.description
             );
@@ -129,7 +110,10 @@ export default function ModuleTable({
                 </Td>
                 <Td>
                   <Typography textColor="neutral800">
-                    {lesson.attributes.world.data.attributes.name}
+                    {
+                      lesson.attributes.module.data.attributes.world.data
+                        .attributes.name
+                    }
                   </Typography>
                 </Td>
                 <Td>
@@ -173,7 +157,7 @@ export default function ModuleTable({
                       </Box>
                       <Box paddingLeft={1}>
                         <IconButton
-                          onClick={() => deleteModule(lesson)}
+                          onClick={() => setLessonIdToDelete(lesson.id)}
                           label="Delete"
                           noBorder
                           icon={<Trash />}
@@ -187,6 +171,14 @@ export default function ModuleTable({
           })}
         </Tbody>
       </Table>
+      {lessonIdToDelete != null && (
+        <DeleteDialog
+          setShowDialog={setLessonIdToDelete}
+          handleDelete={handleDelete}
+          idToDelete={lessonIdToDelete}
+          setShowModal={setShowModal}
+        />
+      )}
     </Box>
   );
 }

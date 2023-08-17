@@ -12,10 +12,8 @@ const lessonRequests = {
   },
 
   getLessonsByModuleId: async (moduleId) => {
-    console.log("lessons: ", moduleId);
-
     const data = await fetch(
-      `http://${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/lessons?filters[module][id]=${moduleId}&populate=*`,
+      `http://${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/lessons?populate[module][populate]=world&filters[module][id]=${moduleId}`,
       {
         method: "GET",
       }
@@ -23,15 +21,15 @@ const lessonRequests = {
     return data;
   },
 
-  createModule: async (moduleData) => {
+  createLesson: async (lessonData) => {
     const response = await fetch(
-      `http://${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/lessons`,
+      `http://${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/lessons?populate=*`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(moduleData),
+        body: JSON.stringify(lessonData),
       }
     );
     const data = await response.json();
@@ -54,14 +52,17 @@ const lessonRequests = {
     return data;
   },
 
-  deleteModule: async (moduleId) => {
+  deleteLesson: async (lessonID) => {
+    console.log(lessonID);
+
     const response = await fetch(
-      `http://${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/modules/${moduleId}`,
+      `http://${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/lessons/${lessonID}`,
       {
         method: "DELETE",
       }
     );
     const data = await response.json();
+    console.log("BORRADO");
     return data;
   },
 };

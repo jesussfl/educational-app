@@ -35,7 +35,6 @@ function HomePage() {
 
       setModule(fetchData.data);
       setWorld(worldData.data);
-      console.log(worldData);
       setIsLoading(false);
     }
     fetchData();

@@ -106,7 +106,6 @@ export default function ModuleTable({
 
         <Tbody>
           {moduleData.map((module) => {
-            console.log(module);
             const [inputValue, setInputValue] = useState(
               module.attributes.description
             );
