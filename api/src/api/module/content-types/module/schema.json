@@ -36,6 +36,9 @@
       "default": 1,
       "required": true,
       "unique": false
+    },
+    "slug": {
+      "type": "uid"
     }
   }
 }

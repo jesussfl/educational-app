@@ -23,6 +23,23 @@
       "relation": "oneToMany",
       "target": "api::exercise.exercise",
       "mappedBy": "lesson"
+    },
+    "world": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::world.world"
+    },
+    "description": {
+      "type": "text",
+      "minLength": 1,
+      "maxLength": 150,
+      "required": true,
+      "default": "This is a lesson description"
+    },
+    "order": {
+      "type": "decimal",
+      "required": true,
+      "default": 1
     }
   }
 }

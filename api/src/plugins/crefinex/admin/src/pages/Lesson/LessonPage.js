@@ -1,41 +1,45 @@
 import React, { memo, useState, useEffect } from "react";
-import { nanoid } from "nanoid";
-
-// @ts-ignore
 import {
   BaseHeaderLayout,
   ContentLayout,
   EmptyStateLayout,
   Button,
+  Link,
   Loader,
   Flex,
+  Breadcrumbs,
+  Crumb,
 } from "@strapi/design-system";
+import { useParams } from "react-router-dom";
 
-// @ts-ignore
-import Plus from "@strapi/icons/Plus";
+import { Plus, ArrowLeft } from "@strapi/icons";
 import { Illo } from "../../components/Illo";
 
 import ModuleModal from "../../components/Modal/ModuleModal";
-import ModuleCount from "../../components/ModuleCounter";
-import ModuleTable from "../../components/Tables/ModuleTable";
+import LessonTable from "../../components/Tables/LessonTable";
 import moduleRequests from "../../api/module/services/modules";
+import lessonRequests from "../../api/lesson/services/lessons";
 import worldRequests from "../../api/world/services/worlds";
+import pluginId from "../../pluginId";
+
 // import PropTypes from 'prop-types';
 
-function HomePage() {
-  const [moduleData, setModule] = useState([]);
+function LessonPage() {
+  const { moduleId } = useParams();
+
   const [worldData, setWorld] = useState([]);
+  const [lessonData, setLesson] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  // @ts-ignore
   useEffect(() => {
     async function fetchData() {
-      const fetchData = await moduleRequests.getAllModules();
       const worldData = await worldRequests.getAllWorlds();
+      const lessonData = await lessonRequests.getLessonsByModuleId(moduleId);
 
-      setModule(fetchData.data);
+      console.log(lessonData.data);
       setWorld(worldData.data);
-      console.log(worldData);
+      setLesson(lessonData.data);
+
       setIsLoading(false);
     }
     fetchData();
@@ -72,32 +76,40 @@ function HomePage() {
   return (
     <>
       <BaseHeaderLayout
-        title="Crefinex Panel"
-        subtitle="Add content for the app here"
+        navigationAction={
+          <Link startIcon={<ArrowLeft />} to={`/plugins/${pluginId}`}>
+            Go back
+          </Link>
+        }
+        title="Lessons Panel"
+        subtitle={
+          <Breadcrumbs label="folders">
+            <Crumb>Lessons</Crumb>
+            <Crumb>Lesson ID: {moduleId} and Description: </Crumb>
+          </Breadcrumbs>
+        }
         as="h2"
       />
 
       <ContentLayout>
-        {!moduleData || moduleData.length === 0 ? (
+        {!lessonData || lessonData.length === 0 ? (
           <EmptyStateLayout
             icon={<Illo />}
-            content="You don't have any Modules yet..."
+            content="You don't have any lessons yet..."
             action={
               <Button
                 onClick={() => setShowModal(true)}
                 variant="secondary"
                 startIcon={<Plus />}
               >
-                Add your first Module
+                Add your first Lesson
               </Button>
             }
           />
         ) : (
           <>
-            <ModuleCount count={moduleData.length} />
-
-            <ModuleTable
-              moduleData={moduleData}
+            <LessonTable
+              lessonData={lessonData}
               setShowModal={setShowModal}
               toogleModule={toogleModule}
               editModule={editModule}
@@ -117,4 +129,4 @@ function HomePage() {
   );
 }
 
-export default memo(HomePage);
+export default memo(LessonPage);

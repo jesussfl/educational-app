@@ -1,16 +1,5 @@
 import React, { useState } from "react";
 import {
-  Table,
-  Thead,
-  TFooter,
-  Tbody,
-  Tr,
-  Td,
-  Th,
-  // @ts-ignore
-} from "@strapi/design-system/Table";
-
-import {
   Box,
   Flex,
   Button,
@@ -20,6 +9,13 @@ import {
   BaseCheckbox,
   TextInput,
   Link,
+  Table,
+  Thead,
+  TFooter,
+  Tbody,
+  Tr,
+  Td,
+  Th,
 } from "@strapi/design-system";
 import pluginId from "../../pluginId";
 
@@ -58,7 +54,7 @@ function ExerciseInput({ value, onChange }) {
 }
 
 export default function ModuleTable({
-  moduleData,
+  lessonData,
   toogleModule,
   deleteModule,
   editModule,
@@ -93,7 +89,7 @@ export default function ModuleTable({
               <Typography variant="sigma">World</Typography>
             </Th>
             <Th>
-              <Typography variant="sigma">Lessons Amount</Typography>
+              <Typography variant="sigma">Exercise Amount</Typography>
             </Th>
             <Th>
               <Typography variant="sigma">Order</Typography>
@@ -105,18 +101,18 @@ export default function ModuleTable({
         </Thead>
 
         <Tbody>
-          {moduleData.map((module) => {
-            console.log(module);
+          {lessonData.map((lesson) => {
+            console.log(lesson);
             const [inputValue, setInputValue] = useState(
-              module.attributes.description
+              lesson.attributes.description
             );
 
             const [isEdit, setIsEdit] = useState(false);
 
             return (
-              <Tr key={module.id}>
+              <Tr key={lesson.id}>
                 <Td>
-                  <Typography textColor="neutral800">{module.id}</Typography>
+                  <Typography textColor="neutral800">{lesson.id}</Typography>
                 </Td>
 
                 <Td>
@@ -127,13 +123,13 @@ export default function ModuleTable({
                     />
                   ) : (
                     <Typography textColor="neutral800">
-                      {module.attributes.description}
+                      {lesson.attributes.description}
                     </Typography>
                   )}
                 </Td>
                 <Td>
                   <Typography textColor="neutral800">
-                    {module.attributes.world.data.attributes.name}
+                    {lesson.attributes.world.data.attributes.name}
                   </Typography>
                 </Td>
                 <Td>
@@ -141,7 +137,7 @@ export default function ModuleTable({
                 </Td>
                 <Td>
                   <Typography textColor="neutral800">
-                    {module.attributes.order}
+                    {lesson.attributes.order}
                   </Typography>
                 </Td>
                 <Td>
@@ -149,7 +145,7 @@ export default function ModuleTable({
                     <Flex style={{ justifyContent: "end" }}>
                       <Button
                         onClick={() =>
-                          editModule(module.id, { name: inputValue })
+                          editModule(lesson.id, { name: inputValue })
                         }
                       >
                         Save
@@ -157,7 +153,7 @@ export default function ModuleTable({
                     </Flex>
                   ) : (
                     <Flex style={{ justifyContent: "end" }}>
-                      <Link to={`/plugins/${pluginId}/lesson/${module.id}`}>
+                      <Link to={`/plugins/${pluginId}/lesson`}>
                         <IconButton
                           onClick={() => {
                             console.log("lessons");
@@ -177,7 +173,7 @@ export default function ModuleTable({
                       </Box>
                       <Box paddingLeft={1}>
                         <IconButton
-                          onClick={() => deleteModule(module)}
+                          onClick={() => deleteModule(lesson)}
                           label="Delete"
                           noBorder
                           icon={<Trash />}
