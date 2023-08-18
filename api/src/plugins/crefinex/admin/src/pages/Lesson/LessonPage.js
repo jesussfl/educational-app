@@ -1,40 +1,47 @@
-import React, { memo, useState, useEffect } from "react";
-import {
-  BaseHeaderLayout,
-  ContentLayout,
-  EmptyStateLayout,
-  Button,
-  Link,
-  Loader,
-  Flex,
-  Breadcrumbs,
-  Crumb,
-  Typography,
-} from "@strapi/design-system";
+import React, { memo } from "react";
 import { useParams } from "react-router-dom";
 
-import { Plus, ArrowLeft, Pencil } from "@strapi/icons";
-import { Illo } from "../../components/Illo";
+//Design System
+import { BaseHeaderLayout, ContentLayout, EmptyStateLayout, Button, Link, Breadcrumbs, Crumb, Alert } from "@strapi/design-system";
+import { Plus, ArrowLeft } from "@strapi/icons";
 
+import { Illo } from "../../components/Illo";
+import pluginId from "../../pluginId";
+
+//Hooks
+import { useLessonManagement } from "./hooks/useLessonManagement";
+import { useAlert } from "../../utils/hooks/useAlert";
+import { useFetchData } from "../../utils/hooks/useFetchData";
+
+//Custom Components
 import LessonModal from "../../components/Modal/LessonModal";
 import LessonTable from "../../components/Tables/LessonTable";
-
-import pluginId from "../../pluginId";
-import { useFetchLessonsData } from "./hooks/useFetchLessonsData";
-import { useLessonManagement } from "./hooks/useLessonManagement";
-// import PropTypes from 'prop-types';
+import CustomLoader from "../../components/CustomLoader";
 
 function LessonPage() {
   const { moduleId } = useParams();
-  const { lessonData, moduleData, isLoading, fetchData } =
-    useFetchLessonsData(moduleId);
-  const { showModal, setShowModal, deleteLesson, createLesson } =
-    useLessonManagement(fetchData);
+  const { data, isLoading, refreshData } = useFetchData(["lessons"], moduleId);
+  const { showModal, setShowModal, lessonActions, response } = useLessonManagement(refreshData);
+  const { showAlert } = useAlert(response);
 
-  console.log("ESTOY RENDERIZANDO LA PAGINA PRINCIPAL", isLoading, lessonData);
+  const lessons = data.lessons?.lessonData || [];
+  const module = data.lessons?.moduleData || {};
+
+  const isLessonDataEmpty = lessons.length === 0 && !isLoading;
+
+  const renderAlert = () => {
+    if (showAlert) {
+      return (
+        <Alert style={{ position: "absolute", top: "45px", left: "50%", transform: "translateX(-15%)", width: "450px" }} closeLabel="Close" title={response.title} variant={response.type}>
+          {response.message}
+        </Alert>
+      );
+    }
+  };
 
   return (
     <>
+      {renderAlert()}
       <BaseHeaderLayout
         navigationAction={
           <Link startIcon={<ArrowLeft />} to={`/plugins/${pluginId}`}>
@@ -45,65 +52,32 @@ function LessonPage() {
         title="Lessons Panel"
         subtitle={
           <Breadcrumbs label="folders">
-            <Crumb>Lessons</Crumb>
-            {/* <Crumb>
-              {isLoading
-                ? `Loading...`
-                : `Module: ID: ${moduleId} - ${moduleData.attributes.description}`}
-            </Crumb> */}
+            <Crumb>Modules</Crumb>
+
+            <Crumb>{isLoading ? `Loading...` : `Module: ID: ${moduleId} - ${module.attributes.description}`}</Crumb>
           </Breadcrumbs>
         }
         as="h2"
       />
 
       <ContentLayout>
-        {!lessonData || lessonData.length === 0 ? (
+        {isLessonDataEmpty ? (
           <EmptyStateLayout
             icon={<Illo />}
             content="You don't have any lessons yet..."
             action={
-              <Button
-                onClick={() => setShowModal(true)}
-                variant="secondary"
-                startIcon={<Plus />}
-              >
+              <Button onClick={() => setShowModal(true)} variant="secondary" startIcon={<Plus />}>
                 Add your first Lesson
               </Button>
             }
           />
         ) : (
-          <>
-            {isLoading && (
-              <Flex
-                style={{
-                  Flex: 1,
-                  justifyContent: "center",
-                  height: "100vh",
-                  alignItems: "center",
-                }}
-              >
-                <Loader>Loading...</Loader>
-              </Flex>
-            )}
-            <LessonTable
-              lessonData={lessonData}
-              setShowModal={setShowModal}
-              handleDelete={deleteLesson}
-            />
-          </>
+          <LessonTable lessonsData={lessons} moduleData={module} showModal={setShowModal} deleteAction={lessonActions.deleteLesson} isLoading={isLoading} />
         )}
       </ContentLayout>
-      {showModal && (
-        <LessonModal
-          setShowModal={setShowModal}
-          createLesson={createLesson}
-          moduleID={moduleId}
-          lessonData={lessonData}
-          moduleData={moduleData}
-        />
-      )}
+      {showModal && <LessonModal setShowModal={setShowModal} createLesson={lessonActions.createLesson} moduleID={moduleId} moduleData={data.lessons.moduleData} />}
     </>
   );
 }
 
-export default LessonPage;
+export default memo(LessonPage);

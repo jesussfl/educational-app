@@ -1,21 +1,36 @@
 // hooks/useLessonManagement.js
 import { useState } from "react";
 import lessonRequests from "../../../api/lesson/services/lessons";
-import { useFetchLessonsData } from "./useFetchLessonsData";
 export function useLessonManagement(fetchingData) {
   const [showModal, setShowModal] = useState(false);
-  const { fetchData } = useFetchLessonsData();
+  const [response, setResponse] = useState({});
+
   async function deleteLesson(lessonId) {
-    await lessonRequests.deleteLesson(lessonId);
-    await fetchData();
+    try {
+      await lessonRequests.deleteLesson(lessonId);
+      await fetchingData();
+      setResponse({ type: "success", title: "Success: ", message: "Lesson deleted successfully" });
+    } catch (error) {
+      console.log(error);
+      setResponse({ type: "error", title: "Error: ", message: `Error deleting lesson: ${error}` });
+    } finally {
+      setShowModal(false);
+    }
   }
 
   async function createLesson(lessonData) {
-    await lessonRequests.createLesson(lessonData);
-    setShowModal(false);
-    console.log("CREADOOOO");
-    fetchingData();
+    try {
+      await lessonRequests.createLesson(lessonData);
+      await fetchingData();
+
+      setResponse({ type: "success", title: "Success: ", message: "Lesson created successfully" });
+    } catch (error) {
+      console.log(error);
+      setResponse({ type: "error", title: "Error: ", message: `Error creating lesson: ${error}` });
+    } finally {
+      setShowModal(false);
+    }
   }
 
-  return { showModal, setShowModal, deleteLesson, createLesson };
+  return { showModal, setShowModal, lessonActions: { deleteLesson, createLesson }, response };
 }

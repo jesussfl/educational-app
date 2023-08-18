@@ -10,17 +10,7 @@ import {
   // @ts-ignore
 } from "@strapi/design-system/Table";
 
-import {
-  Box,
-  Flex,
-  Button,
-  Typography,
-  IconButton,
-  VisuallyHidden,
-  BaseCheckbox,
-  TextInput,
-  Link,
-} from "@strapi/design-system";
+import { Box, Flex, Button, Typography, IconButton, VisuallyHidden, BaseCheckbox, TextInput, Link } from "@strapi/design-system";
 import pluginId from "../../pluginId";
 
 import { Pencil, Trash, Plus, ArrowRight } from "@strapi/icons";
@@ -35,43 +25,25 @@ function ExerciseCheckbox({ value, checkboxID, callback, disabled }) {
     }
   }
 
-  return (
-    <BaseCheckbox
-      checked={isChecked}
-      onChange={handleChange}
-      disabled={disabled}
-    />
-  );
+  return <BaseCheckbox checked={isChecked} onChange={handleChange} disabled={disabled} />;
 }
 
 function ExerciseInput({ value, onChange }) {
-  return (
-    <TextInput
-      type="text"
-      aria-label="exercise-input"
-      name="exercise-input"
-      error={value.length > 40 ? "Text should be less than 40 characters" : ""}
-      onChange={onChange}
-      value={value}
-    />
-  );
+  return <TextInput type="text" aria-label="exercise-input" name="exercise-input" error={value.length > 40 ? "Text should be less than 40 characters" : ""} onChange={onChange} value={value} />;
 }
 
-export default function ModuleTable({
-  moduleData,
-  toogleModule,
-  deleteModule,
-  editModule,
-  setShowModal,
-}) {
+export default function ModuleTable({ moduleData, setShowModal }) {
+  const [editedModule, setEditedModule] = useState({});
+
+  const handleEditInputChange = (moduleId, value) => {
+    setEditedModule((prevEditedLessons) => ({
+      ...prevEditedLessons,
+      [moduleId]: value,
+    }));
+  };
+
   return (
-    <Box
-      background="neutral0"
-      hasRadius
-      shadow="filterShadow"
-      padding={8}
-      style={{ marginTop: "10px" }}
-    >
+    <Box background="neutral0" hasRadius shadow="filterShadow" padding={8} style={{ marginTop: "10px" }}>
       <Table
         colCount={6}
         rowCount={10}
@@ -106,11 +78,8 @@ export default function ModuleTable({
 
         <Tbody>
           {moduleData.map((module) => {
-            const [inputValue, setInputValue] = useState(
-              module.attributes.description
-            );
-
-            const [isEdit, setIsEdit] = useState(false);
+            const isEdit = editedModule.hasOwnProperty(module.id);
+            const inputValue = isEdit ? editedModule[module.id] : module.attributes.description;
 
             return (
               <Tr key={module.id}>
@@ -118,41 +87,20 @@ export default function ModuleTable({
                   <Typography textColor="neutral800">{module.id}</Typography>
                 </Td>
 
+                <Td>{isEdit ? <ExerciseInput value={inputValue} onChange={(e) => setInputValue(e.target.value)} /> : <Typography textColor="neutral800">{module.attributes.description}</Typography>}</Td>
                 <Td>
-                  {isEdit ? (
-                    <ExerciseInput
-                      value={inputValue}
-                      onChange={(e) => setInputValue(e.target.value)}
-                    />
-                  ) : (
-                    <Typography textColor="neutral800">
-                      {module.attributes.description}
-                    </Typography>
-                  )}
-                </Td>
-                <Td>
-                  <Typography textColor="neutral800">
-                    {module.attributes.world.data.attributes.name}
-                  </Typography>
+                  <Typography textColor="neutral800">{module.attributes.world.data.attributes.name}</Typography>
                 </Td>
                 <Td>
                   <Typography textColor="neutral800">{0}</Typography>
                 </Td>
                 <Td>
-                  <Typography textColor="neutral800">
-                    {module.attributes.order}
-                  </Typography>
+                  <Typography textColor="neutral800">{module.attributes.order}</Typography>
                 </Td>
                 <Td>
                   {isEdit ? (
                     <Flex style={{ justifyContent: "end" }}>
-                      <Button
-                        onClick={() =>
-                          editModule(module.id, { name: inputValue })
-                        }
-                      >
-                        Save
-                      </Button>
+                      <Button onClick={() => editModule(module.id, { name: inputValue })}>Save</Button>
                     </Flex>
                   ) : (
                     <Flex style={{ justifyContent: "end" }}>
@@ -167,20 +115,10 @@ export default function ModuleTable({
                         />
                       </Link>
                       <Box paddingLeft={1}>
-                        <IconButton
-                          onClick={() => setIsEdit(true)}
-                          label="Edit"
-                          noBorder
-                          icon={<Pencil />}
-                        />
+                        <IconButton onClick={() => setIsEdit(true)} label="Edit" noBorder icon={<Pencil />} />
                       </Box>
                       <Box paddingLeft={1}>
-                        <IconButton
-                          onClick={() => deleteModule(module)}
-                          label="Delete"
-                          noBorder
-                          icon={<Trash />}
-                        />
+                        <IconButton onClick={() => deleteModule(module)} label="Delete" noBorder icon={<Trash />} />
                       </Box>
                     </Flex>
                   )}
