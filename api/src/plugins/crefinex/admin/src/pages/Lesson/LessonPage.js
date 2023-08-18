@@ -18,33 +18,20 @@ import { Illo } from "../../components/Illo";
 
 import LessonModal from "../../components/Modal/LessonModal";
 import LessonTable from "../../components/Tables/LessonTable";
-import lessonRequests from "../../api/lesson/services/lessons";
-import moduleRequests from "../../api/module/services/modules";
-import pluginId from "../../pluginId";
 
+import pluginId from "../../pluginId";
+import { useFetchLessonsData } from "./hooks/useFetchLessonsData";
+import { useLessonManagement } from "./hooks/useLessonManagement";
 // import PropTypes from 'prop-types';
 
 function LessonPage() {
   const { moduleId } = useParams();
-  const [lessonData, setLesson] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const { lessonData, moduleData, isLoading, fetchData } =
+    useFetchLessonsData(moduleId);
+  const { showModal, setShowModal, deleteLesson, createLesson } =
+    useLessonManagement(fetchData);
 
-  useEffect(() => {
-    fetchLessonData();
-  }, [showModal]);
-
-  const fetchLessonData = async () => {
-    setIsLoading(true);
-    const lessonData = await lessonRequests.getLessonsByModuleId(moduleId);
-    setLesson(lessonData.data);
-    console.log(lessonData);
-    setIsLoading(false);
-  };
-  const handleDelete = async (lessonId) => {
-    await lessonRequests.deleteLesson(lessonId);
-    await fetchLessonData();
-  };
+  console.log("ESTOY RENDERIZANDO LA PAGINA PRINCIPAL", isLoading, lessonData);
 
   return (
     <>
@@ -60,8 +47,9 @@ function LessonPage() {
           <Breadcrumbs label="folders">
             <Crumb>Lessons</Crumb>
             {/* <Crumb>
-              {!isLoading &&
-                `Module: ID: ${moduleId} - ${lessonData[0].attributes.module.data.attributes.description}`}
+              {isLoading
+                ? `Loading...`
+                : `Module: ID: ${moduleId} - ${moduleData.attributes.description}`}
             </Crumb> */}
           </Breadcrumbs>
         }
@@ -100,7 +88,7 @@ function LessonPage() {
             <LessonTable
               lessonData={lessonData}
               setShowModal={setShowModal}
-              handleDelete={handleDelete}
+              handleDelete={deleteLesson}
             />
           </>
         )}
@@ -108,13 +96,14 @@ function LessonPage() {
       {showModal && (
         <LessonModal
           setShowModal={setShowModal}
-          createLesson={lessonRequests.createLesson}
+          createLesson={createLesson}
           moduleID={moduleId}
           lessonData={lessonData}
+          moduleData={moduleData}
         />
       )}
     </>
   );
 }
 
-export default memo(LessonPage);
+export default LessonPage;

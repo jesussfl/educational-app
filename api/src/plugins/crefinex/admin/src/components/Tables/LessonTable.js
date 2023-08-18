@@ -41,6 +41,14 @@ export default function LessonTable({
   handleDelete,
 }) {
   const [lessonIdToDelete, setLessonIdToDelete] = useState(null);
+  const [editedLessons, setEditedLessons] = useState({});
+
+  const handleEditInputChange = (lessonId, value) => {
+    setEditedLessons((prevEditedLessons) => ({
+      ...prevEditedLessons,
+      [lessonId]: value,
+    }));
+  };
 
   return (
     <Box
@@ -84,11 +92,10 @@ export default function LessonTable({
 
         <Tbody>
           {lessonData.map((lesson) => {
-            const [inputValue, setInputValue] = useState(
-              lesson.attributes.description
-            );
-
-            const [isEdit, setIsEdit] = useState(false);
+            const isEdit = editedLessons.hasOwnProperty(lesson.id);
+            const inputValue = isEdit
+              ? editedLessons[lesson.id]
+              : lesson.attributes.description;
 
             return (
               <Tr key={lesson.id}>
@@ -100,7 +107,7 @@ export default function LessonTable({
                   {isEdit ? (
                     <ExerciseInput
                       value={inputValue}
-                      onChange={(e) => setInputValue(e.target.value)}
+                      onChange={(e) => setEditedLessons(e.target.value)}
                     />
                   ) : (
                     <Typography textColor="neutral800">
