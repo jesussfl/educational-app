@@ -12,12 +12,6 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "world": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::world.world",
-      "inversedBy": "modules"
-    },
     "lessons": {
       "type": "relation",
       "relation": "oneToMany",
@@ -37,8 +31,11 @@
       "required": true,
       "unique": false
     },
-    "slug": {
-      "type": "uid"
+    "world": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::world.world",
+      "inversedBy": "modules"
     }
   }
 }

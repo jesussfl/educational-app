@@ -1,28 +1,21 @@
-/**
- *
- * This component is the skeleton around the actual pages, and should only
- * contain code that should be seen on all pages. (e.g. navigation bar)
- *
- */
-
 import React from "react";
-import { Switch, Route } from "react-router-dom";
-// @ts-ignore
+import { Switch, Route, Redirect } from "react-router-dom";
 import { AnErrorOccurred } from "@strapi/helper-plugin";
 import pluginId from "../../pluginId";
-import HomePage from "../Home/HomePage";
+import HomePage from "../../components/CustomLoader/index";
 import LessonPage from "../Lesson/LessonPage";
+import ModulesPage from "../Home/HomePage";
 
 function App() {
   return (
     <div>
       <Switch>
-        <Route path={`/plugins/${pluginId}`} component={HomePage} exact />
-        <Route
-          path={`/plugins/${pluginId}/lesson/:moduleId`}
-          component={LessonPage}
-          exact
-        />
+        <Route path={`/plugins/${pluginId}`} exact>
+          {/* Redirigir desde HomePage a ModulesPage con parámetros de URL */}
+          <Redirect to={`/plugins/${pluginId}/modules?page=1&pageSize=10&sort=id:ASC`} />
+        </Route>
+        <Route path={`/plugins/${pluginId}/lesson/:moduleId`} component={LessonPage} exact />
+        <Route path={`/plugins/${pluginId}/modules`} component={ModulesPage} exact />
 
         <Route component={AnErrorOccurred} />
       </Switch>

@@ -6,7 +6,6 @@ export const useAlert = (response) => {
   useEffect(() => {
     if (response.type === "success") {
       setShowAlert(true);
-      console.log(response);
       setTimeout(() => {
         setShowAlert(false);
       }, 5000);

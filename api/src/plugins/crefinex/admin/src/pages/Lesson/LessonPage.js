@@ -2,10 +2,9 @@ import React, { memo } from "react";
 import { useParams } from "react-router-dom";
 
 //Design System
-import { BaseHeaderLayout, ContentLayout, EmptyStateLayout, Button, Link, Breadcrumbs, Crumb, Alert } from "@strapi/design-system";
+import { BaseHeaderLayout, ContentLayout, Button, Link, Breadcrumbs, Crumb } from "@strapi/design-system";
 import { Plus, ArrowLeft } from "@strapi/icons";
 
-import { Illo } from "../../components/Illo";
 import pluginId from "../../pluginId";
 
 //Hooks
@@ -14,34 +13,22 @@ import { useAlert } from "../../utils/hooks/useAlert";
 import { useFetchData } from "../../utils/hooks/useFetchData";
 
 //Custom Components
+import { LessonTable } from "../../components/Tables/ByPages/LessonTable";
 import LessonModal from "../../components/Modal/LessonModal";
-import LessonTable from "../../components/Tables/LessonTable";
-import CustomLoader from "../../components/CustomLoader";
+import CustomAlert from "../../components/CustomAlert";
 
 function LessonPage() {
   const { moduleId } = useParams();
-  const { data, isLoading, refreshData } = useFetchData(["lessons"], moduleId);
+  const {
+    data: { lessons },
+    status,
+    refreshData,
+  } = useFetchData("lessons", moduleId);
   const { showModal, setShowModal, lessonActions, response } = useLessonManagement(refreshData);
   const { showAlert } = useAlert(response);
-
-  const lessons = data.lessons?.lessonData || [];
-  const module = data.lessons?.moduleData || {};
-
-  const isLessonDataEmpty = lessons.length === 0 && !isLoading;
-
-  const renderAlert = () => {
-    if (showAlert) {
-      return (
-        <Alert style={{ position: "absolute", top: "45px", left: "50%", transform: "translateX(-15%)", width: "450px" }} closeLabel="Close" title={response.title} variant={response.type}>
-          {response.message}
-        </Alert>
-      );
-    }
-  };
-
   return (
     <>
-      {renderAlert()}
+      {showAlert && <CustomAlert response={response} />}
       <BaseHeaderLayout
         navigationAction={
           <Link startIcon={<ArrowLeft />} to={`/plugins/${pluginId}`}>
@@ -51,31 +38,20 @@ function LessonPage() {
         primaryAction={<Button startIcon={<Plus />}>Add a lesson</Button>}
         title="Lessons Panel"
         subtitle={
-          <Breadcrumbs label="folders">
-            <Crumb>Modules</Crumb>
-
-            <Crumb>{isLoading ? `Loading...` : `Module: ID: ${moduleId} - ${module.attributes.description}`}</Crumb>
-          </Breadcrumbs>
+          !status.isLoading && (
+            <Breadcrumbs label="folders">
+              <Crumb>{`World: ${lessons.moduleData.attributes.world.data.attributes.name}`}</Crumb>
+              <Crumb>{`Module: ${lessons.moduleData.attributes.description} (ID: ${lessons.moduleData.id})`}</Crumb>
+            </Breadcrumbs>
+          )
         }
         as="h2"
       />
 
       <ContentLayout>
-        {isLessonDataEmpty ? (
-          <EmptyStateLayout
-            icon={<Illo />}
-            content="You don't have any lessons yet..."
-            action={
-              <Button onClick={() => setShowModal(true)} variant="secondary" startIcon={<Plus />}>
-                Add your first Lesson
-              </Button>
-            }
-          />
-        ) : (
-          <LessonTable lessonsData={lessons} moduleData={module} showModal={setShowModal} deleteAction={lessonActions.deleteLesson} isLoading={isLoading} />
-        )}
+        <LessonTable data={lessons?.lessonData} paginationData={lessons?.lessonData.meta.pagination} status={status} actions={{ lessonActions, setShowModal }} />
       </ContentLayout>
-      {showModal && <LessonModal setShowModal={setShowModal} createLesson={lessonActions.createLesson} moduleID={moduleId} moduleData={data.lessons.moduleData} />}
+      {showModal && <LessonModal setShowModal={setShowModal} createLesson={lessonActions.createLesson} moduleID={moduleId} moduleData={lessons?.moduleData} />}
     </>
   );
 }

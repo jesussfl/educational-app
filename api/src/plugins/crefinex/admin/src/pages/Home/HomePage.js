@@ -1,69 +1,32 @@
 import React from "react";
 
-import { BaseHeaderLayout, ContentLayout, EmptyStateLayout, Button } from "@strapi/design-system";
+import { BaseHeaderLayout, ContentLayout, Alert } from "@strapi/design-system";
 
-import Plus from "@strapi/icons/Plus";
-import { Illo } from "../../components/Illo";
-
-import ModuleModal from "../../components/Modal/ModuleModal";
-import ModuleCount from "../../components/ModuleCounter";
-import ModuleTable from "../../components/Tables/ModuleTable";
 import { useFetchData } from "../../utils/hooks/useFetchData";
 import { useModuleManagement } from "./hooks/useModuleManagement";
 import { useAlert } from "../../utils/hooks/useAlert";
-import CustomLoader from "../../components/CustomLoader";
-
+import { ModuleTable } from "../../components/Tables/ByPages/ModuleTable";
+import ModuleModal from "../../components/Modal/ModuleModal";
+import CustomAlert from "../../components/CustomAlert";
 function HomePage() {
-  const { data, isLoading, refreshData } = useFetchData(["worlds", "modules"]);
-  const { showModal, setShowModal, moduleActions, response } = useModuleManagement(refreshData);
+  const {
+    data: { modules },
+    status: modulesStatus,
+    refreshData: refreshModulesData,
+  } = useFetchData("modules");
+  const {
+    data: { worlds },
+  } = useFetchData("worlds");
+
+  const { showModal, setShowModal, moduleActions, response } = useModuleManagement(refreshModulesData);
   const { showAlert } = useAlert(response);
-
-  const modules = data.modules || [];
-  const worlds = data.worlds || [];
-
-  const isModuleDataEmpty = modules.length === 0 && !isLoading;
-
-  const renderPageContent = () => {
-    if (isLoading) {
-      return <CustomLoader />;
-    }
-
-    return (
-      <>
-        <ModuleCount count={modules.length} />
-        <ModuleTable moduleData={modules} setShowModal={setShowModal} />
-      </>
-    );
-  };
-  const renderAlert = () => {
-    if (showAlert) {
-      return (
-        <Alert style={{ position: "absolute", top: "45px", left: "50%", transform: "translateX(-15%)", width: "450px" }} closeLabel="Close" title={response.title} variant={response.type}>
-          {response.message}
-        </Alert>
-      );
-    }
-  };
+  console.log("MODULLEEEEE", modules);
   return (
     <>
-      {renderAlert()}
+      {showAlert && <CustomAlert response={response} />}
       <BaseHeaderLayout title="Crefinex Panel" subtitle="Add content for the app here" as="h2" />
-
       <ContentLayout>
-        {isModuleDataEmpty ? (
-          <EmptyStateLayout
-            icon={<Illo />}
-            content="You don't have any Modules yet..."
-            action={
-              <Button onClick={() => setShowModal(true)} variant="secondary" startIcon={<Plus />}>
-                Add your first Module
-              </Button>
-            }
-          />
-        ) : (
-          renderPageContent()
-        )}
-
+        <ModuleTable data={modules} paginationData={modules?.meta.pagination} status={modulesStatus} actions={{ moduleActions, setShowModal }} />
         {showModal && <ModuleModal setShowModal={setShowModal} addModule={moduleActions.createModule} worldData={worlds} />}
       </ContentLayout>
     </>

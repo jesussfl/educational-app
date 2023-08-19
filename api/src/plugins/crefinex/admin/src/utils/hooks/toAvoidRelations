@@ -1,0 +1,10 @@
+// if (moduleData.data.length > 0) {
+//   moduleData.data.forEach((module) => {
+//     const attributes = module.attributes;
+//     for (const attrName in attributes) {
+//       if (moduleSchema.attributes[attrName]?.type === "relation") {
+//         attributes[attrName].type = "relation";
+//       }
+//     }
+//   });
+// }

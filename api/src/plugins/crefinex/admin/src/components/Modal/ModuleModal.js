@@ -42,12 +42,7 @@ export default function ModuleModal({ setShowModal, addModule, worldData }) {
   };
 
   return (
-    <ModalLayout
-      onClose={() => setShowModal(false)}
-      labelledBy="title"
-      as="form"
-      onSubmit={handleSubmit}
-    >
+    <ModalLayout onClose={() => setShowModal(false)} labelledBy="title" as="form" onSubmit={handleSubmit}>
       <ModalHeader>
         <Typography fontWeight="bold" textColor="neutral800" as="h2" id="title">
           Add a module
@@ -64,21 +59,11 @@ export default function ModuleModal({ setShowModal, addModule, worldData }) {
           onChange={(e) => setDescription(e.target.value)}
           value={description}
         />
-        <Combobox
-          placeholder="Select the world of this module"
-          label="World"
-          value={world}
-          onChange={setWorld}
-          onClear={() => setWorld("")}
-        >
-          {worldData.map((world) => (
-            <ComboboxOption
-              key={world.id}
-              value={world.id}
-            >{`${world.id} - ${world.attributes.name}`}</ComboboxOption>
+        <Combobox placeholder="Select the world of this module" label="World" value={world} onChange={setWorld} onClear={() => setWorld("")}>
+          {worldData.data.map((world) => (
+            <ComboboxOption key={world.id} value={world.id}>{`${world.id} - ${world.attributes.name}`}</ComboboxOption>
           ))}
         </Combobox>
-        ;
       </ModalBody>
 
       <ModalFooter

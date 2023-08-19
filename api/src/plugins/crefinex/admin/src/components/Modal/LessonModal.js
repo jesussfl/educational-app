@@ -1,27 +1,12 @@
 import React, { useState } from "react";
 
-import {
-  ModalLayout,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Typography,
-  Button,
-  TextInput,
-  Loader,
-  Flex,
-} from "@strapi/design-system";
+import { ModalLayout, ModalHeader, ModalBody, ModalFooter, Typography, Button, TextInput, Loader, Flex } from "@strapi/design-system";
 import { ConfirmationDialog } from "./Dialog/CustomDialogs";
-export default function LessonModal({
-  setShowModal,
-  moduleID,
-  createLesson,
-  moduleData,
-}) {
+export default function LessonModal({ setShowModal, moduleID, createLesson, moduleData }) {
   const [description, setDescription] = useState("");
   const [order, setOrder] = useState("");
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-
+  console.log(moduleData, "moduleData");
   const handleSubmit = async () => {
     try {
       await createLesson({
@@ -40,25 +25,11 @@ export default function LessonModal({
   return (
     <>
       {showConfirmDialog ? (
-        <ConfirmationDialog
-          setShowDialog={setShowConfirmDialog}
-          setShowModal={setShowModal}
-          handleSubmit={handleSubmit}
-        />
+        <ConfirmationDialog setShowDialog={setShowConfirmDialog} setShowModal={setShowModal} handleSubmit={handleSubmit} />
       ) : (
-        <ModalLayout
-          onClose={() => setShowModal(false)}
-          labelledBy="title"
-          as="form"
-          onSubmit={handleSubmit}
-        >
+        <ModalLayout onClose={() => setShowModal(false)} labelledBy="title" as="form" onSubmit={handleSubmit}>
           <ModalHeader>
-            <Typography
-              fontWeight="bold"
-              textColor="neutral800"
-              as="h2"
-              id="title"
-            >
+            <Typography fontWeight="bold" textColor="neutral800" as="h2" id="title">
               Add a lesson
             </Typography>
           </ModalHeader>
@@ -88,11 +59,7 @@ export default function LessonModal({
                 Cancel
               </Button>
             }
-            endActions={
-              <Button onClick={() => setShowConfirmDialog(true)}>
-                Add Lesson
-              </Button>
-            }
+            endActions={<Button onClick={() => setShowConfirmDialog(true)}>Add Lesson</Button>}
           />
         </ModalLayout>
       )}
