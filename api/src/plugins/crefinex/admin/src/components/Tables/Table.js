@@ -2,7 +2,7 @@ import React from "react";
 import { Flex, Table, TFooter } from "@strapi/design-system";
 import { Plus } from "@strapi/icons";
 import { usePagination } from "../../utils/hooks/usePagination";
-import { TableFilters, TablePagination, TableHeaders, CustomLoader } from "../../components";
+import { TableFilters, TablePagination, TableHeaders, CustomLoader, EmptyState } from "../../components";
 
 export default function CustomTable({ data, paginationData, status, actions, children }) {
   const { currentPage, rowsPerPage, history } = usePagination();

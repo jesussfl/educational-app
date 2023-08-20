@@ -6,8 +6,9 @@ import { useFetchData } from "../../utils/hooks/useFetchData";
 import { useModuleManagement } from "./hooks/useModuleManagement";
 import { useAlert } from "../../utils/hooks/useAlert";
 import { ModuleTable } from "../../components/Tables/ByPages/ModuleTable";
-import ModuleModal from "../../components/Modal/ModuleModal";
+import { ModuleModal } from "../../components/Modal/CustomModal";
 import CustomAlert from "../../components/CustomAlert";
+
 function HomePage() {
   const {
     data: { modules },
@@ -18,7 +19,7 @@ function HomePage() {
     data: { worlds },
   } = useFetchData("worlds");
 
-  const { showModal, setShowModal, moduleActions, response } = useModuleManagement(refreshModulesData);
+  const { showModal, setShowModal, entryActions, response } = useModuleManagement(refreshModulesData);
   const { showAlert } = useAlert(response);
   console.log("MODULLEEEEE", modules);
   return (
@@ -26,8 +27,8 @@ function HomePage() {
       {showAlert && <CustomAlert response={response} />}
       <BaseHeaderLayout title="Crefinex Panel" subtitle="Add content for the app here" as="h2" />
       <ContentLayout>
-        <ModuleTable data={modules} paginationData={modules?.meta.pagination} status={modulesStatus} actions={{ moduleActions, setShowModal }} />
-        {showModal && <ModuleModal setShowModal={setShowModal} addModule={moduleActions.createModule} worldData={worlds} />}
+        <ModuleTable data={modules} paginationData={modules?.meta.pagination} status={modulesStatus} actions={{ entryActions, setShowModal }} />
+        {showModal && <ModuleModal actions={{ entryActions, setShowModal }} data={worlds} />}
       </ContentLayout>
     </>
   );

@@ -5,9 +5,9 @@ import { ArrowRight, Trash } from "@strapi/icons";
 
 import { CustomTable, DeleteDialog } from "../../../components";
 
-export function LessonTable({ data, paginationData, status, actions }) {
+export function ExercisesTable({ data, paginationData, status, actions }) {
   let rowData = status.isLoading ? [] : data.data;
-  const [lessonIdToDelete, setLessonIdToDelete] = useState(null);
+  const [exerciseIdToDelete, setExerciseIdToDelete] = useState(null);
 
   return (
     <CustomTable actions={actions} data={data} paginationData={paginationData} status={status}>
@@ -22,6 +22,9 @@ export function LessonTable({ data, paginationData, status, actions }) {
               </Td>
 
               <Td>
+                <Typography textColor="neutral800">{attributes.type}</Typography>
+              </Td>
+              <Td>
                 <Typography textColor="neutral800">{attributes.createdAt}</Typography>
               </Td>
               <Td>
@@ -31,13 +34,10 @@ export function LessonTable({ data, paginationData, status, actions }) {
                 <Typography textColor="neutral800">{attributes.publishedAt}</Typography>
               </Td>
               <Td>
-                <Typography textColor="neutral800">{attributes.description}</Typography>
-              </Td>
-              <Td>
                 <Typography textColor="neutral800">{attributes.order}</Typography>
               </Td>
               <Td>
-                <Typography textColor="neutral800">{attributes.module.data.id || ""}</Typography>
+                <Typography textColor="neutral800">{attributes.lesson.data.id || ""}</Typography>
               </Td>
               <Td>
                 <Flex style={{ justifyContent: "end" }}>
@@ -45,7 +45,7 @@ export function LessonTable({ data, paginationData, status, actions }) {
                     <IconButton label="Go to Lessons" noBorder icon={<ArrowRight />} />
                   </Link>
                   <Box paddingLeft={1}>
-                    <IconButton onClick={() => setLessonIdToDelete(row.id)} label="Delete" noBorder icon={<Trash />} />
+                    <IconButton onClick={() => setExerciseIdToDelete(row.id)} label="Delete" noBorder icon={<Trash />} />
                   </Box>
                 </Flex>
               </Td>
@@ -53,8 +53,8 @@ export function LessonTable({ data, paginationData, status, actions }) {
           );
         })}
       </Tbody>
-      {lessonIdToDelete != null && (
-        <DeleteDialog showDialog={setLessonIdToDelete} deleteAction={actions.lessonActions.deleteLesson} showModal={actions.showModal} idToDelete={lessonIdToDelete} />
+      {exerciseIdToDelete != null && (
+        <DeleteDialog showDialog={setExerciseIdToDelete} deleteAction={actions.exerciseActions.deleteExercise} showModal={actions.showModal} idToDelete={exerciseIdToDelete} />
       )}
     </CustomTable>
   );

@@ -3,11 +3,13 @@ import moduleRequests from "../../api/module/services/modules";
 import worldRequests from "../../api/world/services/worlds";
 import lessonRequests from "../../api/lesson/services/lessons";
 import { useParams, useLocation } from "react-router-dom";
+import exerciseRequests from "../../api/exercise/services/exercises";
 
 const dataTypes = {
   MODULES: "modules",
   WORLDS: "worlds",
   LESSONS: "lessons",
+  EXERCISES: "exercises",
 };
 
 export const useFetchData = (dataToBeFetched, initialModuleId) => {
@@ -62,6 +64,15 @@ export const useFetchData = (dataToBeFetched, initialModuleId) => {
         }));
       }
 
+      if (dataToBeFetched === dataTypes.EXERCISES) {
+        const exerciseData = await exerciseRequests.getExercisesByLessonId(moduleId, { page, pageSize });
+        fetchedData.exercises = exerciseData;
+        setStatus((prevStatus) => ({
+          ...prevStatus,
+          isDataEmpty: { value: exerciseData.data.length === 0, message: "There are no exercises yet" },
+        }));
+      }
+
       setData(fetchedData);
     } catch (error) {
       console.error(error);
@@ -74,7 +85,7 @@ export const useFetchData = (dataToBeFetched, initialModuleId) => {
     }
   };
 
-  console.log("FETCHEAAAANDOOOO", status.isLoading, data);
+  // console.log("FETCHEAAAANDOOOO", status.isLoading, data);
   return {
     data,
     status,

@@ -5,7 +5,7 @@ export function useModuleManagement(fetchingData) {
   const [showModal, setShowModal] = useState(false);
   const [response, setResponse] = useState({});
 
-  async function deleteModule(moduleId) {
+  async function deleteEntry(moduleId) {
     try {
       await moduleRequests.deleteModule(moduleId);
       await fetchingData();
@@ -18,7 +18,7 @@ export function useModuleManagement(fetchingData) {
     }
   }
 
-  async function createModule(moduleData) {
+  async function createEntry(moduleData) {
     try {
       await moduleRequests.createModule(moduleData);
       await fetchingData();
@@ -32,5 +32,5 @@ export function useModuleManagement(fetchingData) {
     }
   }
 
-  return { showModal, setShowModal, moduleActions: { deleteModule, createModule }, response };
+  return { showModal, setShowModal, entryActions: { deleteEntry, createEntry }, response };
 }

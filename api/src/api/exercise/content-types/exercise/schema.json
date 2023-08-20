@@ -24,6 +24,13 @@
       "relation": "manyToOne",
       "target": "api::lesson.lesson",
       "inversedBy": "exercises"
+    },
+    "order": {
+      "type": "decimal"
+    },
+    "content": {
+      "type": "json",
+      "required": true
     }
   }
 }

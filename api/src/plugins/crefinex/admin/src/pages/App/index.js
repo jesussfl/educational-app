@@ -5,6 +5,7 @@ import pluginId from "../../pluginId";
 import HomePage from "../../components/CustomLoader/index";
 import LessonPage from "../Lesson/LessonPage";
 import ModulesPage from "../Home/HomePage";
+import ExercisesPage from "../Exercises/ExercisesPage";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Redirect to={`/plugins/${pluginId}/modules?page=1&pageSize=10&sort=id:ASC`} />
         </Route>
         <Route path={`/plugins/${pluginId}/lesson/:moduleId`} component={LessonPage} exact />
+        <Route path={`/plugins/${pluginId}/exercises/:lessonId`} component={ExercisesPage} exact />
         <Route path={`/plugins/${pluginId}/modules`} component={ModulesPage} exact />
 
         <Route component={AnErrorOccurred} />
