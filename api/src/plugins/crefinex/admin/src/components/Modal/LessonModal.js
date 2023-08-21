@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import CustomModal from "./CustomModal";
 
 import { ModalLayout, ModalHeader, ModalBody, ModalFooter, Typography, Button, TextInput, Loader, Flex } from "@strapi/design-system";
 import { ConfirmationDialog } from "./Dialog/CustomDialogs";

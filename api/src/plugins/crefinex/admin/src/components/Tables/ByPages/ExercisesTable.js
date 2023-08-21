@@ -5,7 +5,7 @@ import { ArrowRight, Trash } from "@strapi/icons";
 
 import { CustomTable, DeleteDialog } from "../../../components";
 
-export function ExercisesTable({ data, paginationData, status, actions }) {
+export default function ExercisesTable({ data, paginationData, status, actions }) {
   let rowData = status.isLoading ? [] : data.data;
   const [exerciseIdToDelete, setExerciseIdToDelete] = useState(null);
 
@@ -14,7 +14,7 @@ export function ExercisesTable({ data, paginationData, status, actions }) {
       <Tbody>
         {rowData.map((row) => {
           const attributes = row.attributes;
-
+          console.log(attributes);
           return (
             <Tr key={row.id}>
               <Td>
@@ -35,6 +35,9 @@ export function ExercisesTable({ data, paginationData, status, actions }) {
               </Td>
               <Td>
                 <Typography textColor="neutral800">{attributes.order}</Typography>
+              </Td>
+              <Td>
+                <Typography textColor="neutral800">{attributes.content || ""}</Typography>
               </Td>
               <Td>
                 <Typography textColor="neutral800">{attributes.lesson.data.id || ""}</Typography>

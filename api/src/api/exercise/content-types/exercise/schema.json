@@ -15,7 +15,7 @@
     "type": {
       "type": "enumeration",
       "enum": [
-        "completion",
+        "Completion",
         "selection"
       ]
     },

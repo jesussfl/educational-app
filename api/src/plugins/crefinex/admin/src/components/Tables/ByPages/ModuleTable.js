@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Box, Flex, Typography, Tbody, Tr, Td, IconButton, Link } from "@strapi/design-system";
+import { DeleteDialog, CustomAlert } from "../../../components";
 import pluginId from "../../../pluginId";
 import { ArrowRight, Trash } from "@strapi/icons";
-import { DeleteDialog } from "../../Modal/Dialog/CustomDialogs";
-
 import CustomTable from "../Table";
-export function ModuleTable({ data, status, actions }) {
+export default function ModuleTable({ data, status, actions }) {
+  if (status.error.value) return <CustomAlert response={status.error} />;
   let rowData = status.isLoading ? [] : data.data;
   const [lessonIdToDelete, setLessonIdToDelete] = useState(null);
 

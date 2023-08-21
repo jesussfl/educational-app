@@ -1,22 +1,16 @@
-import React, { memo } from "react";
+import React from "react";
 import { useParams, useHistory } from "react-router-dom";
 
 //Design System
 import { BaseHeaderLayout, ContentLayout, Button, Link, Breadcrumbs, Crumb } from "@strapi/design-system";
 import { Plus, ArrowLeft } from "@strapi/icons";
-
-import pluginId from "../../pluginId";
+import { ExercisesTable, ExercisesModal, CustomAlert } from "../../components";
 
 //Hooks
 import { useExerciseManagement } from "./hooks/useExerciseManagement";
-import { useAlert } from "../../utils/hooks/useAlert";
-import { useFetchData } from "../../utils/hooks/useFetchData";
+import { useFetchData, useAlert } from "../../utils/";
 
 //Custom Components
-import { ExercisesTable } from "../../components/Tables/ByPages/ExercisesTable";
-import LessonModal from "../../components/Modal/LessonModal";
-import CustomAlert from "../../components/CustomAlert";
-import { ExercisesModal } from "../../components/Modal/CustomModal";
 
 function ExercisesPage() {
   const { lessonId } = useParams();
@@ -26,22 +20,22 @@ function ExercisesPage() {
     status,
     refreshData,
   } = useFetchData("exercises", lessonId);
-  console.log(exercises);
-  const { showModal, setShowModal, exerciseActions, response } = useExerciseManagement(refreshData);
+  const { showModal, setShowModal, entryActions, response } = useExerciseManagement(refreshData);
   const { showAlert } = useAlert(response);
   return (
     <>
       {showAlert && <CustomAlert response={response} />}
       <BaseHeaderLayout
         navigationAction={
-          <Link startIcon={<ArrowLeft />} to={`/plugins/${pluginId}/lessons`}>
+          <Link startIcon={<ArrowLeft />} onClick={() => history.goBack()}>
             Go back
           </Link>
         }
         primaryAction={<Button startIcon={<Plus />}>Add an exercise</Button>}
         title="Exercises Panel"
         subtitle={
-          !status.isLoading && (
+          !status.isLoading &&
+          !status.isDataEmpty.value && (
             <Breadcrumbs label="folders">
               <Crumb>{`World: ${exercises?.data[0].attributes.lesson.data.attributes.world.data.attributes.name}`}</Crumb>
               <Crumb>{`Module: ${exercises?.data[0].attributes.lesson.data.attributes.module.data.attributes.description} (ID: ${exercises?.data[0].attributes.lesson.data.id})`}</Crumb>
@@ -53,11 +47,11 @@ function ExercisesPage() {
       />
 
       <ContentLayout>
-        <ExercisesTable data={exercises} paginationData={exercises?.meta.pagination} status={status} actions={{ exerciseActions, setShowModal }} />
+        <ExercisesTable data={exercises} paginationData={exercises?.meta.pagination} status={status} actions={{ entryActions, setShowModal }} />
       </ContentLayout>
-      {showModal && <ExercisesModal actions={{ exerciseActions, setShowModal }} />}
+      {showModal && <ExercisesModal actions={{ entryActions, setShowModal }} id={lessonId} />}
     </>
   );
 }
 
-export default memo(ExercisesPage);
+export default ExercisesPage;

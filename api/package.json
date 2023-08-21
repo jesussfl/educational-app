@@ -19,6 +19,7 @@
     "@strapi/strapi": "4.12.4",
     "better-sqlite3": "8.5.0",
     "eslint-plugin-import": "^2.28.0",
+    "react-hook-form": "^7.45.4",
     "strapi-plugin-slugify": "^2.3.3"
   },
   "author": {

@@ -3,9 +3,10 @@ import pluginId from "../../../pluginId";
 import { Box, Flex, Typography, Tbody, Tr, Td, IconButton, Link } from "@strapi/design-system";
 import { ArrowRight, Trash } from "@strapi/icons";
 
-import { CustomTable, DeleteDialog } from "../../../components";
+import { CustomTable, DeleteDialog, CustomAlert } from "../../../components";
 
-export function LessonTable({ data, paginationData, status, actions }) {
+export default function LessonTable({ data, paginationData, status, actions }) {
+  if (status.error.value) return <CustomAlert response={status.error} />;
   let rowData = status.isLoading ? [] : data.data;
   const [lessonIdToDelete, setLessonIdToDelete] = useState(null);
 

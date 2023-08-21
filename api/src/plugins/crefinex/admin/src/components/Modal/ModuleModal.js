@@ -1,79 +1,40 @@
 import React, { useState } from "react";
 
-import {
-  ModalLayout,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Typography,
-  Button,
-  TextInput,
-  Combobox,
-  ComboboxOption,
-  CreatableCombobox,
-} from "@strapi/design-system";
+import { TextInput, Combobox, ComboboxOption, SingleSelect, SingleSelectOption } from "@strapi/design-system";
+import CustomModal from "./CustomModal";
 
-export default function ModuleModal({ setShowModal, addModule, worldData }) {
+export default function ModuleModal({ actions, data }) {
   const [description, setDescription] = useState("");
-  const [world, setWorld] = useState();
-  const handleSubmit = async (e) => {
-    // Prevent submitting parent form
-    e.preventDefault();
-    e.stopPropagation();
-
-    try {
-      await addModule({
-        data: { description: description, order: 3, world: world },
-      });
-      setShowModal(false);
-    } catch (e) {
-      console.log("error", e);
-    }
-  };
-
-  const getError = () => {
-    // Form validation error
-
-    if (description.length > 40) {
-      return "Content is too long";
-    }
-
-    return null;
-  };
-
+  const [world, setWorld] = useState("");
+  const [order, setOrder] = useState();
   return (
-    <ModalLayout onClose={() => setShowModal(false)} labelledBy="title" as="form" onSubmit={handleSubmit}>
-      <ModalHeader>
-        <Typography fontWeight="bold" textColor="neutral800" as="h2" id="title">
-          Add a module
-        </Typography>
-      </ModalHeader>
-
-      <ModalBody>
-        <TextInput
-          placeholder="Add a description here"
-          label="Description"
-          name="description"
-          hint="Max 40 characters"
-          error={getError()}
-          onChange={(e) => setDescription(e.target.value)}
-          value={description}
-        />
-        <Combobox placeholder="Select the world of this module" label="World" value={world} onChange={setWorld} onClear={() => setWorld("")}>
-          {worldData.data.map((world) => (
-            <ComboboxOption key={world.id} value={world.id}>{`${world.id} - ${world.attributes.name}`}</ComboboxOption>
-          ))}
-        </Combobox>
-      </ModalBody>
-
-      <ModalFooter
-        startActions={
-          <Button onClick={() => setShowModal(false)} variant="tertiary">
-            Cancel
-          </Button>
-        }
-        endActions={<Button type="submit">Add Module</Button>}
+    <CustomModal actions={actions} data={{ data: { description, order, world } }}>
+      <TextInput
+        placeholder="Add a description here"
+        label="Description"
+        name="description"
+        hint="Max 40 characters"
+        onChange={(e) => setDescription(e.target.value)}
+        value={description}
       />
-    </ModalLayout>
+      <Combobox placeholder="Select the world of this module" label="World" value={world} onChange={setWorld} onClear={() => setWorld("")}>
+        {data.data.map((world) => (
+          <ComboboxOption key={world.id} value={world.id}>{`${world.id} - ${world.attributes.name}`}</ComboboxOption>
+        ))}
+      </Combobox>
+      <SingleSelect placeholder="Select" value={order} onChange={setOrder}>
+        <SingleSelectOption value="1">1</SingleSelectOption>
+        <SingleSelectOption value="2">2</SingleSelectOption>
+        <SingleSelectOption value="3">3</SingleSelectOption>
+        <SingleSelectOption value="4">4</SingleSelectOption>
+        <SingleSelectOption value="5">5</SingleSelectOption>
+        <SingleSelectOption value="6">6</SingleSelectOption>
+        <SingleSelectOption value="7">7</SingleSelectOption>
+        <SingleSelectOption value="8">8</SingleSelectOption>
+        <SingleSelectOption value="9">9</SingleSelectOption>
+        <SingleSelectOption value="10">10</SingleSelectOption>
+        <SingleSelectOption value="11">11</SingleSelectOption>
+      </SingleSelect>
+    </CustomModal>
   );
 }

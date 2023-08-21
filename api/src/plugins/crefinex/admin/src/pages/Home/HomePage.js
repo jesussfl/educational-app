@@ -1,13 +1,10 @@
 import React from "react";
 
-import { BaseHeaderLayout, ContentLayout, Alert } from "@strapi/design-system";
+import { BaseHeaderLayout, ContentLayout } from "@strapi/design-system";
+import { ModuleTable, ModuleModal, CustomAlert } from "../../components/";
 
-import { useFetchData } from "../../utils/hooks/useFetchData";
+import { useFetchData, useAlert } from "../../utils/";
 import { useModuleManagement } from "./hooks/useModuleManagement";
-import { useAlert } from "../../utils/hooks/useAlert";
-import { ModuleTable } from "../../components/Tables/ByPages/ModuleTable";
-import { ModuleModal } from "../../components/Modal/CustomModal";
-import CustomAlert from "../../components/CustomAlert";
 
 function HomePage() {
   const {
@@ -21,7 +18,6 @@ function HomePage() {
 
   const { showModal, setShowModal, entryActions, response } = useModuleManagement(refreshModulesData);
   const { showAlert } = useAlert(response);
-  console.log("MODULLEEEEE", modules);
   return (
     <>
       {showAlert && <CustomAlert response={response} />}

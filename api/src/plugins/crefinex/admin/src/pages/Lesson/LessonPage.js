@@ -1,24 +1,17 @@
-import React, { memo } from "react";
-import { useParams } from "react-router-dom";
+import React from "react";
+import { useParams, useHistory } from "react-router-dom";
 
-//Design System
 import { BaseHeaderLayout, ContentLayout, Button, Link, Breadcrumbs, Crumb } from "@strapi/design-system";
 import { Plus, ArrowLeft } from "@strapi/icons";
-
-import pluginId from "../../pluginId";
+import { LessonTable, LessonModal, CustomAlert } from "../../components";
 
 //Hooks
+import { useAlert, useFetchData } from "../../utils/";
 import { useLessonManagement } from "./hooks/useLessonManagement";
-import { useAlert } from "../../utils/hooks/useAlert";
-import { useFetchData } from "../../utils/hooks/useFetchData";
-
-//Custom Components
-import { LessonTable } from "../../components/Tables/ByPages/LessonTable";
-import LessonModal from "../../components/Modal/LessonModal";
-import CustomAlert from "../../components/CustomAlert";
 
 function LessonPage() {
   const { moduleId } = useParams();
+  const history = useHistory();
   const {
     data: { lessons },
     status,
@@ -31,14 +24,15 @@ function LessonPage() {
       {showAlert && <CustomAlert response={response} />}
       <BaseHeaderLayout
         navigationAction={
-          <Link startIcon={<ArrowLeft />} to={`/plugins/${pluginId}`}>
+          <Link startIcon={<ArrowLeft />} onClick={() => history.goBack()}>
             Go back
           </Link>
         }
         primaryAction={<Button startIcon={<Plus />}>Add a lesson</Button>}
         title="Lessons Panel"
         subtitle={
-          !status.isLoading && (
+          !status.isLoading &&
+          !status.error.value && (
             <Breadcrumbs label="folders">
               <Crumb>{`World: ${lessons.moduleData.attributes.world.data.attributes.name}`}</Crumb>
               <Crumb>{`Module: ${lessons.moduleData.attributes.description} (ID: ${lessons.moduleData.id})`}</Crumb>
@@ -56,4 +50,4 @@ function LessonPage() {
   );
 }
 
-export default memo(LessonPage);
+export default LessonPage;

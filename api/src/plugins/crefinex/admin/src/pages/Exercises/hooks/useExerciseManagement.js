@@ -5,7 +5,7 @@ export function useExerciseManagement(fetchingData) {
   const [showModal, setShowModal] = useState(false);
   const [response, setResponse] = useState({});
 
-  async function deleteExercise(exerciseId) {
+  async function deleteEntry(exerciseId) {
     try {
       await exerciseRequests.deleteExercise(exerciseId);
       await fetchingData();
@@ -18,7 +18,7 @@ export function useExerciseManagement(fetchingData) {
     }
   }
 
-  async function createExercise(exerciseData) {
+  async function createEntry(exerciseData) {
     try {
       await exerciseRequests.createExercise(exerciseData);
       await fetchingData();
@@ -32,5 +32,5 @@ export function useExerciseManagement(fetchingData) {
     }
   }
 
-  return { showModal, setShowModal, exerciseActions: { deleteExercise, createExercise }, response };
+  return { showModal, setShowModal, entryActions: { deleteEntry, createEntry }, response };
 }
