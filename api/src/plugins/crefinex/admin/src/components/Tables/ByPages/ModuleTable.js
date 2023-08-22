@@ -4,15 +4,14 @@ import { DeleteDialog, CustomAlert } from "../../../components";
 import pluginId from "../../../pluginId";
 import { ArrowRight, Trash } from "@strapi/icons";
 import CustomTable from "../Table";
-export default function ModuleTable({ data, status, actions }) {
-  if (status.error.value) return <CustomAlert response={status.error} />;
-  let rowData = status.isLoading ? [] : data.data;
+export default function ModuleTable({ data, error, status, actions }) {
+  if (error !== null) return <CustomAlert response={status.error} />;
   const [lessonIdToDelete, setLessonIdToDelete] = useState(null);
 
   return (
-    <CustomTable actions={actions} data={data} status={status}>
+    <CustomTable actions={actions} data={data} status={status} paginationData={data.meta.pagination}>
       <Tbody>
-        {rowData.map((row) => {
+        {data.data.map((row) => {
           const attributes = row.attributes;
 
           return (

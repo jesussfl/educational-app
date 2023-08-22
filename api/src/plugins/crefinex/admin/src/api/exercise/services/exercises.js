@@ -17,16 +17,25 @@ const exerciseRequests = {
   },
 
   createExercise: async (lessonData) => {
-    const response = await fetch(`http://${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/exercises?populate=*`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(lessonData),
-    });
-    const data = await response.json();
-    console.log("module created ", data);
-    return data;
+    try {
+      const response = await fetch(`http://${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/exercises?populate=*`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(lessonData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to create exercise: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log("exercise created ", data);
+      return data;
+    } catch (error) {
+      throw error; // Re-lanzar el error para que sea capturado por el bloque catch en createEntry
+    }
   },
 
   updateExercise: async (lessonId, lessonData) => {

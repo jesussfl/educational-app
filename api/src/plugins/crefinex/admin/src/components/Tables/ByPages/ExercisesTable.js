@@ -14,7 +14,6 @@ export default function ExercisesTable({ data, paginationData, status, actions }
       <Tbody>
         {rowData.map((row) => {
           const attributes = row.attributes;
-          console.log(attributes);
           return (
             <Tr key={row.id}>
               <Td>

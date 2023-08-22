@@ -2,7 +2,7 @@ import React from "react";
 
 import { ModalLayout, ModalHeader, ModalBody, ModalFooter, Typography, Button } from "@strapi/design-system";
 
-export default function CustomModal({ actions, children, data }) {
+export default function CustomModal({ actions, children, handleSubmit }) {
   return (
     <ModalLayout
       onClose={() => actions.setShowModal(false)}
@@ -11,7 +11,7 @@ export default function CustomModal({ actions, children, data }) {
       onSubmit={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        actions.entryActions.createEntry(data);
+        handleSubmit();
       }}
     >
       <ModalHeader>

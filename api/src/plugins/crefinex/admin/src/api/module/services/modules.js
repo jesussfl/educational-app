@@ -3,15 +3,17 @@ import { useLocation } from "react-router-dom";
 
 const moduleRequests = {
   getAllModules: async ({ page, pageSize }) => {
-    const data = await fetch(
-      `http://${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/modules?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
-      {
+    try {
+      const response = await fetch(`http://${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/modules?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`, {
         method: "GET",
-      }
-    ).then((response) => response.json());
-    return data;
+      });
+      const data = await response.json();
+      data.data.length === 0 ? (data.isEmpty = "There are no modules yet") : (data.isEmpty = null);
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
   },
-
   getModuleById: async (moduleId) => {
     const data = await fetch(`http://${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/modules/${moduleId}?populate=*`, {
       method: "GET",

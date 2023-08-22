@@ -1,30 +1,30 @@
 import React from "react";
 
 import { BaseHeaderLayout, ContentLayout } from "@strapi/design-system";
-import { ModuleTable, ModuleModal, CustomAlert } from "../../components/";
+import { ModuleTable, ModuleModal, CustomAlert, CustomLoader } from "../../components/";
 
 import { useFetchData, useAlert } from "../../utils/";
 import { useModuleManagement } from "./hooks/useModuleManagement";
-
+import { useQuery, useQueries } from "@tanstack/react-query";
+import moduleRequests from "../../api/module/services/modules";
+import worldRequests from "../../api/world/services/worlds";
 function HomePage() {
-  const {
-    data: { modules },
-    status: modulesStatus,
-    refreshData: refreshModulesData,
-  } = useFetchData("modules");
-  const {
-    data: { worlds },
-  } = useFetchData("worlds");
+  const [modules, worlds] = useQueries({
+    queries: [
+      { queryKey: ["modules"], queryFn: () => moduleRequests.getAllModules({ page: 1, pageSize: 10 }) },
+      { queryKey: ["worlds"], queryFn: () => worldRequests.getAllWorlds() },
+    ],
+  });
+  const { refreshData: refreshModulesData } = useFetchData("modules");
 
   const { showModal, setShowModal, entryActions, response } = useModuleManagement(refreshModulesData);
-  const { showAlert } = useAlert(response);
+
   return (
     <>
-      {showAlert && <CustomAlert response={response} />}
       <BaseHeaderLayout title="Crefinex Panel" subtitle="Add content for the app here" as="h2" />
       <ContentLayout>
-        <ModuleTable data={modules} paginationData={modules?.meta.pagination} status={modulesStatus} actions={{ entryActions, setShowModal }} />
-        {showModal && <ModuleModal actions={{ entryActions, setShowModal }} data={worlds} />}
+        {modules.isLoading ? <CustomLoader /> : <ModuleTable data={modules.data} error={modules.error} status={modules} actions={{ entryActions, setShowModal }} />}
+        {showModal && <ModuleModal actions={{ entryActions, setShowModal }} data={worlds.data} />}
       </ContentLayout>
     </>
   );

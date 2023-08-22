@@ -2,14 +2,17 @@ import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { AnErrorOccurred } from "@strapi/helper-plugin";
 import pluginId from "../../pluginId";
-import HomePage from "../../components/CustomLoader/index";
 import LessonPage from "../Lesson/LessonPage";
 import ModulesPage from "../Home/HomePage";
 import ExercisesPage from "../Exercises/ExercisesPage";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+// Create a client
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <div>
+    <QueryClientProvider client={queryClient}>
       <Switch>
         <Route path={`/plugins/${pluginId}`} exact>
           {/* Redirigir desde HomePage a ModulesPage con parámetros de URL */}
@@ -21,7 +24,7 @@ function App() {
 
         <Route component={AnErrorOccurred} />
       </Switch>
-    </div>
+    </QueryClientProvider>
   );
 }
 

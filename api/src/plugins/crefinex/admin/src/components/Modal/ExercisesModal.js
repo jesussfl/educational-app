@@ -1,68 +1,86 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { Button, TextInput, SingleSelect, SingleSelectOption } from "@strapi/design-system";
-import { Plus } from "@strapi/icons";
+import { Json, Plus } from "@strapi/icons";
 import CustomModal from "./CustomModal";
 export default function ExercisesModal({ actions, id }) {
   const {
-    register,
+    control,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm();
-  const [type, setType] = useState();
-  const [order, setOrder] = useState();
-  const [completionSentenceData, setCompletionSentenceData] = useState();
-  const [content, setContent] = useState({});
-  const [words, setWords] = useState([]);
+
   const [options, setOptions] = useState([]);
-  const lesson = id;
-  console.log(watch("help"));
+
+  const onSubmit = handleSubmit((data) => {
+    const exercise = {
+      data: {
+        lesson: id,
+        content: null,
+        type: data.type,
+        order: data.order,
+      },
+    };
+    if (watch("type") === "Completion") {
+      exercise.data.content = loadCompletionSentence(data.completionText);
+    }
+
+    if (watch("type") === "Memory") {
+      exercise.data.content = JSON.stringify(data.memoryWords);
+    }
+    if (watch("type") === "selection") {
+      // exercise.data.content = JSON.stringify({ options: options });
+    }
+    console.log(exercise);
+    actions.entryActions.createEntry(exercise);
+  });
+
   const loadCompletionSentence = (sentence) => {
     const regex = /\{([^}]+)\}/g;
     const words = [];
     let match;
-
+    console.log(sentence);
     while ((match = regex.exec(sentence)) !== null) {
       words.push(match[1]);
     }
-    const data = JSON.stringify({
+    return JSON.stringify({
       template: sentence,
       words,
     });
-    setContent(data);
   };
   const renderExerciseFields = () => {
-    if (type === "Completion") {
+    if (watch("type") === "Completion") {
       return (
         <>
-          <TextInput
-            placeholder="Add the sentence here"
-            label="Completion Sentence"
-            name="completionSentence"
-            hint="close with curly brackets the words you want to be filled in the exercise"
-            onChange={(e) => {
-              setCompletionSentenceData(e.target.value);
-            }}
-            onBlur={() => loadCompletionSentence(completionSentenceData)}
-            value={completionSentenceData}
-          />
+          <Controller
+            name="completionText"
+            control={control}
+            render={({ field }) => (
+              <TextInput
+                {...field}
+                placeholder="Add the sentence here"
+                label="Completion Sentence"
+                name="completionSentence"
+                hint="close with curly brackets the words you want to be filled in the exercise"
+              />
+            )}
+          ></Controller>
         </>
       );
-    } else if (type === "Memory") {
+    } else if (watch("type") === "Memory") {
       return (
         <>
-          <TextInput
-            placeholder="Type the words you want to be in the memory exercise"
-            label="Memory Words"
+          <Controller
             name="memoryWords"
-            hint="Press enter after each word"
-            onChange={(e) => setWords(e.target.value)}
-            value={words}
-          />
+            control={control}
+            render={({ field }) => (
+              <TextInput {...field} placeholder="Type the words you want to be in the memory exercise" label="Memory Words" hint="Press enter after each word" />
+            )}
+          ></Controller>
         </>
       );
-    } else if (type === "Simple Selection") {
+    } else if (watch("type") === "selection") {
       return (
         <>
           <Button variant="secondary" startIcon={<Plus />} onClick={addOption}>
@@ -91,7 +109,6 @@ export default function ExercisesModal({ actions, id }) {
   const addOption = () => {
     setOptions([...options, { text: "", image: null }]);
   };
-
   const handleOptionChange = (e, index) => {
     const updatedOptions = [...options];
     updatedOptions[index].text = e.target.value;
@@ -102,19 +119,33 @@ export default function ExercisesModal({ actions, id }) {
     setOptions(updatedOptions);
   };
   return (
-    <CustomModal actions={actions} submitter={handleSubmit} data={{ data: { type, order, content, lesson } }}>
-      {/* <TextInput label="Type" name="type" hint="Type of the exercise" {...register("help")} /> */}
-      <SingleSelect placeholder="Select the type of the exercise" value={type} onChange={setType}>
-        <SingleSelectOption value="Completion">Completion</SingleSelectOption>
-        <SingleSelectOption value="Memory">Memory</SingleSelectOption>
-        <SingleSelectOption value="Simple Selection">Simple Selection</SingleSelectOption>
-      </SingleSelect>
-
-      <SingleSelect placeholder="Select the order" value={order} onChange={setOrder}>
-        <SingleSelectOption value="1">1</SingleSelectOption>
-        <SingleSelectOption value="2">2</SingleSelectOption>
-        <SingleSelectOption value="3">3</SingleSelectOption>
-      </SingleSelect>
+    <CustomModal actions={actions} handleSubmit={onSubmit}>
+      <Controller
+        name="type"
+        control={control}
+        render={({ field }) => {
+          return (
+            <SingleSelect {...field} placeholder="Select the type of the exercise">
+              <SingleSelectOption value="Completion">Completion</SingleSelectOption>
+              <SingleSelectOption value="Memory">Memory</SingleSelectOption>
+              <SingleSelectOption value="selection">Simple Selection</SingleSelectOption>
+            </SingleSelect>
+          );
+        }}
+      ></Controller>
+      <Controller
+        name="order"
+        control={control}
+        render={({ field }) => {
+          return (
+            <SingleSelect {...field} placeholder="Select the order">
+              <SingleSelectOption value="1">1</SingleSelectOption>
+              <SingleSelectOption value="2">2</SingleSelectOption>
+              <SingleSelectOption value="3">3</SingleSelectOption>
+            </SingleSelect>
+          );
+        }}
+      ></Controller>
 
       {renderExerciseFields()}
     </CustomModal>

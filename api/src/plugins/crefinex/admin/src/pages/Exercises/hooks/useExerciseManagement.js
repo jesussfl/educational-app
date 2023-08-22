@@ -11,7 +11,6 @@ export function useExerciseManagement(fetchingData) {
       await fetchingData();
       setResponse({ type: "success", title: "Success: ", message: "Exercise deleted successfully" });
     } catch (error) {
-      console.log(error);
       setResponse({ type: "error", title: "Error: ", message: `Error deleting Exercise: ${error}` });
     } finally {
       setShowModal(false);
@@ -25,7 +24,9 @@ export function useExerciseManagement(fetchingData) {
 
       setResponse({ type: "success", title: "Success: ", message: "Exercise created successfully" });
     } catch (error) {
-      console.log(error);
+      console.log("ERRORRRRRRRRRR", error);
+
+      // console.log(error);
       setResponse({ type: "error", title: "Error: ", message: `Error creating Exercise: ${error}` });
     } finally {
       setShowModal(false);
