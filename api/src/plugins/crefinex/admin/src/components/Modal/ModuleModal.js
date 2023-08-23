@@ -3,28 +3,18 @@ import React from "react";
 import { TextInput, SingleSelect, SingleSelectOption } from "@strapi/design-system";
 import CustomModal from "./CustomModal";
 import { useForm, Controller } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { useCustomMutation } from "./useCustomMutation";
+import worldActionsAPI from "../../api/world/services/worldServices";
 
 const ORDER_INPUTS_TO_SHOW = 20;
 
-export default function ModuleModal({ actions, data }) {
-  const { control, handleSubmit } = useForm();
-  const queryClient = useQueryClient();
-
-  const mutate = useMutation(actions.actionsAPI.create, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("modules");
-      actions.alert.show("success", "Module created");
-      actions.setShowModal(false);
-    },
-    onError: () => {
-      actions.alert.show("error", "Error creating Module");
-      actions.setShowModal(false);
-    },
-  });
+export default function ModuleModal({ actions, data, actionType }) {
+  const { control, mutate, handleSubmit } = useCustomMutation("modules", actions.actionsAPI[actionType], data, actions);
+  const { data: worlds, isLoading, error } = useQuery(["worlds"], () => worldActionsAPI.getAll());
 
   const onSubmit = handleSubmit((data) => {
-    mutate.mutate({ data: { ...data } });
+    mutate(20, { data: { ...data } });
   });
 
   return (
@@ -33,22 +23,26 @@ export default function ModuleModal({ actions, data }) {
         name="description"
         control={control}
         render={({ field }) => {
-          return <TextInput {...field} placeholder="Add a description here" label="Description" name="description" hint="Max 40 characters" />;
-        }}
-      />
-      <Controller
-        name="world"
-        control={control}
-        render={({ field }) => {
           return (
-            <SingleSelect {...field} placeholder="Select the world of this module" label="World">
-              {data.map((world) => (
-                <SingleSelectOption key={world.id} value={world.id}>{`${world.id} - ${world.attributes.name}`}</SingleSelectOption>
-              ))}
-            </SingleSelect>
+            <TextInput {...field} placeholder="Add a description here" label="Description" name="description" hint="Max 40 characters" />
           );
         }}
-      ></Controller>
+      />
+      {isLoading ? null : (
+        <Controller
+          name="world"
+          control={control}
+          render={({ field }) => {
+            return (
+              <SingleSelect {...field} placeholder="Select the world of this module" label="World">
+                {worlds.data.map((world) => (
+                  <SingleSelectOption key={world.id} value={world.id}>{`${world.id} - ${world.attributes.name}`}</SingleSelectOption>
+                ))}
+              </SingleSelect>
+            );
+          }}
+        ></Controller>
+      )}
 
       <Controller
         name="order"

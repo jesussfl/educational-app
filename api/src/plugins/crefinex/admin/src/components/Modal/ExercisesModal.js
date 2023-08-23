@@ -1,22 +1,36 @@
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Button, TextInput, SingleSelect, SingleSelectOption } from "@strapi/design-system";
-import { Json, Plus } from "@strapi/icons";
+import {  Plus } from "@strapi/icons";
 import CustomModal from "./CustomModal";
-export default function ExercisesModal({ actions, id }) {
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+export default function ExercisesModal({ actions, lessonId }) {
   const {
     control,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm();
+  const queryClient = useQueryClient();
+  const mutate = useMutation(actions.actionsAPI.create, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("exercises");
+      actions.alert.show("success", "Lesson created");
+      actions.setShowModal(false);
+    },
+    onError: () => {
+      actions.alert.show("error", "Error creating Lesson");
+      actions.setShowModal(false);
+    },
+  });
 
   const [options, setOptions] = useState([]);
 
   const onSubmit = handleSubmit((data) => {
+
     const exercise = {
       data: {
-        lesson: id,
+        lesson: lessonId,
         content: null,
         type: data.type,
         order: data.order,
@@ -33,7 +47,7 @@ export default function ExercisesModal({ actions, id }) {
       // exercise.data.content = JSON.stringify({ options: options });
     }
     console.log(exercise);
-    actions.entryActions.createEntry(exercise);
+    mutate.mutate(exercise);
   });
 
   const loadCompletionSentence = (sentence) => {

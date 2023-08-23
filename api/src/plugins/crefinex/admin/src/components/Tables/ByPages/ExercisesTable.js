@@ -6,13 +6,12 @@ import { ArrowRight, Trash } from "@strapi/icons";
 import { CustomTable, DeleteDialog } from "../../../components";
 
 export default function ExercisesTable({ data, paginationData, status, actions }) {
-  let rowData = status.isLoading ? [] : data.data;
   const [exerciseIdToDelete, setExerciseIdToDelete] = useState(null);
 
   return (
     <CustomTable actions={actions} data={data} paginationData={paginationData} status={status}>
       <Tbody>
-        {rowData.map((row) => {
+        {data.data.map((row) => {
           const attributes = row.attributes;
           return (
             <Tr key={row.id}>
@@ -39,7 +38,6 @@ export default function ExercisesTable({ data, paginationData, status, actions }
                 <Typography textColor="neutral800">{attributes.content || ""}</Typography>
               </Td>
               <Td>
-                <Typography textColor="neutral800">{attributes.lesson.data.id || ""}</Typography>
               </Td>
               <Td>
                 <Flex style={{ justifyContent: "end" }}>
@@ -55,9 +53,7 @@ export default function ExercisesTable({ data, paginationData, status, actions }
           );
         })}
       </Tbody>
-      {exerciseIdToDelete != null && (
-        <DeleteDialog showDialog={setExerciseIdToDelete} deleteAction={actions.exerciseActions.deleteExercise} showModal={actions.showModal} idToDelete={exerciseIdToDelete} />
-      )}
+      {exerciseIdToDelete != null && <DeleteDialog showDialog={setExerciseIdToDelete} actions={actions} idToDelete={exerciseIdToDelete} />}
     </CustomTable>
   );
 }

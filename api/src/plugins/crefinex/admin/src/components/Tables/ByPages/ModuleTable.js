@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import { Box, Flex, Typography, Tbody, Tr, Td, IconButton, Link } from "@strapi/design-system";
-import { ArrowRight, Trash } from "@strapi/icons";
-import { DeleteDialog, CustomAlert, CustomTable } from "../../../components";
+import { ArrowRight, Trash, Pencil } from "@strapi/icons";
+import { DeleteDialog, CustomAlert, CustomTable, ModuleModal } from "../../../components";
 import pluginId from "../../../pluginId";
 import { SimpleMenu, MenuItem } from "@strapi/design-system/v2";
 import { NavLink } from "react-router-dom";
 export default function ModuleTable({ data, error, actions }) {
   if (error !== null) return <CustomAlert data={{ type: "error", message: error.name }} />;
-
-  const [lessonIdToDelete, setLessonIdToDelete] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [moduleIdToDelete, setModuleIdToDelete] = useState(null);
+  const [moduleToEdit, setModuleToEdit] = useState(null);
+  const actionsAPI = actions.actionsAPI;
+  const alert = actions.alert;
 
   return (
     <CustomTable actions={actions} data={data} paginationData={data.meta.pagination}>
@@ -56,7 +59,11 @@ export default function ModuleTable({ data, error, actions }) {
                     <IconButton label="Go to Lessons" noBorder icon={<ArrowRight />} />
                   </Link>
                   <Box paddingLeft={1}>
-                    <IconButton onClick={() => setLessonIdToDelete(row.id)} label="Delete" noBorder icon={<Trash />} />
+                    <IconButton onClick={() => setModuleToEdit({...attributes, world:attributes.world.data.id})} label="Delete" noBorder icon={<Pencil />} />
+                  </Box>
+                  <Box paddingLeft={1}>
+                    <IconButton onClick={() => setModuleIdToDelete(row.id)} label="Delete" noBorder icon={<Trash />} />
+     
                   </Box>
                 </Flex>
               </Td>
@@ -64,9 +71,13 @@ export default function ModuleTable({ data, error, actions }) {
           );
         })}
       </Tbody>
-      {lessonIdToDelete != null && (
-        <DeleteDialog showDialog={setLessonIdToDelete} actions={actions} idToDelete={lessonIdToDelete} section={"lessons"} />
+      {moduleIdToDelete != null && (
+        <DeleteDialog showDialog={setModuleIdToDelete} actions={actions} idToDelete={moduleIdToDelete} section={"lessons"} />
       )}
+                 {moduleToEdit != null && (
+        <ModuleModal actions={{ actionsAPI, setShowModal, alert }} actionType="update" data={moduleToEdit} />
+      )}
+
     </CustomTable>
   );
 }

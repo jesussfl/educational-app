@@ -4,21 +4,13 @@ import { BaseHeaderLayout, ContentLayout, Button } from "@strapi/design-system";
 import { ModuleTable, ModuleModal, CustomAlert, CustomLoader } from "../../components";
 import { Plus } from "@strapi/icons";
 import { useAlert } from "../../utils";
-import { useQueries } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import actionsAPI from "../../api/module/services/moduleServices";
-import worldActionsAPI from "../../api/world/services/worldServices";
 function HomePage() {
-  const [modules, worlds] = useQueries({
-    queries: [
-      { queryKey: ["modules"], queryFn: () => actionsAPI.getAll({ page: 1, pageSize: 10 }) },
-      { queryKey: ["worlds"], queryFn: () => worldActionsAPI.getAll() },
-    ],
-  });
-  const isLoading = modules.isLoading || worlds.isLoading;
-  const error = modules.error || worlds.error;
+  const {data:modules, isLoading, error} = useQuery(["modules"], () => actionsAPI.getAll({ page: 1, pageSize: 10 }));
   const [showModal, setShowModal] = useState(false);
   const alert = useAlert();
-
+console.log(modules);
   if (isLoading) return <CustomLoader />;
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
 
@@ -36,8 +28,8 @@ function HomePage() {
         }
       />
       <ContentLayout>
-        <ModuleTable data={modules.data} error={modules.error} actions={{ actionsAPI, setShowModal, alert }} />
-        {showModal && <ModuleModal actions={{ actionsAPI, setShowModal, alert }} data={worlds.data.data} />}
+        <ModuleTable data={modules} error={error} actions={{ actionsAPI, setShowModal, alert }} />
+        {showModal && <ModuleModal actions={{ actionsAPI, setShowModal, alert }} actionType="create" data={null} />}
       </ContentLayout>
     </>
   );

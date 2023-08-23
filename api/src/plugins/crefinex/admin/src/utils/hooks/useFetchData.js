@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import moduleAPI from "../../api/module/services/moduleServices";
 import worldServices from "../../api/world/services/worldServices";
-import lessonRequests from "../../api/lesson/services/lessons";
+import lessonRequests from "../../api/lesson/services/lessonServices";
 import { useParams, useLocation } from "react-router-dom";
 import exerciseRequests from "../../api/exercise/services/exercises";
 
