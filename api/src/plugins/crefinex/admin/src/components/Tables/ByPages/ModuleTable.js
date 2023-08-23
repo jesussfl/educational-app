@@ -3,8 +3,6 @@ import { Box, Flex, Typography, Tbody, Tr, Td, IconButton, Link } from "@strapi/
 import { ArrowRight, Trash } from "@strapi/icons";
 import { DeleteDialog, CustomAlert, CustomTable } from "../../../components";
 import pluginId from "../../../pluginId";
-import { SimpleMenu, MenuItem } from "@strapi/design-system/v2";
-import { NavLink } from "react-router-dom";
 export default function ModuleTable({ data, error, actions }) {
   if (error !== null) return <CustomAlert data={{ type: "error", message: error.name }} />;
 
@@ -37,15 +35,7 @@ export default function ModuleTable({ data, error, actions }) {
                 <Typography textColor="neutral800">{attributes.publishedAt}</Typography>
               </Td>
               <Td>
-                <SimpleMenu label={attributes.lessons.data.length}>
-                  {attributes.lessons.data.map((lesson) => (
-                    <MenuItem
-                      as={NavLink}
-                      key={lesson.id}
-                      to={`/plugins/${pluginId}/exercises/${lesson.id}?page=1&pageSize=10&sort=id:ASC`}
-                    >{`${lesson.attributes.description} - ${lesson.attributes.order}`}</MenuItem>
-                  ))}
-                </SimpleMenu>
+                <Typography textColor="neutral800">{attributes.lessons.data.id || ""}</Typography>
               </Td>
               <Td>
                 <Typography textColor="neutral800">{attributes.world.data?.attributes?.name || ""}</Typography>
