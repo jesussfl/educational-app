@@ -1,4 +1,4 @@
-import moduleRequests from "../../../api/world/services/worlds";
+import moduleRequests from "../../../api/world/services/worldServices";
 const submitHandlers = {
   createModule: async (e, description, world) => {
     e.preventDefault();

@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { Box, Flex, Typography, Tbody, Tr, Td, IconButton, Link } from "@strapi/design-system";
-import { DeleteDialog, CustomAlert } from "../../../components";
-import pluginId from "../../../pluginId";
 import { ArrowRight, Trash } from "@strapi/icons";
-import CustomTable from "../Table";
-export default function ModuleTable({ data, error, status, actions }) {
-  if (error !== null) return <CustomAlert response={status.error} />;
+import { DeleteDialog, CustomAlert, CustomTable } from "../../../components";
+import pluginId from "../../../pluginId";
+export default function ModuleTable({ data, error, actions }) {
+  if (error !== null) return <CustomAlert data={{ type: "error", message: error.name }} />;
+
   const [lessonIdToDelete, setLessonIdToDelete] = useState(null);
 
   return (
-    <CustomTable actions={actions} data={data} status={status} paginationData={data.meta.pagination}>
+    <CustomTable actions={actions} data={data} paginationData={data.meta.pagination}>
       <Tbody>
         {data.data.map((row) => {
           const attributes = row.attributes;
@@ -55,7 +55,7 @@ export default function ModuleTable({ data, error, status, actions }) {
         })}
       </Tbody>
       {lessonIdToDelete != null && (
-        <DeleteDialog showDialog={setLessonIdToDelete} deleteAction={actions.moduleActions.deleteModule} showModal={actions.showModal} idToDelete={lessonIdToDelete} />
+        <DeleteDialog showDialog={setLessonIdToDelete} actions={actions} idToDelete={lessonIdToDelete} section={"lessons"} />
       )}
     </CustomTable>
   );

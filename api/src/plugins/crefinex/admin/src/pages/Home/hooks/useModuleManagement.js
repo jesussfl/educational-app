@@ -1,13 +1,13 @@
 // hooks/useLessonManagement.js
 import { useState } from "react";
-import moduleRequests from "../../../api/module/services/modules";
+import moduleAPI from "../../../api/module/services/moduleServices";
 export function useModuleManagement(fetchingData) {
   const [showModal, setShowModal] = useState(false);
   const [response, setResponse] = useState({});
 
   async function deleteEntry(moduleId) {
     try {
-      await moduleRequests.deleteModule(moduleId);
+      await moduleAPI.deleteModule(moduleId);
       await fetchingData();
       setResponse({ type: "success", title: "Success: ", message: "Module deleted successfully" });
     } catch (error) {
@@ -20,7 +20,7 @@ export function useModuleManagement(fetchingData) {
 
   async function createEntry(moduleData) {
     try {
-      await moduleRequests.createModule(moduleData);
+      await moduleAPI.createModule(moduleData);
       await fetchingData();
 
       setResponse({ type: "success", title: "Success: ", message: "Module created successfully" });

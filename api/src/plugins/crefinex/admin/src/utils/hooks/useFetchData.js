@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import moduleRequests from "../../api/module/services/modules";
-import worldRequests from "../../api/world/services/worlds";
+import moduleAPI from "../../api/module/services/moduleServices";
+import worldServices from "../../api/world/services/worldServices";
 import lessonRequests from "../../api/lesson/services/lessons";
 import { useParams, useLocation } from "react-router-dom";
 import exerciseRequests from "../../api/exercise/services/exercises";
@@ -37,20 +37,20 @@ export const useFetchData = (dataToBeFetched, initialModuleId) => {
     try {
       const fetchedData = {};
       if (dataToBeFetched === dataTypes.MODULES) {
-        const moduleData = await moduleRequests.getAllModules({ page, pageSize });
+        const moduleData = await moduleAPI.getAll({ page, pageSize });
         fetchedData.modules = moduleData;
         statusSetter({ isDataEmpty: { value: moduleData.data.length === 0, message: "There are no modules yet" } });
       }
 
       if (dataToBeFetched === dataTypes.WORLDS) {
-        const worldData = await worldRequests.getAllWorlds();
+        const worldData = await worldServices.getAllWorlds();
         fetchedData.worlds = worldData;
         statusSetter({ isDataEmpty: { value: worldData.data.length === 0, message: "There are no worlds yet" } });
       }
 
       if (dataToBeFetched === dataTypes.LESSONS) {
         const lessonData = await lessonRequests.getLessonsByModuleId(moduleId, { page, pageSize });
-        const moduleData = await moduleRequests.getModuleById(moduleId);
+        const moduleData = await moduleAPI.getModuleById(moduleId);
 
         fetchedData.lessons = { lessonData: lessonData, moduleData: moduleData.data };
         statusSetter({ isDataEmpty: { value: lessonData.data.length === 0, message: "There are no lessons yet" } });

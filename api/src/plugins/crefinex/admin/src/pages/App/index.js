@@ -3,7 +3,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { AnErrorOccurred } from "@strapi/helper-plugin";
 import pluginId from "../../pluginId";
 import LessonPage from "../Lesson/LessonPage";
-import ModulesPage from "../Home/HomePage";
+import ModulesPage from "../Home/ModulesPage";
 import ExercisesPage from "../Exercises/ExercisesPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 

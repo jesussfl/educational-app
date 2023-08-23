@@ -3,7 +3,7 @@ import React from "react";
 import { Typography, Button, Flex, Dialog, DialogBody, DialogFooter } from "@strapi/design-system";
 
 import { ExclamationMarkCircle, Trash, CheckCircle } from "@strapi/icons";
-
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 export function ConfirmationDialog({ setShowDialog, setShowModal, handleSubmit }) {
   return (
     <Dialog onClose={() => setShowDialog(false)} title="Confirmation" isOpen={setShowDialog}>
@@ -37,14 +37,22 @@ export function ConfirmationDialog({ setShowDialog, setShowModal, handleSubmit }
     </Dialog>
   );
 }
-export function DeleteDialog({ showDialog, deleteAction, idToDelete }) {
-  const handleConfirm = async () => {
-    try {
-      await deleteAction(idToDelete);
+export function DeleteDialog({ showDialog, actions, idToDelete, section }) {
+  const queryClient = useQueryClient();
+  const mutate = useMutation(actions.actionsAPI.delete, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(section);
+      actions.alert.show("success", "entry deleted");
       showDialog(null);
-    } catch (e) {
-      console.log("error", e);
-    }
+    },
+    onError: () => {
+      actions.alert.show("error", "Error deleting entry");
+      showDialog(null);
+    },
+  });
+
+  const onSubmit = () => {
+    mutate.mutate(idToDelete);
   };
   return (
     <Dialog onClose={() => showDialog(null)} title="Confirmation" isOpen={showDialog !== null}>
@@ -62,7 +70,7 @@ export function DeleteDialog({ showDialog, deleteAction, idToDelete }) {
           </Button>
         }
         endAction={
-          <Button variant="danger" startIcon={<Trash />} type="submit" onClick={() => handleConfirm()}>
+          <Button variant="danger" startIcon={<Trash />} type="submit" onClick={onSubmit}>
             Confirm
           </Button>
         }

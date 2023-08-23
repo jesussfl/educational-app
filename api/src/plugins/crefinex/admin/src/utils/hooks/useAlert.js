@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from "react";
 
-export const useAlert = (response) => {
-  const [showAlert, setShowAlert] = useState(false);
+export const useAlert = () => {
+  const [data, setData] = useState({
+    type: "",
+    message: "",
+  });
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
 
   useEffect(() => {
-    if (response.type === "success") {
-      setShowAlert(true);
+    if (isAlertVisible) {
       setTimeout(() => {
-        setShowAlert(false);
-      }, 5000);
+        setIsAlertVisible(false);
+      }, 3000);
     }
-  }, [response]);
+  }, [data]);
 
-  return { showAlert, setShowAlert };
+  const show = (type, message) => {
+    setData({ type, message });
+    setIsAlertVisible(true);
+  };
+  return { show, data, isAlertVisible };
 };

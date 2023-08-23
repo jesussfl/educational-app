@@ -1,40 +1,72 @@
-import React, { useState } from "react";
+import React from "react";
 
-import { TextInput, Combobox, ComboboxOption, SingleSelect, SingleSelectOption } from "@strapi/design-system";
+import { TextInput, SingleSelect, SingleSelectOption } from "@strapi/design-system";
 import CustomModal from "./CustomModal";
+import { useForm, Controller } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+const ORDER_INPUTS_TO_SHOW = 20;
 
 export default function ModuleModal({ actions, data }) {
-  const [description, setDescription] = useState("");
-  const [world, setWorld] = useState("");
-  const [order, setOrder] = useState();
+  const { control, handleSubmit } = useForm();
+  const queryClient = useQueryClient();
+
+  const mutate = useMutation(actions.actionsAPI.create, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("modules");
+      actions.alert.show("success", "Module created");
+      actions.setShowModal(false);
+    },
+    onError: () => {
+      actions.alert.show("error", "Error creating Module");
+      actions.setShowModal(false);
+    },
+  });
+
+  const onSubmit = handleSubmit((data) => {
+    mutate.mutate({ data: { ...data } });
+  });
+
   return (
-    <CustomModal actions={actions} data={{ data: { description, order, world } }}>
-      <TextInput
-        placeholder="Add a description here"
-        label="Description"
+    <CustomModal actions={actions} handleSubmit={onSubmit}>
+      <Controller
         name="description"
-        hint="Max 40 characters"
-        onChange={(e) => setDescription(e.target.value)}
-        value={description}
+        control={control}
+        render={({ field }) => {
+          return <TextInput {...field} placeholder="Add a description here" label="Description" name="description" hint="Max 40 characters" />;
+        }}
       />
-      <Combobox placeholder="Select the world of this module" label="World" value={world} onChange={setWorld} onClear={() => setWorld("")}>
-        {data.data.map((world) => (
-          <ComboboxOption key={world.id} value={world.id}>{`${world.id} - ${world.attributes.name}`}</ComboboxOption>
-        ))}
-      </Combobox>
-      <SingleSelect placeholder="Select" value={order} onChange={setOrder}>
-        <SingleSelectOption value="1">1</SingleSelectOption>
-        <SingleSelectOption value="2">2</SingleSelectOption>
-        <SingleSelectOption value="3">3</SingleSelectOption>
-        <SingleSelectOption value="4">4</SingleSelectOption>
-        <SingleSelectOption value="5">5</SingleSelectOption>
-        <SingleSelectOption value="6">6</SingleSelectOption>
-        <SingleSelectOption value="7">7</SingleSelectOption>
-        <SingleSelectOption value="8">8</SingleSelectOption>
-        <SingleSelectOption value="9">9</SingleSelectOption>
-        <SingleSelectOption value="10">10</SingleSelectOption>
-        <SingleSelectOption value="11">11</SingleSelectOption>
-      </SingleSelect>
+      <Controller
+        name="world"
+        control={control}
+        render={({ field }) => {
+          return (
+            <SingleSelect {...field} placeholder="Select the world of this module" label="World">
+              {data.map((world) => (
+                <SingleSelectOption key={world.id} value={world.id}>{`${world.id} - ${world.attributes.name}`}</SingleSelectOption>
+              ))}
+            </SingleSelect>
+          );
+        }}
+      ></Controller>
+
+      <Controller
+        name="order"
+        control={control}
+        render={({ field }) => {
+          return (
+            <SingleSelect label="Order" placeholder="Select" {...field}>
+              {Array(ORDER_INPUTS_TO_SHOW)
+                .fill(0)
+                .map((_, index) => (
+                  <SingleSelectOption key={index} value={index + 1}>
+                    {index + 1}
+                  </SingleSelectOption>
+                ))}
+            </SingleSelect>
+          );
+        }}
+      ></Controller>
     </CustomModal>
   );
 }
