@@ -24,7 +24,7 @@ const moduleAPI = {
     }
   },
 
-  findById: async (moduleId) => {
+  getById: async (moduleId) => {
     try {
       const data = await fetch(`http://${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/modules/${moduleId}?populate=*`, {
         method: "GET",
