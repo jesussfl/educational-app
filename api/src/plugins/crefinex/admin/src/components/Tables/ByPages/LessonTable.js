@@ -3,17 +3,15 @@ import pluginId from "../../../pluginId";
 import { Box, Flex, Typography, Tbody, Tr, Td, IconButton, Link } from "@strapi/design-system";
 import { ArrowRight, Trash } from "@strapi/icons";
 
-import { CustomTable, DeleteDialog, CustomAlert } from "../../../components";
+import { CustomTable, DeleteDialog } from "../../../components";
 
 export default function LessonTable({ data, paginationData, status, actions }) {
-  if (status.error.value) return <CustomAlert response={status.error} />;
-  let rowData = status.isLoading ? [] : data.data;
   const [lessonIdToDelete, setLessonIdToDelete] = useState(null);
 
   return (
     <CustomTable actions={actions} data={data} paginationData={paginationData} status={status}>
       <Tbody>
-        {rowData.map((row) => {
+        {data.data.map((row) => {
           const attributes = row.attributes;
 
           return (
@@ -37,9 +35,7 @@ export default function LessonTable({ data, paginationData, status, actions }) {
               <Td>
                 <Typography textColor="neutral800">{attributes.order}</Typography>
               </Td>
-              <Td>
-                <Typography textColor="neutral800">{attributes.module.data.id || ""}</Typography>
-              </Td>
+              <Td>{/* <Typography textColor="neutral800">{attributes.module.data.id || ""}</Typography> */}</Td>
               <Td>
                 <Flex style={{ justifyContent: "end" }}>
                   <Link to={`/plugins/${pluginId}/exercises/${row.id}?page=1&pageSize=10&sort=id:ASC`}>
@@ -54,9 +50,7 @@ export default function LessonTable({ data, paginationData, status, actions }) {
           );
         })}
       </Tbody>
-      {lessonIdToDelete != null && (
-        <DeleteDialog showDialog={setLessonIdToDelete} deleteAction={actions.lessonActions.deleteLesson} showModal={actions.showModal} idToDelete={lessonIdToDelete} />
-      )}
+      {lessonIdToDelete != null && <DeleteDialog showDialog={setLessonIdToDelete} actions={actions} idToDelete={lessonIdToDelete} />}
     </CustomTable>
   );
 }
