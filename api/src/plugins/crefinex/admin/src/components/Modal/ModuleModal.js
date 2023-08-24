@@ -2,23 +2,25 @@ import React from "react";
 
 import { TextInput, SingleSelect, SingleSelectOption } from "@strapi/design-system";
 import CustomModal from "./CustomModal";
-import { useForm, Controller } from "react-hook-form";
-import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { Controller } from "react-hook-form";
+import { useQuery } from "@tanstack/react-query";
 import { useCustomMutation } from "./useCustomMutation";
 import worldActionsAPI from "../../api/world/services/worldServices";
 
 const ORDER_INPUTS_TO_SHOW = 20;
 
-export default function ModuleModal({ actions, data, actionType }) {
-  const { control, mutate, handleSubmit } = useCustomMutation("modules", actions.actionsAPI[actionType], data, actions);
+export default function ModuleModal({ mainAction, extraActions, defaultValues, editId }) {
+  const { control, mutate, handleSubmit } = useCustomMutation("modules", mainAction, defaultValues, extraActions);
   const { data: worlds, isLoading, error } = useQuery(["worlds"], () => worldActionsAPI.getAll());
 
   const onSubmit = handleSubmit((data) => {
-    mutate(20, { data: { ...data } });
+    const id = editId;
+
+    id ? mutate({ id, data: { ...data } }) : mutate({ data: { ...data } });
   });
 
   return (
-    <CustomModal actions={actions} handleSubmit={onSubmit}>
+    <CustomModal open={extraActions.setShowModal} handleSubmit={onSubmit} isEdit={editId}>
       <Controller
         name="description"
         control={control}
@@ -28,7 +30,7 @@ export default function ModuleModal({ actions, data, actionType }) {
           );
         }}
       />
-      {isLoading ? null : (
+      {isLoading && !error ? null : (
         <Controller
           name="world"
           control={control}

@@ -2,15 +2,22 @@ import React, { useState } from "react";
 
 import { BaseHeaderLayout, ContentLayout, Button } from "@strapi/design-system";
 import { ModuleTable, ModuleModal, CustomAlert, CustomLoader } from "../../components";
+import { useHistory, useLocation } from "react-router-dom";
+
 import { Plus } from "@strapi/icons";
-import { useAlert } from "../../utils";
+import { useAlert, usePagination } from "../../utils";
 import { useQuery } from "@tanstack/react-query";
 import actionsAPI from "../../api/module/services/moduleServices";
 function HomePage() {
-  const {data:modules, isLoading, error} = useQuery(["modules"], () => actionsAPI.getAll({ page: 1, pageSize: 10 }));
+  const { currentPage, rowsPerPage } = usePagination();
+  const {
+    data: modules,
+    isLoading,
+    error,
+  } = useQuery(["modules", currentPage, rowsPerPage], () => actionsAPI.getAll({ page: currentPage, pageSize: rowsPerPage }));
   const [showModal, setShowModal] = useState(false);
   const alert = useAlert();
-console.log(modules);
+
   if (isLoading) return <CustomLoader />;
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
 
@@ -29,7 +36,7 @@ console.log(modules);
       />
       <ContentLayout>
         <ModuleTable data={modules} error={error} actions={{ actionsAPI, setShowModal, alert }} />
-        {showModal && <ModuleModal actions={{ actionsAPI, setShowModal, alert }} actionType="create" data={null} />}
+        {showModal && <ModuleModal mainAction={actionsAPI.create} extraActions={{ setShowModal, alert }} />}
       </ContentLayout>
     </>
   );

@@ -8,7 +8,7 @@ import { NavLink } from "react-router-dom";
 export default function ModuleTable({ data, error, actions }) {
   if (error !== null) return <CustomAlert data={{ type: "error", message: error.name }} />;
   const [showModal, setShowModal] = useState(false);
-  const [moduleIdToDelete, setModuleIdToDelete] = useState(null);
+  const [moduleId, setModuleId] = useState(null);
   const [moduleToEdit, setModuleToEdit] = useState(null);
   const actionsAPI = actions.actionsAPI;
   const alert = actions.alert;
@@ -59,10 +59,10 @@ export default function ModuleTable({ data, error, actions }) {
                     <IconButton label="Go to Lessons" noBorder icon={<ArrowRight />} />
                   </Link>
                   <Box paddingLeft={1}>
-                    <IconButton onClick={() => setModuleToEdit({...attributes, world:attributes.world.data.id})} label="Delete" noBorder icon={<Pencil />} />
+                    <IconButton onClick={() => {setModuleToEdit({...attributes, world:attributes.world.data.id}); setShowModal(true); setModuleId(row.id)}} label="Edit" noBorder icon={<Pencil />} />
                   </Box>
                   <Box paddingLeft={1}>
-                    <IconButton onClick={() => setModuleIdToDelete(row.id)} label="Delete" noBorder icon={<Trash />} />
+                    <IconButton onClick={() => setModuleId(row.id)} label="Delete" noBorder icon={<Trash />} />
      
                   </Box>
                 </Flex>
@@ -71,11 +71,11 @@ export default function ModuleTable({ data, error, actions }) {
           );
         })}
       </Tbody>
-      {moduleIdToDelete != null && (
-        <DeleteDialog showDialog={setModuleIdToDelete} actions={actions} idToDelete={moduleIdToDelete} section={"lessons"} />
-      )}
-                 {moduleToEdit != null && (
-        <ModuleModal actions={{ actionsAPI, setShowModal, alert }} actionType="update" data={moduleToEdit} />
+      {/* {moduleId != null && (
+        <DeleteDialog showDialog={setModuleId} actions={actions} idToDelete={moduleId} section={"lessons"} />
+      )} */}
+                 {showModal && (
+        <ModuleModal mainAction={actionsAPI.update} extraActions={{ setShowModal, alert }} defaultValues={moduleToEdit} editId={moduleId} />
       )}
 
     </CustomTable>

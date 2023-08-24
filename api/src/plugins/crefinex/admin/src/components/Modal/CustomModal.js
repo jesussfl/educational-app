@@ -2,10 +2,10 @@ import React from "react";
 
 import { ModalLayout, ModalHeader, ModalBody, ModalFooter, Typography, Button } from "@strapi/design-system";
 
-export default function CustomModal({ actions, children, handleSubmit }) {
+export default function CustomModal({ open, children, handleSubmit, isEdit }) {
   return (
     <ModalLayout
-      onClose={() => actions.setShowModal(false)}
+      onClose={() => open(false)}
       labelledBy="title"
       as="form"
       onSubmit={(e) => {
@@ -16,7 +16,7 @@ export default function CustomModal({ actions, children, handleSubmit }) {
     >
       <ModalHeader>
         <Typography fontWeight="bold" textColor="neutral800" as="h2" id="title">
-          Add entry
+          {isEdit ? "Edit entry" : "Add entry"}
         </Typography>
       </ModalHeader>
 
@@ -24,11 +24,11 @@ export default function CustomModal({ actions, children, handleSubmit }) {
 
       <ModalFooter
         startActions={
-          <Button onClick={() => actions.setShowModal(false)} variant="tertiary">
+          <Button onClick={() => open(false)} variant="tertiary">
             Cancel
           </Button>
         }
-        endActions={<Button type="submit">Add entry</Button>}
+        endActions={<Button type="submit">{isEdit ? "Edit entry" : "Add entry"}</Button>}
       />
     </ModalLayout>
   );

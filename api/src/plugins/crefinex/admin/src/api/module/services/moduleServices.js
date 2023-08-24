@@ -1,6 +1,3 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
-
 const moduleAPI = {
   getAll: async ({ page, pageSize }) => {
     try {
@@ -55,9 +52,10 @@ const moduleAPI = {
     }
   },
 
-  update: async (moduleId, moduleData) => {
+  update: async (moduleData) => {
+    console.log("module edited ", moduleData);
     try {
-      const data = await fetch(`http:${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/modules/${moduleId}`, {
+      const data = await fetch(`http://${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/modules/${moduleData.id}?populate=*`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -83,7 +81,7 @@ const moduleAPI = {
       console.log(error);
       throw new Error("Failed to delete module");
     }
-  },
+  }
 };
 
 export default moduleAPI;

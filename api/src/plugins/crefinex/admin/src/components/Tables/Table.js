@@ -7,7 +7,7 @@ import { TableFilters, TablePagination, TableHeaders, EmptyState } from "../../c
 export default function CustomTable({ data, paginationData, actions, children }) {
   const isDataEmpty = data.isEmpty || data.data.length === 0;
   const { currentPage, rowsPerPage, history } = usePagination();
-
+console.log("paginationData", rowsPerPage);
   return (
     <Flex gap={4} direction="column" alignItems="stretch">
       <TableFilters />
@@ -30,9 +30,9 @@ export default function CustomTable({ data, paginationData, actions, children })
           </Table>
           <TablePagination
             history={history}
-            currentPage={currentPage || 1}
-            rowsPerPage={rowsPerPage || 10}
-            totalPageCount={paginationData?.pageCount || 1}
+            currentPage={currentPage }
+            rowsPerPage={rowsPerPage}
+            totalPageCount={paginationData.pageCount}
           />
         </>
       )}
