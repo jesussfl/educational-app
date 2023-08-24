@@ -8,10 +8,16 @@ import { useCustomMutation } from "./useCustomMutation";
 import worldActionsAPI from "../../api/world/services/worldServices";
 
 const ORDER_INPUTS_TO_SHOW = 20;
+const QUERY_KEYS = {
+  modules: "modules",
+  worlds: "worlds",
+};
 
 export default function ModuleModal({ mainAction, extraActions, defaultValues, editId }) {
-  const { control, mutate, handleSubmit } = useCustomMutation("modules", mainAction, defaultValues, extraActions);
-  const { data: worlds, isLoading, error } = useQuery(["worlds"], () => worldActionsAPI.getAll());
+
+
+  const { control, mutate, handleSubmit } = useCustomMutation(QUERY_KEYS.modules, mainAction, defaultValues, extraActions);
+  const { data: worlds, isLoading, error } = useQuery([QUERY_KEYS.worlds], () => worldActionsAPI.getAll());
 
   const onSubmit = handleSubmit((data) => {
     const id = editId;
@@ -20,7 +26,7 @@ export default function ModuleModal({ mainAction, extraActions, defaultValues, e
   });
 
   return (
-    <CustomModal open={extraActions.setShowModal} handleSubmit={onSubmit} isEdit={editId}>
+    <CustomModal handleSubmit={onSubmit} setIdToEdit={extraActions.setIdToEdit}>
       <Controller
         name="description"
         control={control}

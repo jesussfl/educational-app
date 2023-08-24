@@ -1,19 +1,42 @@
 import React, { useState } from "react";
 import pluginId from "../../../pluginId";
-import { Box, Flex, Typography, Tbody, Tr, Td, IconButton, Link } from "@strapi/design-system";
-import { ArrowRight, Trash } from "@strapi/icons";
+import { Box, Flex, Typography, Tbody, Tr, Td, IconButton, Link, Tab } from "@strapi/design-system";
+import { ArrowRight, Trash, Pencil } from "@strapi/icons";
 
-import { CustomTable, DeleteDialog } from "../../../components";
+import { CustomTable, DeleteDialog, LessonModal, EmptyState, TableHeaders } from "../../../components";
+import { useModal } from "../../../utils/ModalContext";
+export default function LessonTable({ data, actions, moduleId, moduleInfo }) {
+  const isDataEmpty = data.isEmpty || data.data.length === 0;
 
-export default function LessonTable({ data, paginationData, status, actions }) {
-  const [lessonIdToDelete, setLessonIdToDelete] = useState(null);
+  const { showModal, setShowModal } = useModal();
+  const [idToDelete, setIdToDelete] = useState(null);
+  const [idToEdit, setIdToEdit] = useState(null);
+  const [dataToEdit, setDataToEdit] = useState(null);
+
+  if (isDataEmpty) return <EmptyState showModal={setShowModal}
+    renderActionModal={() => <LessonModal data={moduleInfo} moduleId={moduleId} mainAction={actions.actionsAPI.create}
+      extraActions={{ alert: actions.alert }} />}
+    message="There are no lessons yet" />;
 
   return (
-    <CustomTable actions={actions} data={data} paginationData={paginationData} status={status}>
+    <CustomTable paginationData={{ page: 1, pageSize: 10, pageCount: 1 }}
+      renderDeleteDialog={() => idToDelete !== null && <DeleteDialog showDialog={setIdToDelete}
+        actions={actions}
+        idToDelete={idToDelete}
+        section={"lessons"} />}
+
+      renderEditModal={() => showModal && idToEdit !== null && <LessonModal data={moduleInfo} moduleId={moduleId} mainAction={actions.actionsAPI.update}
+        extraActions={{ alert: actions.alert, setIdToEdit }}
+        defaultValues={dataToEdit}
+        editId={idToEdit} />}
+
+      renderCreateModal={() => showModal && idToEdit === null && <LessonModal data={moduleInfo} moduleId={moduleId} mainAction={actions.actionsAPI.create}
+        extraActions={{ alert: actions.alert }} />} >
+      <TableHeaders data={data.data} />
       <Tbody>
         {data.data.map((row) => {
           const attributes = row.attributes;
-
+          console.log("attributesssss", attributes);
           return (
             <Tr key={row.id}>
               <Td>
@@ -42,7 +65,10 @@ export default function LessonTable({ data, paginationData, status, actions }) {
                     <IconButton label="Go to Lessons" noBorder icon={<ArrowRight />} />
                   </Link>
                   <Box paddingLeft={1}>
-                    <IconButton onClick={() => setLessonIdToDelete(row.id)} label="Delete" noBorder icon={<Trash />} />
+                    <IconButton onClick={() => { setDataToEdit({ ...attributes }); setIdToEdit(row.id), setShowModal(true) }} label="Edit" noBorder icon={<Pencil />} />
+                  </Box>
+                  <Box paddingLeft={1}>
+                    <IconButton onClick={() => setIdToDelete(row.id)} label="Delete" noBorder icon={<Trash />} />
                   </Box>
                 </Flex>
               </Td>
@@ -50,7 +76,7 @@ export default function LessonTable({ data, paginationData, status, actions }) {
           );
         })}
       </Tbody>
-      {lessonIdToDelete != null && <DeleteDialog showDialog={setLessonIdToDelete} actions={actions} idToDelete={lessonIdToDelete} />}
+
     </CustomTable>
   );
 }

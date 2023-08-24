@@ -2,20 +2,20 @@ import React, { useState } from "react";
 
 import { BaseHeaderLayout, ContentLayout, Button } from "@strapi/design-system";
 import { ModuleTable, ModuleModal, CustomAlert, CustomLoader } from "../../components";
-import { useHistory, useLocation } from "react-router-dom";
 
 import { Plus } from "@strapi/icons";
 import { useAlert, usePagination } from "../../utils";
 import { useQuery } from "@tanstack/react-query";
 import actionsAPI from "../../api/module/services/moduleServices";
+import { useModal } from "../../utils/ModalContext";
 function HomePage() {
   const { currentPage, rowsPerPage } = usePagination();
+  const { setShowModal } = useModal();
   const {
     data: modules,
     isLoading,
     error,
   } = useQuery(["modules", currentPage, rowsPerPage], () => actionsAPI.getAll({ page: currentPage, pageSize: rowsPerPage }));
-  const [showModal, setShowModal] = useState(false);
   const alert = useAlert();
 
   if (isLoading) return <CustomLoader />;
@@ -35,8 +35,7 @@ function HomePage() {
         }
       />
       <ContentLayout>
-        <ModuleTable data={modules} error={error} actions={{ actionsAPI, setShowModal, alert }} />
-        {showModal && <ModuleModal mainAction={actionsAPI.create} extraActions={{ setShowModal, alert }} />}
+        <ModuleTable data={modules} actions={{ actionsAPI, setShowModal, alert }} />
       </ContentLayout>
     </>
   );

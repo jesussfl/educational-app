@@ -26,13 +26,13 @@ export const useCustomMutation = (queryKey, queryFunction, defaultValues, extraF
       if (extraFunctions.alert !== undefined) {
         extraFunctions.alert.show("success", `${singularKey(queryKey)} created`);
       }
-      extraFunctions.setShowModal(false);
+      // extraFunctions.setShowModal(false);
     },
     onError: () => {
       if (extraFunctions.alert !== undefined) {
         extraFunctions.alert.show("error", `there was an error creating a ${singularKey(queryKey)}`);
       }
-      extraFunctions.setShowModal(false);
+      // extraFunctions.setShowModal(false);
     },
   });
 

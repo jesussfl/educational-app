@@ -2,33 +2,21 @@ import React from "react";
 
 import { TextInput, SingleSelect, SingleSelectOption } from "@strapi/design-system";
 import CustomModal from "./CustomModal";
-import { useForm, Controller } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-
+import { Controller } from "react-hook-form";
+import { useCustomMutation } from "./useCustomMutation";
 const ORDER_INPUTS_TO_SHOW = 20;
+const QUERY_KEY = "lessons"
+export default function LessonModal({ data, moduleId, mainAction, extraActions, defaultValues, editId }) {
 
-export default function LessonModal({ actions, data, moduleId }) {
-  const { control, handleSubmit } = useForm();
-  const queryClient = useQueryClient();
-  console.log(actions);
-  const mutate = useMutation(actions.actionsAPI.create, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("lessons");
-      actions.alert.show("success", "Lesson created");
-      actions.setShowModal(false);
-    },
-    onError: () => {
-      actions.alert.show("error", "Error creating Lesson");
-      actions.setShowModal(false);
-    },
-  });
-
+  const { control, mutate, handleSubmit } = useCustomMutation(QUERY_KEY, mainAction, defaultValues, extraActions);
+  console.log(data)
   const onSubmit = handleSubmit((formData) => {
-    mutate.mutate({ data: { ...formData, module: moduleId, world: data.world.id } });
+    const id = editId;
+    id ? mutate({ id, data: { ...formData, module: moduleId, world: data.world.id } }) : mutate({ data: { ...formData, module: moduleId, world: data.world.id } });
   });
 
   return (
-    <CustomModal actions={actions} handleSubmit={onSubmit}>
+    <CustomModal handleSubmit={onSubmit} setIdToEdit={extraActions.setIdToEdit}>
       <Controller
         name="description"
         control={control}

@@ -54,9 +54,9 @@ const lessonServices = {
     }
   },
 
-  update: async (moduleId, moduleData) => {
+  update: async (moduleData) => {
     try {
-      const response = await fetch(`http:${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/lessons/${moduleId}`, {
+      const response = await fetch(`http://${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/lessons/${moduleData.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -1,24 +1,28 @@
-import React, { useState } from "react";
+import React from "react";
 import { useParams, useHistory } from "react-router-dom";
 
 import { BaseHeaderLayout, ContentLayout, Button, Link, Breadcrumbs, Crumb } from "@strapi/design-system";
 import { Plus, ArrowLeft } from "@strapi/icons";
-import { LessonTable, LessonModal, CustomAlert, CustomLoader } from "../../components";
+import { LessonTable, CustomAlert, CustomLoader } from "../../components";
 
 //Hooks
 import { useAlert } from "../../utils/";
 import { useQuery } from "@tanstack/react-query";
 import moduleActionsAPI from "../../api/module/services/moduleServices";
 import actionsAPI from "../../api/lesson/services/lessonServices";
+import { useModal } from "../../utils/ModalContext";
+import { usePagination } from "../../utils/hooks/usePagination";
 function LessonPage() {
   const { moduleId } = useParams();
+  const { currentPage, rowsPerPage } = usePagination();
   const history = useHistory();
   const {
     data: module,
     isLoading,
     error,
-  } = useQuery(["modules", moduleId], () => moduleActionsAPI.findById(moduleId, { page: 1, pageSize: 10 }));
-  const [showModal, setShowModal] = useState(false);
+  } = useQuery(["modules", moduleId, currentPage, rowsPerPage], () => moduleActionsAPI.findById(moduleId, { page: currentPage, pageSize: rowsPerPage }));
+  const { setShowModal } = useModal();
+
   const alert = useAlert();
 
   if (isLoading) return <CustomLoader />;
@@ -53,9 +57,8 @@ function LessonPage() {
       />
 
       <ContentLayout>
-        <LessonTable data={lessons} error={error} actions={{ actionsAPI, setShowModal, alert }} />
+        <LessonTable data={lessons} moduleId={moduleId} actions={{ actionsAPI, alert }} moduleInfo={moduleInfo} />
       </ContentLayout>
-      {showModal && <LessonModal actions={{ actionsAPI, setShowModal, alert }} moduleId={moduleId} data={moduleInfo} />}
     </>
   );
 }
