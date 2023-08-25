@@ -1,29 +1,30 @@
 import React from "react";
-import { useParams, useHistory } from "react-router-dom";
+import actionsAPI from "../../api/lesson/services/lessonServices";
+import moduleActionsAPI from "../../api/module/services/moduleServices";
 
 import { BaseHeaderLayout, ContentLayout, Button, Link, Breadcrumbs, Crumb } from "@strapi/design-system";
 import { Plus, ArrowLeft } from "@strapi/icons";
 import { LessonTable, CustomAlert, CustomLoader } from "../../components";
 
 //Hooks
-import { useAlert } from "../../utils/";
+
+import { useParams, useHistory } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import moduleActionsAPI from "../../api/module/services/moduleServices";
-import actionsAPI from "../../api/lesson/services/lessonServices";
-import { useModal } from "../../utils/ModalContext";
+import { useModal } from "../../utils/contexts/ModalContext";
 import { usePagination } from "../../utils/hooks/usePagination";
+
 function LessonPage() {
-  const { moduleId } = useParams();
-  const { currentPage, rowsPerPage } = usePagination();
   const history = useHistory();
+  const { moduleId } = useParams();
+  const { setShowModal } = useModal();
+  const { currentPage, rowsPerPage } = usePagination();
   const {
     data: module,
     isLoading,
     error,
-  } = useQuery(["modules", moduleId, currentPage, rowsPerPage], () => moduleActionsAPI.findById(moduleId, { page: currentPage, pageSize: rowsPerPage }));
-  const { setShowModal } = useModal();
-
-  const alert = useAlert();
+  } = useQuery(["modules", moduleId, currentPage, rowsPerPage], () =>
+    moduleActionsAPI.findById(moduleId, { page: currentPage, pageSize: rowsPerPage })
+  );
 
   if (isLoading) return <CustomLoader />;
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
@@ -34,7 +35,6 @@ function LessonPage() {
 
   return (
     <>
-      {alert.isAlertVisible && <CustomAlert data={alert.data} />}
       <BaseHeaderLayout
         navigationAction={
           <Link startIcon={<ArrowLeft />} onClick={() => history.goBack()}>
@@ -57,7 +57,7 @@ function LessonPage() {
       />
 
       <ContentLayout>
-        <LessonTable data={lessons} moduleId={moduleId} actions={{ actionsAPI, alert }} moduleInfo={moduleInfo} />
+        <LessonTable data={lessons} moduleId={moduleId} actions={actionsAPI} moduleInfo={moduleInfo} />
       </ContentLayout>
     </>
   );

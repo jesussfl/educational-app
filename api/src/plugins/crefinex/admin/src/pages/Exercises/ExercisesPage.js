@@ -1,25 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { useParams, useHistory } from "react-router-dom";
 
 import { BaseHeaderLayout, ContentLayout, Button, Link, Breadcrumbs, Crumb } from "@strapi/design-system";
-import { ExercisesTable, ExercisesModal, CustomAlert, CustomLoader } from "../../components";
+import { ExercisesTable, CustomAlert, CustomLoader } from "../../components";
 import { Plus, ArrowLeft } from "@strapi/icons";
 
 //Hooks
-import { useAlert } from "../../utils/";
 import { useQuery } from "@tanstack/react-query";
 import LessonActionsAPI from "../../api/lesson/services/lessonServices";
 import actionsAPI from "../../api/exercise/services/exercises";
+import { useModal } from "../../utils/contexts/ModalContext";
 function ExercisesPage() {
   const { lessonId } = useParams();
   const history = useHistory();
-  const {
-    data: lesson,
-    isLoading,
-    error,
-  } = useQuery(["lessons", lessonId], () => LessonActionsAPI.findById(lessonId));
-  const [showModal, setShowModal] = useState(false);
-  const alert = useAlert();
+  const { data: lesson, isLoading, error } = useQuery(["lessons", lessonId], () => LessonActionsAPI.findById(lessonId));
+  const { setShowModal } = useModal();
 
   if (isLoading) return <CustomLoader />;
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
@@ -30,7 +25,6 @@ function ExercisesPage() {
 
   return (
     <>
-      {alert.isAlertVisible && <CustomAlert data={alert.data} />}
       <BaseHeaderLayout
         navigationAction={
           <Link startIcon={<ArrowLeft />} onClick={() => history.goBack()}>
@@ -55,9 +49,8 @@ function ExercisesPage() {
       />
 
       <ContentLayout>
-        <ExercisesTable data={exercises} error={error} actions={{ actionsAPI, setShowModal, alert }} />
+        <ExercisesTable data={exercises} actions={actionsAPI} lessonId={lessonId} lessonInfo={lessonInfo} />
       </ContentLayout>
-      {showModal && <ExercisesModal actions={{ actionsAPI, setShowModal, alert }} lessonId={lessonId} data={lessonInfo} />}
     </>
   );
 }

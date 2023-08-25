@@ -7,7 +7,7 @@ import { Plus } from "@strapi/icons";
 import { useAlert, usePagination } from "../../utils";
 import { useQuery } from "@tanstack/react-query";
 import actionsAPI from "../../api/module/services/moduleServices";
-import { useModal } from "../../utils/ModalContext";
+import { useModal } from "../../utils/contexts/ModalContext";
 function HomePage() {
   const { currentPage, rowsPerPage } = usePagination();
   const { setShowModal } = useModal();
@@ -16,14 +16,12 @@ function HomePage() {
     isLoading,
     error,
   } = useQuery(["modules", currentPage, rowsPerPage], () => actionsAPI.getAll({ page: currentPage, pageSize: rowsPerPage }));
-  const alert = useAlert();
 
   if (isLoading) return <CustomLoader />;
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
 
   return (
     <>
-      {alert.isAlertVisible && <CustomAlert data={alert.data} />}
       <BaseHeaderLayout
         title="Modules"
         subtitle="Add modules for the app here"
@@ -35,7 +33,7 @@ function HomePage() {
         }
       />
       <ContentLayout>
-        <ModuleTable data={modules} actions={{ actionsAPI, setShowModal, alert }} />
+        <ModuleTable data={modules} actions={actionsAPI} />
       </ContentLayout>
     </>
   );

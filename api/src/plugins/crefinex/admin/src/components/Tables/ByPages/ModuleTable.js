@@ -1,44 +1,34 @@
-import React, { useState } from "react";
+import React from "react";
 import pluginId from "../../../pluginId";
 import { Box, Flex, Typography, Tbody, Tr, Td, IconButton, Link } from "@strapi/design-system";
 import { ArrowRight, Trash, Pencil } from "@strapi/icons";
-import { DeleteDialog, CustomTable, ModuleModal, TableHeaders, EmptyState } from "../../../components";
+import { DeleteDialog, CustomTable, ModuleModal, TableHeaders } from "../../../components";
 import { SimpleMenu, MenuItem } from "@strapi/design-system/v2";
 import { NavLink } from "react-router-dom";
-import { useModal } from "../../../utils/ModalContext";
+import { useModal } from "../../../utils/contexts/ModalContext";
 
 export default function ModuleTable({ data, actions }) {
   const isDataEmpty = data.isEmpty || data.data.length === 0;
 
-  const { showModal, setShowModal } = useModal();
+  const { showModal, setShowModal, idToEdit, setIdToEdit, dataToEdit, setDataToEdit, idToDelete, setIdToDelete } = useModal();
 
-  const [idToDelete, setIdToDelete] = useState(null);
-  const [idToEdit, setIdToEdit] = useState(null);
-  const [dataToEdit, setDataToEdit] = useState(null);
+  const tableConfig = {
+    tableName: "modules",
+    emptyStateMessage: "There are no modules yet",
 
-
-  if (isDataEmpty) return <EmptyState showModal={setShowModal}
-    renderActionModal={() => <ModuleModal mainAction={actions.actionsAPI.create}
-      extraActions={{ alert: actions.alert }} />}
-    message="There are no modules yet" />;
+    createModal: () => <ModuleModal mainAction={actions.create} />,
+    editModal: () => <ModuleModal mainAction={actions.update} defaultValues={dataToEdit} editId={idToEdit} setIdToEdit={setIdToEdit} />,
+    deleteDialog: () => <DeleteDialog showDialog={setIdToDelete} mainAction={actions.delete} idToDelete={idToDelete} section={"modules"} />,
+  };
 
   return (
     <CustomTable
+      config={tableConfig}
+      isDataEmpty={isDataEmpty}
       paginationData={data.meta.pagination}
-
-      renderDeleteDialog={() => idToDelete !== null && <DeleteDialog showDialog={setIdToDelete}
-        actions={actions}
-        idToDelete={idToDelete}
-        section={"lessons"} />}
-
-      renderEditModal={() => showModal && idToEdit !== null && <ModuleModal mainAction={actions.actionsAPI.update}
-        extraActions={{ alert: actions.alert, setIdToEdit }}
-        defaultValues={dataToEdit}
-        editId={idToEdit} />}
-
-      renderCreateModal={() => showModal && idToEdit === null && <ModuleModal mainAction={actions.actionsAPI.create}
-        extraActions={{ alert: actions.alert }}
-      />}
+      renderDeleteDialog={() => idToDelete !== null && tableConfig.deleteDialog()}
+      renderEditModal={() => showModal && idToEdit !== null && tableConfig.editModal()}
+      renderCreateModal={() => showModal && idToEdit === null && tableConfig.createModal()}
     >
       <TableHeaders data={data.data} />
       <Tbody>
@@ -85,11 +75,18 @@ export default function ModuleTable({ data, actions }) {
                     <IconButton label="Go to Lessons" noBorder icon={<ArrowRight />} />
                   </Link>
                   <Box paddingLeft={1}>
-                    <IconButton onClick={() => { setDataToEdit({ ...attributes, world: attributes.world.data.id }); setIdToEdit(row.id), setShowModal(true) }} label="Edit" noBorder icon={<Pencil />} />
+                    <IconButton
+                      onClick={() => {
+                        setDataToEdit({ ...attributes, world: attributes.world.data.id });
+                        setIdToEdit(row.id), setShowModal(true);
+                      }}
+                      label="Edit"
+                      noBorder
+                      icon={<Pencil />}
+                    />
                   </Box>
                   <Box paddingLeft={1}>
                     <IconButton onClick={() => setIdToDelete(row.id)} label="Delete" noBorder icon={<Trash />} />
-
                   </Box>
                 </Flex>
               </Td>
@@ -97,7 +94,6 @@ export default function ModuleTable({ data, actions }) {
           );
         })}
       </Tbody>
-
-    </CustomTable >
+    </CustomTable>
   );
 }

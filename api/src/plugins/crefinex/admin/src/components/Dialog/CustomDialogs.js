@@ -3,7 +3,8 @@ import React from "react";
 import { Typography, Button, Flex, Dialog, DialogBody, DialogFooter } from "@strapi/design-system";
 
 import { ExclamationMarkCircle, Trash, CheckCircle } from "@strapi/icons";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { useCustomMutation } from "../../utils/hooks/useCustomMutation";
 export function ConfirmationDialog({ setShowDialog, setShowModal, handleSubmit }) {
   return (
     <Dialog onClose={() => setShowDialog(false)} title="Confirmation" isOpen={setShowDialog}>
@@ -37,22 +38,12 @@ export function ConfirmationDialog({ setShowDialog, setShowModal, handleSubmit }
     </Dialog>
   );
 }
-export function DeleteDialog({ showDialog, actions, idToDelete, section }) {
-  const queryClient = useQueryClient();
-  const mutate = useMutation(actions.actionsAPI.delete, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(section);
-      actions.alert.show("success", "entry deleted");
-      showDialog(null);
-    },
-    onError: () => {
-      actions.alert.show("error", "Error deleting entry");
-      showDialog(null);
-    },
-  });
+export function DeleteDialog({ showDialog, mainAction, idToDelete, section }) {
+  const { mutate } = useCustomMutation(section, mainAction);
 
   const onSubmit = () => {
-    mutate.mutate(idToDelete);
+    mutate(idToDelete);
+    showDialog(null);
   };
   return (
     <Dialog onClose={() => showDialog(null)} title="Confirmation" isOpen={showDialog !== null}>

@@ -2,12 +2,22 @@ import React from "react";
 import { Flex, Table, TFooter } from "@strapi/design-system";
 import { Plus } from "@strapi/icons";
 import { usePagination } from "../../utils/hooks/usePagination";
-import { TableFilters, TablePagination, } from "../../components";
-import { useModal } from "../../utils/ModalContext";
+import { TableFilters, TablePagination, EmptyState } from "..";
+import { useModal } from "../../utils/contexts/ModalContext";
 
-export default function CustomTable({ paginationData, renderCreateModal, renderDeleteDialog, renderEditModal, children }) {
+export default function CustomTable({
+  paginationData,
+  renderCreateModal,
+  renderDeleteDialog,
+  renderEditModal,
+  children,
+  isDataEmpty,
+  config,
+}) {
   const { setShowModal } = useModal();
   const { currentPage, rowsPerPage, history } = usePagination();
+
+  if (isDataEmpty) return <EmptyState showModal={setShowModal} renderActionModal={config.createModal} message={config.emptyStateMessage} />;
   return (
     <Flex gap={4} direction="column" alignItems="stretch">
       <TableFilters />
@@ -32,7 +42,6 @@ export default function CustomTable({ paginationData, renderCreateModal, renderD
       {renderDeleteDialog()}
       {renderEditModal()}
       {renderCreateModal()}
-
     </Flex>
   );
 }

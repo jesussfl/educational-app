@@ -1,11 +1,11 @@
 import React from "react";
 
 import { TextInput, SingleSelect, SingleSelectOption } from "@strapi/design-system";
-import CustomModal from "./CustomModal";
+import CustomModal from "../CustomModal";
 import { Controller } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
-import { useCustomMutation } from "./useCustomMutation";
-import worldActionsAPI from "../../api/world/services/worldServices";
+import { useCustomMutation } from "../../../utils/hooks/useCustomMutation";
+import worldActionsAPI from "../../../api/world/services/worldServices";
 
 const ORDER_INPUTS_TO_SHOW = 20;
 const QUERY_KEYS = {
@@ -13,10 +13,8 @@ const QUERY_KEYS = {
   worlds: "worlds",
 };
 
-export default function ModuleModal({ mainAction, extraActions, defaultValues, editId }) {
-
-
-  const { control, mutate, handleSubmit } = useCustomMutation(QUERY_KEYS.modules, mainAction, defaultValues, extraActions);
+export default function ModuleModal({ mainAction, defaultValues, editId, setIdToEdit }) {
+  const { control, mutate, handleSubmit } = useCustomMutation(QUERY_KEYS.modules, mainAction, defaultValues);
   const { data: worlds, isLoading, error } = useQuery([QUERY_KEYS.worlds], () => worldActionsAPI.getAll());
 
   const onSubmit = handleSubmit((data) => {
@@ -26,7 +24,7 @@ export default function ModuleModal({ mainAction, extraActions, defaultValues, e
   });
 
   return (
-    <CustomModal handleSubmit={onSubmit} setIdToEdit={extraActions.setIdToEdit}>
+    <CustomModal handleSubmit={onSubmit} setIdToEdit={setIdToEdit}>
       <Controller
         name="description"
         control={control}

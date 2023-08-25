@@ -1,33 +1,18 @@
 import React, { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { Button, TextInput, SingleSelect, SingleSelectOption } from "@strapi/design-system";
-import {  Plus } from "@strapi/icons";
-import CustomModal from "./CustomModal";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-export default function ExercisesModal({ actions, lessonId }) {
-  const {
-    control,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
-  const queryClient = useQueryClient();
-  const mutate = useMutation(actions.actionsAPI.create, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("exercises");
-      actions.alert.show("success", "Lesson created");
-      actions.setShowModal(false);
-    },
-    onError: () => {
-      actions.alert.show("error", "Error creating Lesson");
-      actions.setShowModal(false);
-    },
-  });
+import { Plus } from "@strapi/icons";
+import CustomModal from "../CustomModal";
+
+import { useCustomMutation } from "../../../utils/hooks/useCustomMutation";
+
+const QUERY_KEY = "lessons";
+export default function ExercisesModal({ data, lessonId, mainAction, defaultValues, editId, setIdToEdit }) {
+  const { control, mutate, handleSubmit, watch } = useCustomMutation(QUERY_KEY, mainAction, defaultValues);
 
   const [options, setOptions] = useState([]);
 
   const onSubmit = handleSubmit((data) => {
-
     const exercise = {
       data: {
         lesson: lessonId,
@@ -47,7 +32,7 @@ export default function ExercisesModal({ actions, lessonId }) {
       // exercise.data.content = JSON.stringify({ options: options });
     }
     console.log(exercise);
-    mutate.mutate(exercise);
+    mutate(exercise);
   });
 
   const loadCompletionSentence = (sentence) => {
@@ -89,7 +74,12 @@ export default function ExercisesModal({ actions, lessonId }) {
             name="memoryWords"
             control={control}
             render={({ field }) => (
-              <TextInput {...field} placeholder="Type the words you want to be in the memory exercise" label="Memory Words" hint="Press enter after each word" />
+              <TextInput
+                {...field}
+                placeholder="Type the words you want to be in the memory exercise"
+                label="Memory Words"
+                hint="Press enter after each word"
+              />
             )}
           ></Controller>
         </>
@@ -133,7 +123,7 @@ export default function ExercisesModal({ actions, lessonId }) {
     setOptions(updatedOptions);
   };
   return (
-    <CustomModal actions={actions} handleSubmit={onSubmit}>
+    <CustomModal handleSubmit={onSubmit}>
       <Controller
         name="type"
         control={control}

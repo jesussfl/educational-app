@@ -2,14 +2,42 @@ import React, { useState } from "react";
 import pluginId from "../../../pluginId";
 import { Box, Flex, Typography, Tbody, Tr, Td, IconButton, Link } from "@strapi/design-system";
 import { ArrowRight, Trash } from "@strapi/icons";
+import { useModal } from "../../../utils/contexts/ModalContext";
+import { CustomTable, DeleteDialog, ExercisesModal, TableHeaders } from "../../../components";
 
-import { CustomTable, DeleteDialog } from "../../../components";
+export default function ExercisesTable({ data, actions, lessonId, lessonInfo }) {
+  const isDataEmpty = data.isEmpty || data.data.length === 0;
+  const { showModal, setShowModal, idToEdit, setIdToEdit, dataToEdit, setDataToEdit, idToDelete, setIdToDelete } = useModal();
 
-export default function ExercisesTable({ data, paginationData, status, actions }) {
-  const [exerciseIdToDelete, setExerciseIdToDelete] = useState(null);
+  const tableConfig = {
+    tableName: "exercises",
+    emptyStateMessage: "There are no exercises yet",
+    createModal: () => <ExercisesModal mainAction={actions.create} data={lessonInfo} lessonId={lessonId} />,
+    editModal: () => (
+      <ExercisesModal
+        data={lessonInfo}
+        lessonId={lessonId}
+        mainAction={actions.update}
+        defaultValues={dataToEdit}
+        editId={idToEdit}
+        setIdToEdit={setIdToEdit}
+      />
+    ),
+    deleteDialog: () => (
+      <DeleteDialog showDialog={setIdToDelete} mainAction={actions.delete} idToDelete={idToDelete} section={"exercises"} />
+    ),
+  };
 
   return (
-    <CustomTable actions={actions} data={data} paginationData={paginationData} status={status}>
+    <CustomTable
+      config={tableConfig}
+      isDataEmpty={isDataEmpty}
+      paginationData={{ page: 1, pageSize: 10, pageCount: 1 }}
+      renderDeleteDialog={() => idToDelete !== null && tableConfig.deleteDialog()}
+      renderEditModal={() => showModal && idToEdit !== null && tableConfig.editModal()}
+      renderCreateModal={() => showModal && idToEdit === null && tableConfig.createModal()}
+    >
+      <TableHeaders data={data.data} />
       <Tbody>
         {data.data.map((row) => {
           const attributes = row.attributes;
@@ -37,15 +65,14 @@ export default function ExercisesTable({ data, paginationData, status, actions }
               <Td>
                 <Typography textColor="neutral800">{attributes.content || ""}</Typography>
               </Td>
-              <Td>
-              </Td>
+              <Td></Td>
               <Td>
                 <Flex style={{ justifyContent: "end" }}>
                   <Link to={`/plugins/${pluginId}/exercises/${row.id}?page=1&pageSize=10&sort=id:ASC`}>
                     <IconButton label="Go to Lessons" noBorder icon={<ArrowRight />} />
                   </Link>
                   <Box paddingLeft={1}>
-                    <IconButton onClick={() => setExerciseIdToDelete(row.id)} label="Delete" noBorder icon={<Trash />} />
+                    <IconButton onClick={() => setIdToDelete(row.id)} label="Delete" noBorder icon={<Trash />} />
                   </Box>
                 </Flex>
               </Td>
@@ -53,7 +80,6 @@ export default function ExercisesTable({ data, paginationData, status, actions }
           );
         })}
       </Tbody>
-      {exerciseIdToDelete != null && <DeleteDialog showDialog={setExerciseIdToDelete} actions={actions} idToDelete={exerciseIdToDelete} />}
     </CustomTable>
   );
 }

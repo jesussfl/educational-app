@@ -1,22 +1,24 @@
 import React from "react";
 
 import { TextInput, SingleSelect, SingleSelectOption } from "@strapi/design-system";
-import CustomModal from "./CustomModal";
+import CustomModal from "../CustomModal";
 import { Controller } from "react-hook-form";
-import { useCustomMutation } from "./useCustomMutation";
-const ORDER_INPUTS_TO_SHOW = 20;
-const QUERY_KEY = "lessons"
-export default function LessonModal({ data, moduleId, mainAction, extraActions, defaultValues, editId }) {
+import { useCustomMutation } from "../../../utils/hooks/useCustomMutation";
 
-  const { control, mutate, handleSubmit } = useCustomMutation(QUERY_KEY, mainAction, defaultValues, extraActions);
-  console.log(data)
+const ORDER_INPUTS_TO_SHOW = 20;
+const QUERY_KEY = "lessons";
+export default function LessonModal({ data, moduleId, mainAction, defaultValues, editId, setIdToEdit }) {
+  const { control, mutate, handleSubmit } = useCustomMutation(QUERY_KEY, mainAction, defaultValues);
+
   const onSubmit = handleSubmit((formData) => {
     const id = editId;
-    id ? mutate({ id, data: { ...formData, module: moduleId, world: data.world.id } }) : mutate({ data: { ...formData, module: moduleId, world: data.world.id } });
+    id
+      ? mutate({ id, data: { ...formData, module: moduleId, world: data.world.id } })
+      : mutate({ data: { ...formData, module: moduleId, world: data.world.data.id } });
   });
 
   return (
-    <CustomModal handleSubmit={onSubmit} setIdToEdit={extraActions.setIdToEdit}>
+    <CustomModal handleSubmit={onSubmit} setIdToEdit={setIdToEdit}>
       <Controller
         name="description"
         control={control}

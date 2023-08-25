@@ -1,10 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-
-export const useCustomMutation = (queryKey, queryFunction, defaultValues, extraFunctions) => {
+import { useAlerts } from "../contexts/AlertsContext";
+export const useCustomMutation = (queryKey, queryFunction, defaultValues) => {
   if (defaultValues === undefined || defaultValues === null) {
     defaultValues = {};
   }
+
+  const { showAlert } = useAlerts();
   const singularKey = (queryKey) => {
     if (queryKey.endsWith("ies")) {
       return queryKey.replace(/ies$/, "y");
@@ -17,22 +19,15 @@ export const useCustomMutation = (queryKey, queryFunction, defaultValues, extraF
     }
   };
 
-  const { control, handleSubmit } = useForm({ defaultValues: defaultValues });
+  const { control, handleSubmit, watch } = useForm({ defaultValues: defaultValues });
   const queryClient = useQueryClient();
   const mutate = useMutation(queryFunction, {
     onSuccess: () => {
       queryClient.invalidateQueries(queryKey);
-
-      if (extraFunctions.alert !== undefined) {
-        extraFunctions.alert.show("success", `${singularKey(queryKey)} created`);
-      }
-      // extraFunctions.setShowModal(false);
+      showAlert("success", `${singularKey(queryKey)} created`);
     },
     onError: () => {
-      if (extraFunctions.alert !== undefined) {
-        extraFunctions.alert.show("error", `there was an error creating a ${singularKey(queryKey)}`);
-      }
-      // extraFunctions.setShowModal(false);
+      showAlert("error", `there was an error creating a ${singularKey(queryKey)}`);
     },
   });
 
@@ -40,5 +35,6 @@ export const useCustomMutation = (queryKey, queryFunction, defaultValues, extraF
     control,
     mutate: mutate.mutate,
     handleSubmit,
+    watch,
   };
 };

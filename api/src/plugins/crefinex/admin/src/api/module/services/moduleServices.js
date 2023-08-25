@@ -71,6 +71,8 @@ const moduleAPI = {
   },
 
   delete: async (moduleId) => {
+    console.log("module deleted ", moduleId);
+
     try {
       const data = await fetch(`http://${process.env.STRAPI_ADMIN_HOST_URL}:1337/api/modules/${moduleId}`, {
         method: "DELETE",
@@ -81,7 +83,7 @@ const moduleAPI = {
       console.log(error);
       throw new Error("Failed to delete module");
     }
-  }
+  },
 };
 
 export default moduleAPI;

@@ -1,4 +1,4 @@
-import CustomTable from "./Tables/Table";
+import CustomTable from "./Tables/CustomTable";
 import TableFilters from "./Tables/TableFilters";
 import TablePagination from "./Tables/TablePagination";
 
@@ -8,9 +8,9 @@ import ModuleTable from "./Tables/ByPages/ModuleTable";
 import ExercisesTable from "./Tables/ByPages/ExercisesTable";
 
 import CustomModal from "./Modal/CustomModal";
-import ModuleModal from "./Modal/ModuleModal";
-import LessonModal from "./Modal/LessonModal";
-import ExercisesModal from "./Modal/ExercisesModal";
+import ModuleModal from "./Modal/ByPages/ModuleModal";
+import LessonModal from "./Modal/ByPages/LessonModal";
+import ExercisesModal from "./Modal/ByPages/ExercisesModal";
 
 import EmptyState from "./EmptyState";
 
@@ -18,7 +18,7 @@ import CustomAlert from "./CustomAlert";
 
 import CustomLoader from "./CustomLoader";
 
-import { DeleteDialog } from "./Modal/Dialog/CustomDialogs";
+import { DeleteDialog } from "./Dialog/CustomDialogs";
 
 export {
   TableFilters,

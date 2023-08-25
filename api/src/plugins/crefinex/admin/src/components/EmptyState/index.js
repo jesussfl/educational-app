@@ -2,7 +2,7 @@ import React from "react";
 import { Illo } from "../../components/Illo";
 import { EmptyStateLayout, Button } from "@strapi/design-system";
 import { Plus } from "@strapi/icons";
-import { useModal } from "../../utils/ModalContext";
+import { useModal } from "../../utils/contexts/ModalContext";
 export default function EmptyState({ message, renderActionModal }) {
   const { showModal, setShowModal } = useModal();
   return (
