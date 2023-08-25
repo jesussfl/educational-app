@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "exercises",
+  "info": {
+    "singularName": "exercise",
+    "pluralName": "exercises",
+    "displayName": "Exercise",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "enum": ["Completion", "selection"]
+    },
+    "lesson": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::crefinex.lesson",
+      "inversedBy": "exercises"
+    },
+    "order": {
+      "type": "decimal"
+    },
+    "content": {
+      "type": "json",
+      "required": true
+    }
+  }
+}

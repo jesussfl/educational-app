@@ -1,0 +1,45 @@
+{
+  "kind": "collectionType",
+  "collectionName": "lessons",
+  "info": {
+    "singularName": "lesson",
+    "pluralName": "lessons",
+    "displayName": "Lesson",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "module": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::crefinex.section",
+      "inversedBy": "lessons"
+    },
+    "exercises": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "plugin::crefinex.exercise",
+      "mappedBy": "lesson"
+    },
+    "world": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::crefinex.world"
+    },
+    "description": {
+      "type": "text",
+      "minLength": 1,
+      "maxLength": 150,
+      "required": true,
+      "default": "This is a lesson description"
+    },
+    "order": {
+      "type": "decimal",
+      "required": true,
+      "default": 1
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "worlds",
+  "info": {
+    "singularName": "world",
+    "pluralName": "worlds",
+    "displayName": "World",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100,
+      "minLength": 1
+    },
+    "description": {
+      "type": "text",
+      "required": true,
+      "maxLength": 255,
+      "minLength": 1
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "modules": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "plugin::crefinex.section",
+      "mappedBy": "world"
+    }
+  }
+}

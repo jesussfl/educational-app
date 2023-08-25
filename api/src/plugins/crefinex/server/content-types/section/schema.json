@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sections",
+  "info": {
+    "singularName": "section",
+    "pluralName": "sections",
+    "displayName": "Section",
+    "description": "hola"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "lessons": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "plugin::crefinex.lesson",
+      "mappedBy": "module"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "required": true,
+      "default": "This is a description"
+    },
+    "order": {
+      "type": "decimal",
+      "default": 1,
+      "required": true,
+      "unique": false
+    },
+    "world": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::crefinex.world",
+      "inversedBy": "modules"
+    }
+  }
+}

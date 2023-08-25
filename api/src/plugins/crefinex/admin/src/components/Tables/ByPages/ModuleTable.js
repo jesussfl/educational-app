@@ -8,8 +8,7 @@ import { NavLink } from "react-router-dom";
 import { useModal } from "../../../utils/contexts/ModalContext";
 
 export default function ModuleTable({ data, actions }) {
-  const isDataEmpty = data.isEmpty || data.data.length === 0;
-
+  const isDataEmpty = false;
   const { showModal, setShowModal, idToEdit, setIdToEdit, dataToEdit, setDataToEdit, idToDelete, setIdToDelete } = useModal();
 
   const tableConfig = {
@@ -25,15 +24,15 @@ export default function ModuleTable({ data, actions }) {
     <CustomTable
       config={tableConfig}
       isDataEmpty={isDataEmpty}
-      paginationData={data.meta.pagination}
+      paginationData={{ page: 1, pageSize: 10, pageCount: 1 }}
       renderDeleteDialog={() => idToDelete !== null && tableConfig.deleteDialog()}
       renderEditModal={() => showModal && idToEdit !== null && tableConfig.editModal()}
       renderCreateModal={() => showModal && idToEdit === null && tableConfig.createModal()}
     >
-      <TableHeaders data={data.data} />
+      {/* <TableHeaders data={data} /> */}
       <Tbody>
-        {data.data.map((row) => {
-          const attributes = row.attributes;
+        {data.map((row) => {
+          // const attributes = row.attributes;
 
           return (
             <Tr key={row.id}>
@@ -41,21 +40,21 @@ export default function ModuleTable({ data, actions }) {
                 <Typography textColor="neutral800">{row.id}</Typography>
               </Td>
               <Td>
-                <Typography textColor="neutral800">{attributes.description}</Typography>
+                <Typography textColor="neutral800">{row.description}</Typography>
               </Td>
               <Td>
-                <Typography textColor="neutral800">{attributes.order}</Typography>
+                <Typography textColor="neutral800">{row.order}</Typography>
               </Td>
               <Td>
-                <Typography textColor="neutral800">{attributes.createdAt}</Typography>
+                <Typography textColor="neutral800">{row.createdAt}</Typography>
               </Td>
               <Td>
-                <Typography textColor="neutral800">{attributes.updatedAt}</Typography>
+                <Typography textColor="neutral800">{row.updatedAt}</Typography>
               </Td>
               <Td>
-                <Typography textColor="neutral800">{attributes.publishedAt}</Typography>
+                <Typography textColor="neutral800">{row.publishedAt}</Typography>
               </Td>
-              <Td>
+              {/* <Td>
                 <SimpleMenu label={attributes.lessons.data.length}>
                   {attributes.lessons.data.map((lesson) => (
                     <MenuItem
@@ -65,10 +64,8 @@ export default function ModuleTable({ data, actions }) {
                     >{`${lesson.attributes.description} - ${lesson.attributes.order}`}</MenuItem>
                   ))}
                 </SimpleMenu>
-              </Td>
-              <Td>
-                <Typography textColor="neutral800">{attributes.world.data?.attributes?.name || ""}</Typography>
-              </Td>
+              </Td> */}
+              <Td>{/* <Typography textColor="neutral800">{attributes.world.data?.attributes?.name || ""}</Typography> */}</Td>
               <Td>
                 <Flex style={{ justifyContent: "end" }}>
                   <Link to={`/plugins/${pluginId}/lesson/${row.id}?page=1&pageSize=10&sort=id:ASC`}>
@@ -77,7 +74,7 @@ export default function ModuleTable({ data, actions }) {
                   <Box paddingLeft={1}>
                     <IconButton
                       onClick={() => {
-                        setDataToEdit({ ...attributes, world: attributes.world.data.id });
+                        // setDataToEdit({ ...attributes, world: attributes.world.data.id });
                         setIdToEdit(row.id), setShowModal(true);
                       }}
                       label="Edit"
