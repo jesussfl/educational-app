@@ -1,6 +1,6 @@
 const myController = require("./my-controller");
-const sectionController = require("./sectionController");
+const section = require("./section");
 module.exports = {
   myController,
-  sectionController,
+  section,
 };

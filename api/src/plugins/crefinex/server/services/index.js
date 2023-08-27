@@ -1,6 +1,6 @@
 const myService = require("./my-service");
-const sectionService = require("./sectionService");
+const section = require("./section");
 module.exports = {
   myService,
-  sectionService,
+  section,
 };

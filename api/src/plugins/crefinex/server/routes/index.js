@@ -11,7 +11,7 @@ module.exports = [
   {
     method: "GET",
     path: "/sections",
-    handler: "sectionController.find",
+    handler: "section.find",
     config: {
       policies: [],
       auth: false,

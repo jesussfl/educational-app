@@ -29,10 +29,10 @@ export default function ModuleTable({ data, actions }) {
       renderEditModal={() => showModal && idToEdit !== null && tableConfig.editModal()}
       renderCreateModal={() => showModal && idToEdit === null && tableConfig.createModal()}
     >
-      {/* <TableHeaders data={data} /> */}
+      <TableHeaders data={data.data} />
       <Tbody>
-        {data.map((row) => {
-          // const attributes = row.attributes;
+        {data.data.map((row) => {
+          const attributes = row.attributes;
 
           return (
             <Tr key={row.id}>
@@ -40,21 +40,21 @@ export default function ModuleTable({ data, actions }) {
                 <Typography textColor="neutral800">{row.id}</Typography>
               </Td>
               <Td>
-                <Typography textColor="neutral800">{row.description}</Typography>
+                <Typography textColor="neutral800">{attributes.description}</Typography>
               </Td>
               <Td>
-                <Typography textColor="neutral800">{row.order}</Typography>
+                <Typography textColor="neutral800">{attributes.order}</Typography>
               </Td>
               <Td>
-                <Typography textColor="neutral800">{row.createdAt}</Typography>
+                <Typography textColor="neutral800">{attributes.createdAt}</Typography>
               </Td>
               <Td>
-                <Typography textColor="neutral800">{row.updatedAt}</Typography>
+                <Typography textColor="neutral800">{attributes.updatedAt}</Typography>
               </Td>
               <Td>
-                <Typography textColor="neutral800">{row.publishedAt}</Typography>
+                <Typography textColor="neutral800">{attributes.publishedAt}</Typography>
               </Td>
-              {/* <Td>
+              <Td>
                 <SimpleMenu label={attributes.lessons.data.length}>
                   {attributes.lessons.data.map((lesson) => (
                     <MenuItem
@@ -64,8 +64,10 @@ export default function ModuleTable({ data, actions }) {
                     >{`${lesson.attributes.description} - ${lesson.attributes.order}`}</MenuItem>
                   ))}
                 </SimpleMenu>
-              </Td> */}
-              <Td>{/* <Typography textColor="neutral800">{attributes.world.data?.attributes?.name || ""}</Typography> */}</Td>
+              </Td>
+              <Td>
+                <Typography textColor="neutral800">{attributes.world.data?.attributes?.name || ""}</Typography>
+              </Td>
               <Td>
                 <Flex style={{ justifyContent: "end" }}>
                   <Link to={`/plugins/${pluginId}/lesson/${row.id}?page=1&pageSize=10&sort=id:ASC`}>

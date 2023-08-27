@@ -6,7 +6,20 @@ import { Controller } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import { useCustomMutation } from "../../../utils/hooks/useCustomMutation";
 import worldActionsAPI from "../../../api/world/services/worldServices";
-
+import { gql } from "@apollo/client";
+import { useGraphQL } from "../../../utils/contexts/GraphqlContext";
+const GET_ALL_WORLDS = gql`
+  query {
+    crefinexWorlds {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+  }
+`;
 const ORDER_INPUTS_TO_SHOW = 20;
 const QUERY_KEYS = {
   modules: "modules",
@@ -14,8 +27,9 @@ const QUERY_KEYS = {
 };
 
 export default function ModuleModal({ mainAction, defaultValues, editId, setIdToEdit }) {
+  const { graphQLClient } = useGraphQL();
   const { control, mutate, handleSubmit } = useCustomMutation(QUERY_KEYS.modules, mainAction, defaultValues);
-  const { data: worlds, isLoading, error } = useQuery([QUERY_KEYS.worlds], () => worldActionsAPI.getAll());
+  const { data, isLoading, error } = useQuery([QUERY_KEYS.worlds], () => graphQLClient.request(GET_ALL_WORLDS));
 
   const onSubmit = handleSubmit((data) => {
     const id = editId;
@@ -39,9 +53,10 @@ export default function ModuleModal({ mainAction, defaultValues, editId, setIdTo
           name="world"
           control={control}
           render={({ field }) => {
+            const { crefinexWorlds } = data;
             return (
               <SingleSelect {...field} placeholder="Select the world of this module" label="World">
-                {worlds.data.map((world) => (
+                {crefinexWorlds.data.map((world) => (
                   <SingleSelectOption key={world.id} value={world.id}>{`${world.id} - ${world.attributes.name}`}</SingleSelectOption>
                 ))}
               </SingleSelect>
