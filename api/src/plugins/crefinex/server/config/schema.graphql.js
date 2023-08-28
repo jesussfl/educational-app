@@ -1,6 +1,8 @@
 module.exports = {
   definition: ``,
-  query: ``,
+  query: `
+  sectionsByWorld(id: ID, limit: Int): [CrefinexSection]!
+`,
   type: {},
   resolver: {
     Query: {},
