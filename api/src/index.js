@@ -1,5 +1,5 @@
-const lessonsBySection = require("./plugins/crefinex/server/resolvers/lessonsBySection");
-
+const { resolvers: sectionsResolvers } = require("./plugins/crefinex/server/modules/sections");
+const { resolvers: lessonsBySectionResolvers } = require("./plugins/crefinex/server/modules/lessonsBySection");
 module.exports = {
   /**
    * An asynchronous register function that runs before
@@ -9,14 +9,22 @@ module.exports = {
    */
   register(/* { strapi } */) {
     const extensionService = strapi.plugin("graphql").service("extension");
-
+    const Query = `
+    type Query {
+      lessonsBySection(id:ID!, start:Int, limit:Int): LessonsBySection!
+    }
+    extend type Query {
+      sections(start:Int, limit:Int): CrefinexSectionEntityResponseCollection!
+    }
+    type LessonsBySection {
+      lessons: [CrefinexLessonEntity]
+      pagination: Pagination
+      section: CrefinexSection
+    }
+    `;
     extensionService.use(({ strapi }) => ({
-      typeDefs: `
-        type Query {
-          lessonsBySection(id:ID!, start:Int, limit:Int): CrefinexLessonEntityResponseCollection!
-        }
-      `,
-      resolvers: lessonsBySection,
+      typeDefs: Query,
+      resolvers: { Query: { ...lessonsBySectionResolvers, ...sectionsResolvers } },
     }));
   },
 

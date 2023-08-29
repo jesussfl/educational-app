@@ -2,36 +2,41 @@ import React from "react";
 import pluginId from "../../../pluginId";
 import { Box, Flex, Typography, Tbody, Tr, Td, IconButton, Link } from "@strapi/design-system";
 import { ArrowRight, Trash, Pencil } from "@strapi/icons";
-import { DeleteDialog, CustomTable, ModuleModal, TableHeaders } from "../../../components";
+import { DeleteDialog, CustomTable, ModuleModal, TableHeaders } from "../..";
 import { SimpleMenu, MenuItem } from "@strapi/design-system/v2";
 import { NavLink } from "react-router-dom";
 import { useModal } from "../../../utils/contexts/ModalContext";
 
-export default function ModuleTable({ data, actions }) {
+const LESSONS_URL = (id) => `/plugins/${pluginId}/lessons/${id}?page=1&pageSize=10&sort=id:ASC`;
+const EXERCISES_URL = (id) => `/plugins/${pluginId}/exercises/${id}?page=1&pageSize=10&sort=id:ASC`;
+
+export default function SectionTable({ data, paginationData, actions }) {
   const isDataEmpty = false;
   const { showModal, setShowModal, idToEdit, setIdToEdit, dataToEdit, setDataToEdit, idToDelete, setIdToDelete } = useModal();
 
   const tableConfig = {
-    tableName: "modules",
-    emptyStateMessage: "There are no modules yet",
+    tableName: "sections",
+    emptyStateMessage: "There are no sections yet",
 
     createModal: () => <ModuleModal mainAction={actions.create} />,
     editModal: () => <ModuleModal mainAction={actions.update} defaultValues={dataToEdit} editId={idToEdit} setIdToEdit={setIdToEdit} />,
-    deleteDialog: () => <DeleteDialog showDialog={setIdToDelete} mainAction={actions.delete} idToDelete={idToDelete} section={"modules"} />,
+    deleteDialog: () => (
+      <DeleteDialog showDialog={setIdToDelete} mainAction={actions.delete} idToDelete={idToDelete} section={"sections"} />
+    ),
   };
 
   return (
     <CustomTable
       config={tableConfig}
       isDataEmpty={isDataEmpty}
-      paginationData={{ page: 1, pageSize: 10, pageCount: 1 }}
+      paginationData={paginationData}
       renderDeleteDialog={() => idToDelete !== null && tableConfig.deleteDialog()}
       renderEditModal={() => showModal && idToEdit !== null && tableConfig.editModal()}
       renderCreateModal={() => showModal && idToEdit === null && tableConfig.createModal()}
     >
-      <TableHeaders data={data.data} />
+      <TableHeaders data={data} />
       <Tbody>
-        {data.data.map((row) => {
+        {data.map((row) => {
           const attributes = row.attributes;
 
           return (
@@ -60,7 +65,7 @@ export default function ModuleTable({ data, actions }) {
                     <MenuItem
                       as={NavLink}
                       key={lesson.id}
-                      to={`/plugins/${pluginId}/exercises/${lesson.id}?page=1&pageSize=10&sort=id:ASC`}
+                      to={EXERCISES_URL(lesson.id)}
                     >{`${lesson.attributes.description} - ${lesson.attributes.order}`}</MenuItem>
                   ))}
                 </SimpleMenu>
@@ -70,7 +75,7 @@ export default function ModuleTable({ data, actions }) {
               </Td>
               <Td>
                 <Flex style={{ justifyContent: "end" }}>
-                  <Link to={`/plugins/${pluginId}/lesson/${row.id}?page=1&pageSize=10&sort=id:ASC`}>
+                  <Link to={LESSONS_URL(row.id)}>
                     <IconButton label="Go to Lessons" noBorder icon={<ArrowRight />} />
                   </Link>
                   <Box paddingLeft={1}>

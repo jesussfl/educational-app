@@ -2,8 +2,8 @@ import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { AnErrorOccurred } from "@strapi/helper-plugin";
 import pluginId from "../../pluginId";
-import LessonPage from "../Lesson/LessonPage";
-import ModulesPage from "../Home/ModulesPage";
+import LessonsPage from "../Lesson/LessonsPage";
+import SectionsPage from "../Home/SectionsPage";
 import ExercisesPage from "../Exercises/ExercisesPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ModalProvider } from "../../utils/contexts/ModalContext";
@@ -20,11 +20,11 @@ function App() {
             <Switch>
               <Route path={`/plugins/${pluginId}`} exact>
                 {/* Redirigir desde HomePage a ModulesPage con parámetros de URL */}
-                <Redirect to={`/plugins/${pluginId}/modules?page=1&pageSize=10&sort=id:ASC`} />
+                <Redirect to={`/plugins/${pluginId}/sections?page=1&pageSize=10&sort=id:ASC`} />
               </Route>
-              <Route path={`/plugins/${pluginId}/lesson/:moduleId`} component={LessonPage} exact />
+              <Route path={`/plugins/${pluginId}/lessons/:sectionId`} component={LessonsPage} exact />
               <Route path={`/plugins/${pluginId}/exercises/:lessonId`} component={ExercisesPage} exact />
-              <Route path={`/plugins/${pluginId}/modules`} render={() => <ModulesPage />} exact />
+              <Route path={`/plugins/${pluginId}/sections`} render={() => <SectionsPage />} exact />
 
               <Route component={AnErrorOccurred} />
             </Switch>

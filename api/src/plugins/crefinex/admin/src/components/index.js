@@ -4,7 +4,7 @@ import TablePagination from "./Tables/TablePagination";
 
 import TableHeaders from "./Tables/TableHeaders";
 import LessonTable from "./Tables/ByPages/LessonTable";
-import ModuleTable from "./Tables/ByPages/ModuleTable";
+import SectionTable from "./Tables/ByPages/SectionTable";
 import ExercisesTable from "./Tables/ByPages/ExercisesTable";
 
 import CustomModal from "./Modal/CustomModal";
@@ -32,7 +32,7 @@ export {
   ModuleModal,
   ExercisesModal,
   CustomModal,
-  ModuleTable,
+  SectionTable,
   ExercisesTable,
   LessonTable,
   LessonModal,

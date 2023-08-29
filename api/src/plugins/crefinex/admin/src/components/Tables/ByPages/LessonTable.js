@@ -5,18 +5,21 @@ import { ArrowRight, Trash, Pencil } from "@strapi/icons";
 
 import { CustomTable, DeleteDialog, LessonModal, TableHeaders } from "../../../components";
 import { useModal } from "../../../utils/contexts/ModalContext";
-export default function LessonTable({ data, actions, moduleId, moduleInfo }) {
-  const isDataEmpty = data.isEmpty || data.data.length === 0;
+
+const EXERCISES_URL = (id) => `/plugins/${pluginId}/exercises/${id}?page=1&pageSize=10&sort=id:ASC`;
+
+export default function LessonTable({ data, actions, sectionId, sectionInfo, paginationData }) {
+  const isDataEmpty = data.length === 0;
   const { showModal, setShowModal, idToEdit, setIdToEdit, dataToEdit, setDataToEdit, idToDelete, setIdToDelete } = useModal();
 
   const tableConfig = {
     tableName: "lessons",
     emptyStateMessage: "There are no lessons yet",
-    createModal: () => <LessonModal mainAction={actions.create} data={moduleInfo} moduleId={moduleId} />,
+    createModal: () => <LessonModal mainAction={actions.create} data={sectionInfo} moduleId={sectionId} />,
     editModal: () => (
       <LessonModal
-        data={moduleInfo}
-        moduleId={moduleId}
+        data={sectionInfo}
+        moduleId={sectionId}
         mainAction={actions.update}
         defaultValues={dataToEdit}
         editId={idToEdit}
@@ -30,14 +33,14 @@ export default function LessonTable({ data, actions, moduleId, moduleInfo }) {
     <CustomTable
       config={tableConfig}
       isDataEmpty={isDataEmpty}
-      paginationData={{ page: 1, pageSize: 10, pageCount: 1 }}
+      paginationData={paginationData}
       renderDeleteDialog={() => idToDelete !== null && tableConfig.deleteDialog()}
       renderEditModal={() => showModal && idToEdit !== null && tableConfig.editModal()}
       renderCreateModal={() => showModal && idToEdit === null && tableConfig.createModal()}
     >
-      <TableHeaders data={data.data} />
+      <TableHeaders data={data} />
       <Tbody>
-        {data.data.map((row) => {
+        {data.map((row) => {
           const attributes = row.attributes;
 
           return (
@@ -61,11 +64,10 @@ export default function LessonTable({ data, actions, moduleId, moduleInfo }) {
               <Td>
                 <Typography textColor="neutral800">{attributes.order}</Typography>
               </Td>
-              <Td>{/* <Typography textColor="neutral800">{attributes.module.data.id || ""}</Typography> */}</Td>
               <Td>
                 <Flex style={{ justifyContent: "end" }}>
-                  <Link to={`/plugins/${pluginId}/exercises/${row.id}?page=1&pageSize=10&sort=id:ASC`}>
-                    <IconButton label="Go to Lessons" noBorder icon={<ArrowRight />} />
+                  <Link to={EXERCISES_URL(row.id)}>
+                    <IconButton label="Go to Exercises" noBorder icon={<ArrowRight />} />
                   </Link>
                   <Box paddingLeft={1}>
                     <IconButton
