@@ -1,3 +1,5 @@
+const lessonsBySection = require("./plugins/crefinex/server/resolvers/lessonsBySection");
+
 module.exports = {
   /**
    * An asynchronous register function that runs before
@@ -14,31 +16,7 @@ module.exports = {
           lessonsBySection(id:ID!, start:Int, limit:Int): CrefinexLessonEntityResponseCollection!
         }
       `,
-      resolvers: {
-        Query: {
-          lessonsBySection: {
-            resolve: async (parent, args, context) => {
-              const { toEntityResponseCollection } = strapi.service("plugin::graphql.format").returnTypes;
-
-              const { results } = await strapi.services["plugin::crefinex.lesson"].find({
-                filters: {
-                  section: args.id,
-                },
-              });
-              console.log("##################", results, "##################");
-
-              const response = toEntityResponseCollection(results, {
-                args: { start: args.start, limit: args.limit },
-                resourceUID: "plugin::crefinex.lesson",
-              });
-
-              console.log("##################", response, "##################");
-
-              return response;
-            },
-          },
-        },
-      },
+      resolvers: lessonsBySection,
     }));
   },
 
