@@ -1,6 +1,4 @@
 import React from "react";
-import actionsAPI from "../../api/lesson/services/lessonServices";
-import moduleActionsAPI from "../../api/module/services/moduleServices";
 
 import { BaseHeaderLayout, ContentLayout, Button, Link, Breadcrumbs, Crumb } from "@strapi/design-system";
 import { Plus, ArrowLeft } from "@strapi/icons";
@@ -12,17 +10,17 @@ import { useParams, useHistory } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useModal } from "../../utils/contexts/ModalContext";
 import { usePagination } from "../../utils/hooks/usePagination";
-import { getLessonsBySection } from "../../queries/lessonsBySection";
-import { useGraphQL } from "../../utils/contexts/GraphqlContext";
+import { QUERY_KEYS } from "../../constants/queryKeys.constants";
+import { query } from "../../graphql/client/GraphQLCLient";
+import { queryLessonsBySectionId } from "../../graphql/queries/lesson.queries";
 
 function LessonsPage() {
   const history = useHistory();
   const { sectionId } = useParams();
   const { setShowModal } = useModal();
-  const { graphQLClient } = useGraphQL();
   const { currentPage, rowsPerPage } = usePagination();
-  const { data, isLoading, error } = useQuery(["lessons", sectionId, currentPage, rowsPerPage], () =>
-    graphQLClient.request(getLessonsBySection(sectionId, currentPage, rowsPerPage))
+  const { data, isLoading, error } = useQuery([QUERY_KEYS.lessons, sectionId, currentPage, rowsPerPage], () =>
+    query(queryLessonsBySectionId, { id: sectionId, start: currentPage, limit: rowsPerPage })
   );
   const { lessonsBySection } = isLoading ? {} : data;
   const lessons = lessonsBySection?.lessons;
@@ -60,7 +58,6 @@ function LessonsPage() {
             <LessonTable
               data={lessons}
               paginationData={lessonsBySection.pagination}
-              actions={actionsAPI}
               sectionId={sectionId}
               sectionInfo={lessonsBySection.section?.description}
             />

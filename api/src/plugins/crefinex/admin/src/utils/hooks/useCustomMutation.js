@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useAlerts } from "../contexts/AlertsContext";
+import { query } from "../../graphql/client/GraphQLCLient";
 export const useCustomMutation = (queryKey, queryFunction, defaultValues) => {
   if (defaultValues === undefined || defaultValues === null) {
     defaultValues = {};
@@ -21,7 +22,7 @@ export const useCustomMutation = (queryKey, queryFunction, defaultValues) => {
 
   const { control, handleSubmit, watch } = useForm({ defaultValues: defaultValues });
   const queryClient = useQueryClient();
-  const mutate = useMutation(queryFunction, {
+  const mutate = useMutation(async (payload) => await query(queryFunction, { ...payload }), {
     onSuccess: () => {
       queryClient.invalidateQueries(queryKey);
       showAlert("success", `${singularKey(queryKey)} created`);

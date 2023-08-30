@@ -1,40 +1,53 @@
 import React from "react";
 import pluginId from "../../../pluginId";
+
 import { Box, Flex, Typography, Tbody, Tr, Td, IconButton, Link } from "@strapi/design-system";
+import { SimpleMenu, MenuItem } from "@strapi/design-system/v2";
 import { ArrowRight, Trash, Pencil } from "@strapi/icons";
 import { DeleteDialog, CustomTable, ModuleModal, TableHeaders } from "../..";
-import { SimpleMenu, MenuItem } from "@strapi/design-system/v2";
 import { NavLink } from "react-router-dom";
 import { useModal } from "../../../utils/contexts/ModalContext";
+
+import {
+  createSectionMutation as createMutation,
+  updateSectionMutation as updateMutation,
+  deleteSectionMutation as deleteMutation,
+} from "../../../graphql/mutations/section.mutations";
 
 const LESSONS_URL = (id) => `/plugins/${pluginId}/lessons/${id}?page=1&pageSize=10&sort=id:ASC`;
 const EXERCISES_URL = (id) => `/plugins/${pluginId}/exercises/${id}?page=1&pageSize=10&sort=id:ASC`;
 
-export default function SectionTable({ data, paginationData, actions }) {
-  const isDataEmpty = false;
+export default function SectionTable({ data, paginationData }) {
   const { showModal, setShowModal, idToEdit, setIdToEdit, dataToEdit, setDataToEdit, idToDelete, setIdToDelete } = useModal();
+
+  const showDeleteDialog = idToDelete !== null;
+  const showEditModal = showModal && idToEdit;
+  const showCreateModal = showModal && !idToEdit;
+
+  //Custom Table needs some configurations that's why we create a config object
+  //This config should include the table name, isDataEmpty, emptyStateMessage, paginationData, createModal, editModal and deleteDialog
 
   const tableConfig = {
     tableName: "sections",
+    isDataEmpty: data.length === 0,
     emptyStateMessage: "There are no sections yet",
-
-    createModal: () => <ModuleModal mainAction={actions.create} />,
-    editModal: () => <ModuleModal mainAction={actions.update} defaultValues={dataToEdit} editId={idToEdit} setIdToEdit={setIdToEdit} />,
+    paginationData: paginationData,
+    createModal: () => <ModuleModal mainAction={createMutation} />,
+    editModal: () => <ModuleModal mainAction={updateMutation} defaultValues={dataToEdit} editId={idToEdit} setIdToEdit={setIdToEdit} />,
     deleteDialog: () => (
-      <DeleteDialog showDialog={setIdToDelete} mainAction={actions.delete} idToDelete={idToDelete} section={"sections"} />
+      <DeleteDialog mainAction={deleteMutation} section={"sections"} idToDelete={idToDelete} showDialog={setIdToDelete} />
     ),
   };
 
   return (
     <CustomTable
       config={tableConfig}
-      isDataEmpty={isDataEmpty}
-      paginationData={paginationData}
-      renderDeleteDialog={() => idToDelete !== null && tableConfig.deleteDialog()}
-      renderEditModal={() => showModal && idToEdit !== null && tableConfig.editModal()}
-      renderCreateModal={() => showModal && idToEdit === null && tableConfig.createModal()}
+      renderDeleteDialog={() => showDeleteDialog && tableConfig.deleteDialog()}
+      renderEditModal={() => showEditModal && tableConfig.editModal()}
+      renderCreateModal={() => showCreateModal && tableConfig.createModal()}
     >
       <TableHeaders data={data} />
+
       <Tbody>
         {data.map((row) => {
           const attributes = row.attributes;
@@ -81,7 +94,7 @@ export default function SectionTable({ data, paginationData, actions }) {
                   <Box paddingLeft={1}>
                     <IconButton
                       onClick={() => {
-                        // setDataToEdit({ ...attributes, world: attributes.world.data.id });
+                        setDataToEdit({ ...attributes, world: attributes.world.data.id });
                         setIdToEdit(row.id), setShowModal(true);
                       }}
                       label="Edit"

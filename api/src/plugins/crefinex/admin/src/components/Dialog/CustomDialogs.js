@@ -42,7 +42,7 @@ export function DeleteDialog({ showDialog, mainAction, idToDelete, section }) {
   const { mutate } = useCustomMutation(section, mainAction);
 
   const onSubmit = () => {
-    mutate(idToDelete);
+    mutate({ id: idToDelete });
     showDialog(null);
   };
   return (

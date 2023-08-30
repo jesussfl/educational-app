@@ -1,40 +1,30 @@
 import React from "react";
+import CustomModal from "../CustomModal";
 
 import { TextInput, SingleSelect, SingleSelectOption } from "@strapi/design-system";
-import CustomModal from "../CustomModal";
 import { Controller } from "react-hook-form";
-import { useQuery } from "@tanstack/react-query";
 import { useCustomMutation } from "../../../utils/hooks/useCustomMutation";
-import worldActionsAPI from "../../../api/world/services/worldServices";
-import { gql } from "@apollo/client";
-import { useGraphQL } from "../../../utils/contexts/GraphqlContext";
-const GET_ALL_WORLDS = gql`
-  query {
-    crefinexWorlds {
-      data {
-        id
-        attributes {
-          name
-        }
-      }
-    }
-  }
-`;
+
+import { useQuery } from "@tanstack/react-query";
+import { queryWorlds } from "../../../graphql/queries/world.queries";
+import { query } from "../../../graphql/client/GraphQLCLient";
+import { QUERY_KEYS } from "../../../constants/queryKeys.constants";
+
 const ORDER_INPUTS_TO_SHOW = 20;
-const QUERY_KEYS = {
-  modules: "modules",
-  worlds: "worlds",
-};
 
 export default function ModuleModal({ mainAction, defaultValues, editId, setIdToEdit }) {
-  const { graphQLClient } = useGraphQL();
   const { control, mutate, handleSubmit } = useCustomMutation(QUERY_KEYS.modules, mainAction, defaultValues);
-  const { data, isLoading, error } = useQuery([QUERY_KEYS.worlds], () => graphQLClient.request(GET_ALL_WORLDS));
+  const { data, isLoading, error } = useQuery([QUERY_KEYS.worlds], () => query(queryWorlds));
 
-  const onSubmit = handleSubmit((data) => {
-    const id = editId;
+  const onSubmit = handleSubmit((values) => {
+    const data = {
+      description: values.description,
+      order: parseFloat(values.order),
+      world: values.world,
+      publishedAt: new Date(),
+    };
 
-    id ? mutate({ id, data: { ...data } }) : mutate({ data: { ...data } });
+    editId ? mutate({ id: editId, data: { ...data } }) : mutate({ data: { ...data } });
   });
 
   return (
@@ -68,6 +58,7 @@ export default function ModuleModal({ mainAction, defaultValues, editId, setIdTo
       <Controller
         name="order"
         control={control}
+        rules={{ valueAsNumber: true }}
         render={({ field }) => {
           return (
             <SingleSelect label="Order" placeholder="Select" {...field}>

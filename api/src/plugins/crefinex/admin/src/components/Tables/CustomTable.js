@@ -5,18 +5,10 @@ import { usePagination } from "../../utils/hooks/usePagination";
 import { TableFilters, TablePagination, EmptyState } from "..";
 import { useModal } from "../../utils/contexts/ModalContext";
 
-export default function CustomTable({
-  paginationData,
-  renderCreateModal,
-  renderDeleteDialog,
-  renderEditModal,
-  children,
-  isDataEmpty,
-  config,
-}) {
+export default function CustomTable({ renderCreateModal, renderDeleteDialog, renderEditModal, children, config }) {
   const { setShowModal } = useModal();
   const { currentPage, rowsPerPage, history } = usePagination();
-
+  const isDataEmpty = config.isDataEmpty;
   if (isDataEmpty) return <EmptyState showModal={setShowModal} renderActionModal={config.createModal} message={config.emptyStateMessage} />;
   return (
     <Flex gap={4} direction="column" alignItems="stretch">
@@ -36,7 +28,7 @@ export default function CustomTable({
         history={history}
         currentPage={currentPage}
         rowsPerPage={rowsPerPage}
-        totalPageCount={paginationData?.pageCount || 1}
+        totalPageCount={config.paginationData?.pageCount || 1}
       />
 
       {renderDeleteDialog()}

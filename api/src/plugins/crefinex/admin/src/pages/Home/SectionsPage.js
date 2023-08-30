@@ -5,21 +5,23 @@ import { SectionTable, CustomAlert, CustomLoader } from "../../components";
 
 import { Plus } from "@strapi/icons";
 import { usePagination } from "../../utils";
-import { useQuery } from "@tanstack/react-query";
 import { useModal } from "../../utils/contexts/ModalContext";
-import { useGraphQL } from "../../utils/contexts/GraphqlContext";
-import { getSections } from "../../queries/sections";
-import actionsAPI from "../../api/module/services/moduleServices";
 
+//Queries
+import { useQuery } from "@tanstack/react-query";
+import { querySections } from "../../graphql/queries/section.queries";
+import { query } from "../../graphql/client/GraphQLCLient";
+import { QUERY_KEYS } from "../../constants/queryKeys.constants";
 function SectionsPage() {
   const { currentPage, rowsPerPage } = usePagination();
   const { setShowModal } = useModal();
-  const { graphQLClient } = useGraphQL();
 
-  const { data, isLoading, error } = useQuery(["sections", currentPage, rowsPerPage], () =>
-    graphQLClient.request(getSections(currentPage, rowsPerPage))
+  const { data, isLoading, error } = useQuery([QUERY_KEYS.sections, currentPage, rowsPerPage], () =>
+    query(querySections, {
+      start: currentPage,
+      limit: rowsPerPage,
+    })
   );
-
   const { sections } = isLoading ? {} : data;
 
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
@@ -41,7 +43,7 @@ function SectionsPage() {
             }
           />
           <ContentLayout>
-            <SectionTable data={sections.data} paginationData={sections.meta.pagination} actions={actionsAPI} />
+            <SectionTable data={sections.data} paginationData={sections.meta.pagination} />
           </ContentLayout>
         </>
       )}

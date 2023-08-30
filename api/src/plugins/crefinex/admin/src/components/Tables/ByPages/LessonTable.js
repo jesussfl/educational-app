@@ -5,28 +5,33 @@ import { ArrowRight, Trash, Pencil } from "@strapi/icons";
 
 import { CustomTable, DeleteDialog, LessonModal, TableHeaders } from "../../../components";
 import { useModal } from "../../../utils/contexts/ModalContext";
+import {
+  createLessonMutation as createMutation,
+  deleteLessonMutation as deleteMutation,
+  updateLessonMutation as updateMutation,
+} from "../../../graphql/mutations/lesson.mutations";
 
 const EXERCISES_URL = (id) => `/plugins/${pluginId}/exercises/${id}?page=1&pageSize=10&sort=id:ASC`;
 
-export default function LessonTable({ data, actions, sectionId, sectionInfo, paginationData }) {
+export default function LessonTable({ data, sectionId, sectionInfo, paginationData }) {
   const isDataEmpty = data.length === 0;
   const { showModal, setShowModal, idToEdit, setIdToEdit, dataToEdit, setDataToEdit, idToDelete, setIdToDelete } = useModal();
 
   const tableConfig = {
     tableName: "lessons",
     emptyStateMessage: "There are no lessons yet",
-    createModal: () => <LessonModal mainAction={actions.create} data={sectionInfo} moduleId={sectionId} />,
+    createModal: () => <LessonModal mainAction={createMutation} data={sectionInfo} moduleId={sectionId} />,
     editModal: () => (
       <LessonModal
         data={sectionInfo}
         moduleId={sectionId}
-        mainAction={actions.update}
+        mainAction={updateMutation}
         defaultValues={dataToEdit}
         editId={idToEdit}
         setIdToEdit={setIdToEdit}
       />
     ),
-    deleteDialog: () => <DeleteDialog showDialog={setIdToDelete} mainAction={actions.delete} idToDelete={idToDelete} section={"lessons"} />,
+    deleteDialog: () => <DeleteDialog mainAction={deleteMutation} showDialog={setIdToDelete} idToDelete={idToDelete} section={"lessons"} />,
   };
 
   return (
@@ -50,6 +55,12 @@ export default function LessonTable({ data, actions, sectionId, sectionInfo, pag
               </Td>
 
               <Td>
+                <Typography textColor="neutral800">{attributes.description}</Typography>
+              </Td>
+              <Td>
+                <Typography textColor="neutral800">{attributes.order}</Typography>
+              </Td>
+              <Td>
                 <Typography textColor="neutral800">{attributes.createdAt}</Typography>
               </Td>
               <Td>
@@ -57,12 +68,6 @@ export default function LessonTable({ data, actions, sectionId, sectionInfo, pag
               </Td>
               <Td>
                 <Typography textColor="neutral800">{attributes.publishedAt}</Typography>
-              </Td>
-              <Td>
-                <Typography textColor="neutral800">{attributes.description}</Typography>
-              </Td>
-              <Td>
-                <Typography textColor="neutral800">{attributes.order}</Typography>
               </Td>
               <Td>
                 <Flex style={{ justifyContent: "end" }}>
