@@ -20,6 +20,9 @@ module.exports = {
     extend type Query {
       exercisesByLesson(id:ID!, start:Int, limit:Int): ExercisesByLesson!
     }
+    extend type Query {
+      sectionsByWorld(id:ID!, start:Int, limit:Int): SectionsByWorld!
+    }
     type LessonsBySection {
       lessons: [CrefinexLessonEntity]
       pagination: Pagination
@@ -29,6 +32,11 @@ module.exports = {
       exercises: [CrefinexExerciseEntity]
       pagination: Pagination
       lesson: CrefinexLesson
+    }
+    type SectionsByWorld {
+      sections: [CrefinexSectionEntity]
+      pagination: Pagination
+      world: CrefinexWorld
     }
     `;
     extensionService.use(({ strapi }) => ({

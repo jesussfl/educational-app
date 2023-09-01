@@ -5,6 +5,7 @@ import { Home, Weight, Signpost, Notification, UserOctagon } from "iconsax-react
 
 import { SemanticColors, Colors } from "@utils/Theme";
 import * as Screens from "../index";
+import WorldScreen from "../World/pages/WorldScreen";
 
 const BottomNavStack = createBottomTabNavigator();
 
@@ -18,7 +19,7 @@ export const BottomNavStackNavigator = () => {
 			}}>
 			<BottomNavStack.Screen
 				name='Lessons'
-				component={Screens.HomeScreen}
+				component={WorldScreen}
 				options={{
 					tabBarIcon: ({ focused }) => <Home variant='Bold' size={28} color={focused ? SemanticColors.bg.primary_active : SemanticColors.elevation.secondary_normal} />,
 				}}
