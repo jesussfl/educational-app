@@ -2,33 +2,22 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useAlerts } from "../contexts/AlertsContext";
 import { query } from "../../graphql/client/GraphQLCLient";
+import { convertWordToSingular } from "../convertWordToSingular";
 export const useCustomMutation = (queryKey, queryFunction, defaultValues) => {
-  if (defaultValues === undefined || defaultValues === null) {
-    defaultValues = {};
-  }
+  defaultValues = defaultValues || {};
 
   const { showAlert } = useAlerts();
-  const singularKey = (queryKey) => {
-    if (queryKey.endsWith("ies")) {
-      return queryKey.replace(/ies$/, "y");
-    }
-    if (queryKey.endsWith("s")) {
-      return queryKey.replace(/s$/, "");
-    }
-    if (queryKey.endsWith("es")) {
-      return queryKey.replace(/es$/, "e");
-    }
-  };
-
   const { control, handleSubmit, watch } = useForm({ defaultValues: defaultValues });
+
   const queryClient = useQueryClient();
+
   const mutate = useMutation(async (payload) => await query(queryFunction, { ...payload }), {
     onSuccess: () => {
       queryClient.invalidateQueries(queryKey);
-      showAlert("success", `${singularKey(queryKey)} created`);
+      showAlert("success", `${convertWordToSingular(queryKey)}`);
     },
     onError: () => {
-      showAlert("error", `there was an error creating a ${singularKey(queryKey)}`);
+      showAlert("error", `there was an error in ${convertWordToSingular(queryKey)}`);
     },
   });
 

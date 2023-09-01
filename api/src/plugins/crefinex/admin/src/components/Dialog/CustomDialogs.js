@@ -3,7 +3,7 @@ import React from "react";
 import { Typography, Button, Flex, Dialog, DialogBody, DialogFooter } from "@strapi/design-system";
 
 import { ExclamationMarkCircle, Trash, CheckCircle } from "@strapi/icons";
-
+import { useModal } from "../../utils/contexts/ModalContext";
 import { useCustomMutation } from "../../utils/hooks/useCustomMutation";
 export function ConfirmationDialog({ setShowDialog, setShowModal, handleSubmit }) {
   return (
@@ -38,9 +38,9 @@ export function ConfirmationDialog({ setShowDialog, setShowModal, handleSubmit }
     </Dialog>
   );
 }
-export function DeleteDialog({ showDialog, mainAction, idToDelete, section }) {
+export function DeleteDialog({ mainAction, section }) {
   const { mutate } = useCustomMutation(section, mainAction);
-
+  const { setIdToDelete: showDialog, idToDelete } = useModal();
   const onSubmit = () => {
     mutate({ id: idToDelete });
     showDialog(null);

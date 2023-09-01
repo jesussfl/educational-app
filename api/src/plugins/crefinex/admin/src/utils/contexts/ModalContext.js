@@ -1,4 +1,3 @@
-// ModalContext.js
 import React, { createContext, useContext, useState } from "react";
 
 const ModalContext = createContext();
@@ -16,6 +15,8 @@ export const ModalProvider = ({ children }) => {
   );
 };
 
+//This hooks provides the context
+//is important to clean the states after close the modal!
 export const useModal = () => {
   return useContext(ModalContext);
 };

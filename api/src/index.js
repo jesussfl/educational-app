@@ -1,5 +1,6 @@
-const { resolvers: sectionsResolvers } = require("./plugins/crefinex/server/modules/sections");
-const { resolvers: lessonsBySectionResolvers } = require("./plugins/crefinex/server/modules/lessonsBySection");
+const { resolvers: sectionsResolvers } = require("./plugins/crefinex/server/graphql/modules/sections");
+const { resolvers: lessonsBySectionResolvers } = require("./plugins/crefinex/server/graphql/modules/lessonsBySection");
+const { resolvers: exerciseResolvers } = require("./plugins/crefinex/server/graphql/modules/exercise.module");
 module.exports = {
   /**
    * An asynchronous register function that runs before
@@ -16,15 +17,23 @@ module.exports = {
     extend type Query {
       sections(start:Int, limit:Int): CrefinexSectionEntityResponseCollection!
     }
+    extend type Query {
+      exercisesByLesson(id:ID!, start:Int, limit:Int): ExercisesByLesson!
+    }
     type LessonsBySection {
       lessons: [CrefinexLessonEntity]
       pagination: Pagination
       section: CrefinexSection
     }
+    type ExercisesByLesson {
+      exercises: [CrefinexExerciseEntity]
+      pagination: Pagination
+      lesson: CrefinexLesson
+    }
     `;
     extensionService.use(({ strapi }) => ({
       typeDefs: Query,
-      resolvers: { Query: { ...lessonsBySectionResolvers, ...sectionsResolvers } },
+      resolvers: { Query: { ...lessonsBySectionResolvers, ...sectionsResolvers, ...exerciseResolvers } },
     }));
   },
 

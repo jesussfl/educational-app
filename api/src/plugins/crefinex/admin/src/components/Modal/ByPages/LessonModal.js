@@ -1,20 +1,28 @@
 import React from "react";
+import CustomModal from "../CustomModal";
 
 import { TextInput, SingleSelect, SingleSelectOption } from "@strapi/design-system";
-import CustomModal from "../CustomModal";
 import { Controller } from "react-hook-form";
-import { useCustomMutation } from "../../../utils/hooks/useCustomMutation";
+import { useCustomMutation, useModal } from "../../../utils/";
+
+import { QUERY_KEYS } from "../../../constants/queryKeys.constants";
 
 const ORDER_INPUTS_TO_SHOW = 20;
-const QUERY_KEY = "lessons";
-export default function LessonModal({ data, moduleId, mainAction, defaultValues, editId, setIdToEdit }) {
-  const { control, mutate, handleSubmit } = useCustomMutation(QUERY_KEY, mainAction, defaultValues);
 
-  const onSubmit = handleSubmit((formData) => {
-    const id = editId;
-    id
-      ? mutate({ id, data: { ...formData, module: moduleId, world: data.world.id } })
-      : mutate({ data: { ...formData, module: moduleId, world: data.world.data.id } });
+export default function LessonModal({ sectionInfo, sectionId, mainAction }) {
+  const { idToEdit, setIdToEdit, dataToEdit: defaultValues } = useModal();
+  const { control, mutate, handleSubmit } = useCustomMutation(QUERY_KEYS.lessons, mainAction, defaultValues);
+
+  const onSubmit = handleSubmit((values) => {
+    const data = {
+      description: values.description,
+      order: parseFloat(values.order),
+      section: sectionId,
+      world: sectionInfo.world.data.id,
+      publishedAt: new Date(),
+    };
+
+    idToEdit ? mutate({ id: idToEdit, data: { ...data } }) : mutate({ data: { ...data } });
   });
 
   return (

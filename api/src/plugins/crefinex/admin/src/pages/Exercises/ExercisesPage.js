@@ -2,27 +2,44 @@ import React from "react";
 import { useParams, useHistory } from "react-router-dom";
 
 import { BaseHeaderLayout, ContentLayout, Button, Link, Breadcrumbs, Crumb } from "@strapi/design-system";
-import { ExercisesTable, CustomAlert, CustomLoader } from "../../components";
+import { ExercisesTable, CustomAlert, CustomLoader, CustomTable, ExercisesModal, DeleteDialog } from "../../components";
 import { Plus, ArrowLeft } from "@strapi/icons";
-
+import { ExerciseRows } from "../../components/Tables/ByPages/ExerciseRows";
 //Hooks
 import { useQuery } from "@tanstack/react-query";
-import LessonActionsAPI from "../../api/lesson/services/lessonServices";
-import actionsAPI from "../../api/exercise/services/exercises";
+
 import { useModal } from "../../utils/contexts/ModalContext";
+import { QUERY_KEYS } from "../../constants/queryKeys.constants";
+import { usePagination } from "../../utils/hooks/usePagination";
+import { query } from "../../graphql/client/GraphQLCLient";
+import { queryExercisesByLessonId } from "../../graphql/queries/exercise.queries";
+import {
+  createExerciseMutation as createMutation,
+  updateExerciseMutation as updateMutation,
+  deleteExerciseMutation as deleteMutation,
+} from "../../graphql/mutations/exercise.mutations";
 function ExercisesPage() {
-  const { lessonId } = useParams();
   const history = useHistory();
-  const { data: lesson, isLoading, error } = useQuery(["lessons", lessonId], () => LessonActionsAPI.findById(lessonId));
+  const { lessonId } = useParams();
+  const { currentPage, rowsPerPage } = usePagination();
+  const {
+    data: exercisesData,
+    isLoading,
+    error,
+  } = useQuery([QUERY_KEYS, lessonId], () =>
+    query(queryExercisesByLessonId, {
+      id: lessonId,
+      start: currentPage,
+      limit: rowsPerPage,
+    })
+  );
   const { setShowModal } = useModal();
 
   if (isLoading) return <CustomLoader />;
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
-
-  const lessonInfo = lesson.data.attributes;
-  const exercises = lessonInfo.exercises;
-  const world = lessonInfo.world.data?.attributes.name;
-
+  const exercises = exercisesData.exercisesByLesson;
+  const lessonInfo = exercises.lesson;
+  const world = exercises.lesson?.world?.data?.attributes.name;
   return (
     <>
       <BaseHeaderLayout
@@ -40,8 +57,8 @@ function ExercisesPage() {
         subtitle={
           <Breadcrumbs label="folders">
             <Crumb>{`World: ${world}`}</Crumb>
-            <Crumb>{`Module: ${lessonInfo.module.data.description} (ID: ${lessonInfo.module.data.id})`}</Crumb>
-            <Crumb>{`lesson: ${lessonInfo.description} (ID: ${lessonId})`}</Crumb>
+            <Crumb>{`Module: ${exercises.lesson?.section?.data?.attributes?.description} (ID: ${lessonInfo?.section?.data?.id})`}</Crumb>
+            <Crumb>{`lesson: ${lessonInfo?.description} (ID: ${lessonId})`}</Crumb>
             <Crumb>Exercises</Crumb>
           </Breadcrumbs>
         }
@@ -49,7 +66,21 @@ function ExercisesPage() {
       />
 
       <ContentLayout>
-        <ExercisesTable data={exercises} actions={actionsAPI} lessonId={lessonId} lessonInfo={lessonInfo} />
+        <CustomTable
+          config={{
+            tableName: "exercises",
+            emptyStateMessage: "There are no exercises yet",
+            createModal: () => <ExercisesModal mainAction={createMutation} data={lessonInfo} lessonId={lessonId} />,
+            editModal: () => <ExercisesModal mainAction={updateMutation} data={lessonInfo} lessonId={lessonId} />,
+            deleteDialog: () => <DeleteDialog mainAction={deleteMutation} section={"exercises"} />,
+          }}
+          data={exercises.exercises}
+          paginationData={exercises.pagination}
+          lessonId={lessonId}
+          lessonInfo={lessonInfo}
+        >
+          <ExerciseRows data={exercises.exercises} />
+        </CustomTable>
       </ContentLayout>
     </>
   );

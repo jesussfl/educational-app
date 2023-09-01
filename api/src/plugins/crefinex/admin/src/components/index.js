@@ -3,8 +3,6 @@ import TableFilters from "./Tables/TableFilters";
 import TablePagination from "./Tables/TablePagination";
 
 import TableHeaders from "./Tables/TableHeaders";
-import LessonTable from "./Tables/ByPages/LessonTable";
-import SectionTable from "./Tables/ByPages/SectionTable";
 import ExercisesTable from "./Tables/ByPages/ExercisesTable";
 
 import CustomModal from "./Modal/CustomModal";
@@ -32,8 +30,6 @@ export {
   ModuleModal,
   ExercisesModal,
   CustomModal,
-  SectionTable,
   ExercisesTable,
-  LessonTable,
   LessonModal,
 };

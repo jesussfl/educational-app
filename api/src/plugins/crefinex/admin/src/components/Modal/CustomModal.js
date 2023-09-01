@@ -2,13 +2,14 @@ import React from "react";
 
 import { ModalLayout, ModalHeader, ModalBody, ModalFooter, Typography, Button } from "@strapi/design-system";
 import { useModal } from "../../utils/contexts/ModalContext";
-export default function CustomModal({ children, handleSubmit, setIdToEdit }) {
-  const { setShowModal } = useModal();
+export default function CustomModal({ children, handleSubmit }) {
+  const { setShowModal, setIdToEdit, setDataToEdit, idToEdit } = useModal();
   return (
     <ModalLayout
       onClose={() => {
+        setIdToEdit(null);
+        setDataToEdit(null);
         setShowModal(false);
-        setIdToEdit && setIdToEdit(null);
       }}
       labelledBy="title"
       as="form"
@@ -16,13 +17,14 @@ export default function CustomModal({ children, handleSubmit, setIdToEdit }) {
         e.preventDefault();
         e.stopPropagation();
         handleSubmit();
+        setDataToEdit(null);
+        setIdToEdit(null);
         setShowModal(false);
-        setIdToEdit && setIdToEdit(null);
       }}
     >
       <ModalHeader>
         <Typography fontWeight="bold" textColor="neutral800" as="h2" id="title">
-          {setIdToEdit ? "Edit entry" : "Add entry"}
+          {idToEdit ? "Edit entry" : "Add entry"}
         </Typography>
       </ModalHeader>
 
@@ -32,15 +34,16 @@ export default function CustomModal({ children, handleSubmit, setIdToEdit }) {
         startActions={
           <Button
             onClick={() => {
+              setIdToEdit(null);
+              setDataToEdit(null);
               setShowModal(false);
-              setIdToEdit && setIdToEdit(null);
             }}
             variant="tertiary"
           >
             Cancel
           </Button>
         }
-        endActions={<Button type="submit">{setIdToEdit ? "Edit entry" : "Add entry"}</Button>}
+        endActions={<Button type="submit">{idToEdit ? "Edit entry" : "Add entry"}</Button>}
       />
     </ModalLayout>
   );

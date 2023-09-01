@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { Controller } from "react-hook-form";
-import { Button, TextInput, SingleSelect, SingleSelectOption } from "@strapi/design-system";
-import { Plus } from "@strapi/icons";
 import CustomModal from "../CustomModal";
 
-import { useCustomMutation } from "../../../utils/hooks/useCustomMutation";
+import { Button, TextInput, SingleSelect, SingleSelectOption } from "@strapi/design-system";
+import { Controller } from "react-hook-form";
+import { Plus } from "@strapi/icons";
 
-const QUERY_KEY = "lessons";
-export default function ExercisesModal({ data, lessonId, mainAction, defaultValues, editId, setIdToEdit }) {
-  const { control, mutate, handleSubmit, watch } = useCustomMutation(QUERY_KEY, mainAction, defaultValues);
+import { useCustomMutation, loadCompletionSentence, useModal } from "../../../utils";
+import { QUERY_KEYS } from "../../../constants/queryKeys.constants";
 
+export default function ExercisesModal({ data, lessonId, mainAction, defaultValues }) {
+  const { control, mutate, handleSubmit, watch } = useCustomMutation(QUERY_KEYS.exercises, mainAction, defaultValues);
+  const { idToEdit } = useModal();
   const [options, setOptions] = useState([]);
 
   const onSubmit = handleSubmit((data) => {
@@ -18,7 +19,8 @@ export default function ExercisesModal({ data, lessonId, mainAction, defaultValu
         lesson: lessonId,
         content: null,
         type: data.type,
-        order: data.order,
+        order: parseFloat(data.order),
+        publishedAt: new Date(),
       },
     };
     if (watch("type") === "Completion") {
@@ -29,25 +31,12 @@ export default function ExercisesModal({ data, lessonId, mainAction, defaultValu
       exercise.data.content = JSON.stringify(data.memoryWords);
     }
     if (watch("type") === "selection") {
-      // exercise.data.content = JSON.stringify({ options: options });
+      exercise.data.content = JSON.stringify({ options: options });
     }
     console.log(exercise);
-    mutate(exercise);
+    idToEdit ? mutate({ id: idToEdit, data: { ...exercise } }) : mutate({ ...exercise });
   });
 
-  const loadCompletionSentence = (sentence) => {
-    const regex = /\{([^}]+)\}/g;
-    const words = [];
-    let match;
-    console.log(sentence);
-    while ((match = regex.exec(sentence)) !== null) {
-      words.push(match[1]);
-    }
-    return JSON.stringify({
-      template: sentence,
-      words,
-    });
-  };
   const renderExerciseFields = () => {
     if (watch("type") === "Completion") {
       return (

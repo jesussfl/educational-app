@@ -3,7 +3,7 @@ import CustomModal from "../CustomModal";
 
 import { TextInput, SingleSelect, SingleSelectOption } from "@strapi/design-system";
 import { Controller } from "react-hook-form";
-import { useCustomMutation } from "../../../utils/hooks/useCustomMutation";
+import { useCustomMutation, useModal } from "../../../utils/";
 
 import { useQuery } from "@tanstack/react-query";
 import { queryWorlds } from "../../../graphql/queries/world.queries";
@@ -12,7 +12,8 @@ import { QUERY_KEYS } from "../../../constants/queryKeys.constants";
 
 const ORDER_INPUTS_TO_SHOW = 20;
 
-export default function ModuleModal({ mainAction, defaultValues, editId, setIdToEdit }) {
+export default function ModuleModal({ mainAction }) {
+  const { idToEdit: editId, setIdToEdit, dataToEdit: defaultValues } = useModal();
   const { control, mutate, handleSubmit } = useCustomMutation(QUERY_KEYS.modules, mainAction, defaultValues);
   const { data, isLoading, error } = useQuery([QUERY_KEYS.worlds], () => query(queryWorlds));
 

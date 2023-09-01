@@ -2,14 +2,19 @@ import React from "react";
 import { Flex, Table, TFooter } from "@strapi/design-system";
 import { Plus } from "@strapi/icons";
 import { usePagination } from "../../utils/hooks/usePagination";
-import { TableFilters, TablePagination, EmptyState } from "..";
+import { TableFilters, TablePagination, EmptyState, TableHeaders } from "..";
 import { useModal } from "../../utils/contexts/ModalContext";
-
-export default function CustomTable({ renderCreateModal, renderDeleteDialog, renderEditModal, children, config }) {
-  const { setShowModal } = useModal();
+export default function CustomTable({ config, data, paginationData, children }) {
+  const { setShowModal, idToEdit, idToDelete, showModal } = useModal();
   const { currentPage, rowsPerPage, history } = usePagination();
-  const isDataEmpty = config.isDataEmpty;
+
+  const isDataEmpty = data.length === 0;
+  const showDeleteDialog = idToDelete !== null;
+  const showEditModal = showModal && idToEdit;
+  const showCreateModal = showModal && !idToEdit;
+
   if (isDataEmpty) return <EmptyState showModal={setShowModal} renderActionModal={config.createModal} message={config.emptyStateMessage} />;
+
   return (
     <Flex gap={4} direction="column" alignItems="stretch">
       <TableFilters />
@@ -22,18 +27,20 @@ export default function CustomTable({ renderCreateModal, renderDeleteDialog, ren
           </TFooter>
         }
       >
+        <TableHeaders data={data} />
+
         {children}
       </Table>
       <TablePagination
         history={history}
         currentPage={currentPage}
         rowsPerPage={rowsPerPage}
-        totalPageCount={config.paginationData?.pageCount || 1}
+        totalPageCount={paginationData?.pageCount || 1}
       />
 
-      {renderDeleteDialog()}
-      {renderEditModal()}
-      {renderCreateModal()}
+      {showDeleteDialog && config.deleteDialog()}
+      {showEditModal && config.editModal()}
+      {showCreateModal && config.createModal()}
     </Flex>
   );
 }

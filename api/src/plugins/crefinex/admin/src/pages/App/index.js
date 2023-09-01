@@ -1,37 +1,32 @@
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { AnErrorOccurred } from "@strapi/helper-plugin";
-import pluginId from "../../pluginId";
-import LessonsPage from "../Lesson/LessonsPage";
-import SectionsPage from "../Home/SectionsPage";
-import ExercisesPage from "../Exercises/ExercisesPage";
+import { LessonsPage, ExercisesPage, SectionsPage } from "../../pages";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ModalProvider } from "../../utils/contexts/ModalContext";
 import { AlertsProvider } from "../../utils/contexts/AlertsContext";
-import { GraphQLProvider } from "../../utils/contexts/GraphqlContext";
+import { ROUTES, APP_ROUTES } from "../../constants/routes.constants";
 // Create a client
 const queryClient = new QueryClient();
 function App() {
   return (
-    <GraphQLProvider>
-      <QueryClientProvider client={queryClient}>
-        <ModalProvider>
-          <AlertsProvider>
-            <Switch>
-              <Route path={`/plugins/${pluginId}`} exact>
-                {/* Redirigir desde HomePage a ModulesPage con parámetros de URL */}
-                <Redirect to={`/plugins/${pluginId}/sections?page=1&pageSize=10&sort=id:ASC`} />
-              </Route>
-              <Route path={`/plugins/${pluginId}/lessons/:sectionId`} component={LessonsPage} exact />
-              <Route path={`/plugins/${pluginId}/exercises/:lessonId`} component={ExercisesPage} exact />
-              <Route path={`/plugins/${pluginId}/sections`} render={() => <SectionsPage />} exact />
+    <QueryClientProvider client={queryClient}>
+      <ModalProvider>
+        <AlertsProvider>
+          <Switch>
+            <Route path={APP_ROUTES.HOME} exact>
+              {/* Redirigir desde HomePage a ModulesPage con parámetros de URL */}
+              <Redirect to={ROUTES.SECTIONS} />
+            </Route>
+            <Route path={APP_ROUTES.LESSONS} component={LessonsPage} exact />
+            <Route path={APP_ROUTES.EXERCISES} component={ExercisesPage} exact />
+            <Route path={APP_ROUTES.SECTIONS} render={() => <SectionsPage />} exact />
 
-              <Route component={AnErrorOccurred} />
-            </Switch>
-          </AlertsProvider>
-        </ModalProvider>
-      </QueryClientProvider>
-    </GraphQLProvider>
+            <Route component={AnErrorOccurred} />
+          </Switch>
+        </AlertsProvider>
+      </ModalProvider>
+    </QueryClientProvider>
   );
 }
 
