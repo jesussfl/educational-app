@@ -22,7 +22,14 @@ export const BottomNavStackNavigator = () => {
 				component={WorldScreen}
 				options={{
 					tabBarIcon: ({ focused }) => <Home variant='Bold' size={28} color={focused ? SemanticColors.bg.primary_active : SemanticColors.elevation.secondary_normal} />,
+					headerShown: true,
+					headerTitleStyle: {
+						color: Colors.gray_400,
+						fontFamily: "Sora-SemiBold",
+						fontSize: 18,
+					},
 				}}
+				initialParams={{ headerShown: true, headerTitle: "" }}
 			/>
 
 			<BottomNavStack.Screen

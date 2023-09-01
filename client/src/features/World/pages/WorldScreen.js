@@ -8,9 +8,12 @@ import { LessonButton } from "@components";
 import { SemanticColors, Colors } from "../../../utils/Theme";
 import { Flag } from "iconsax-react-native";
 
-const WorldScreen = () => {
+const WorldScreen = ({ navigation }) => {
 	const { data, isLoading, error } = useQuery(["sections"], () => query(querySectionsByWorldId, { id: 1, start: 1, limit: 10 }));
-
+	const worldName = isLoading ? "Cargando..." : data.sectionsByWorld.world.name;
+	navigation.setOptions({
+		title: worldName,
+	});
 	return isLoading ? (
 		<Text>Cargando...</Text>
 	) : (

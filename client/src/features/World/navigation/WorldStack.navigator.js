@@ -6,9 +6,9 @@ const WorldStack = createStackNavigator();
 
 const WorldStackNavigator = () => {
 	return (
-		<WorldStack.Navigator screenOptions={{ headerShown: false }}>
-			<WorldStack.Screen name='WorldSelect' component={LevelsScreen} />
-			<WorldStack.Screen name='World' component={WorldScreen} />
+		<WorldStack.Navigator>
+			<WorldStack.Screen name='WorldSelect' component={LevelsScreen} options={{ headerShown: false }} />
+			<WorldStack.Screen name='World' component={WorldScreen} options={{ headerShown: true }} initialParams={{ headerShown: true, headerTitle: "" }} />
 		</WorldStack.Navigator>
 	);
 };

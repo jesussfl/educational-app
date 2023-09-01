@@ -60,13 +60,15 @@ export const querySectionsByWorldId = gql`
 							}
 						}
 					}
-					world {
-						data {
-							id
-							attributes {
-								name
-								description
-							}
+				}
+			}
+			world {
+				name
+				description
+				image {
+					data {
+						attributes {
+							formats
 						}
 					}
 				}

@@ -22,7 +22,7 @@ export const IntroductoryStackNavigator = () => {
 		<Stack.Navigator screenOptions={commonScreenOptions}>
 			<Stack.Screen name='Walkthrough' component={WalkthroughStackNavigator} options={{ headerShown: false }} />
 			<Stack.Screen name='Auth' component={AuthStackNavigator} options={{ headerShown: false }} />
-			<Stack.Screen name='Main' component={BottomNavStackNavigator} options={{ headerShown: false, headerTitle: "" }} initialParams={{ headerShown: false, headerTitle: "" }} />
+			<Stack.Screen name='Main' component={BottomNavStackNavigator} options={{ headerShown: false }} />
 		</Stack.Navigator>
 	);
 };
