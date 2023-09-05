@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 
 //Components
 import { SemanticColors } from "@utils/Theme";
@@ -27,11 +27,11 @@ const WelcomeScreen = ({ navigation }) => {
 		}
 	}, [response]);
 	return (
-		<View style={{ flex: 1, justifyContent: "space-around", gap: 32, padding: 24 }}>
-			<Headings title='Bienvenido' description='Continuemos con una de las siguientes opciones'></Headings>
+		<View style={styles.pageContainer}>
+			<Headings title='Bienvenido' description='Continuemos con una de las siguientes opciones' />
 			<View style={{ gap: 16 }}>
-				<Button variant={"secondary"} text='Continuar con Google' size='medium' onPress={() => promptAsync()} rightIcon={<GoogleIcon></GoogleIcon>} />
-				<Button variant={"secondary"} text='Continuar con Facebook' size='medium' onPress={() => console.log("Login")} rightIcon={<FacebookIcon></FacebookIcon>} />
+				<Button variant={"secondary"} text='Continuar con Google' size='medium' onPress={() => promptAsync()} rightIcon={<GoogleIcon />} />
+				<Button variant={"secondary"} text='Continuar con Facebook' size='medium' onPress={() => console.log("Login")} rightIcon={<FacebookIcon />} />
 				<Button onPress={() => navigation.navigate("Auth", { screen: "Login" })} variant={"secondary"} text='Continuar con correo' size='medium' rightIcon={<Icon name='mail-fill' size='20' color={SemanticColors.text.normal}></Icon>} />
 			</View>
 			<View style={{ gap: 16 }}>
@@ -43,3 +43,12 @@ const WelcomeScreen = ({ navigation }) => {
 };
 
 export default WelcomeScreen;
+
+const styles = StyleSheet.create({
+	pageContainer: {
+		flex: 1,
+		justifyContent: "space-around",
+		gap: 32,
+		padding: 24,
+	},
+});

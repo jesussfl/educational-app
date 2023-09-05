@@ -1,19 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { Colors } from "@utils/Theme";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { emailValidations, loginPasswordValidations } from "../utils/inputValidations";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { API_URL } from "@env";
+import { useAuthContext } from "../contexts/auth.context";
+import { setToken } from "../../../utils/helpers/auth.helpers";
 
-import { auth } from "../../../config/firebase";
 //components
 import Icon from "react-native-remix-icon";
 import { TextField, Button } from "@components";
 import Spinner from "react-native-loading-spinner-overlay";
 const LoginForm = () => {
 	const navigation = useNavigation();
-	const route = useRoute();
+	const { setUser } = useAuthContext();
+
 	const {
 		control,
 		handleSubmit,
@@ -21,25 +23,37 @@ const LoginForm = () => {
 	} = useForm();
 	const [isLoading, setIsLoading] = useState(false);
 	onSigninPressed = async ({ email, password }) => {
-		console.log(email, password);
 		setIsLoading(true);
 		try {
-			await signInWithEmailAndPassword(auth, email, password);
-			setIsLoading(false);
-			navigation.navigate("Main", { screen: "Lessons" });
+			const values = {
+				identifier: email,
+				password: password,
+			};
+			const response = await fetch(`${API_URL}/api/auth/local`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(values),
+			});
+			const data = await response.json();
+			if (data?.error) {
+				throw data?.error;
+			} else {
+				// set the token
+				setToken(data.jwt);
+
+				// set the user
+				setUser(data.user);
+				setIsLoading(false);
+				navigation.navigate("Main", { screen: "Lessons" });
+			}
 		} catch (error) {
 			setIsLoading(false);
 			console.log(error);
 		}
 	};
 
-	// useEffect(() => {
-	// 	if (route.params?.isFromSignup) {
-	// 		navigation.setOptions({
-	// 			animation: "fade",
-	// 		});
-	// 	}
-	// }, []);
 	return (
 		<View style={styles.container}>
 			<Spinner visible={isLoading} />
