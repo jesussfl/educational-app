@@ -1,24 +1,17 @@
-import { StyleSheet, Text, View } from "react-native";
-import { db, auth } from "../../../config/firebase";
-import React, { useEffect, useState } from "react";
-import { getDocs, collection } from "firebase/firestore";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { Button } from "@components";
+import { removeToken } from "@utils/helpers/auth.helpers";
+import { useNavigation } from "@react-navigation/native";
 const ProfileScreen = () => {
-	const [users, setUsers] = useState([]);
-	const [loading, setLoading] = useState(true);
-	useEffect(() => {
-		const getUserDetails = async () => {
-			setLoading(true);
-			const userCollectionRef = collection(db, "USER_DETAILS");
-			const data = await getDocs(userCollectionRef);
-			setUsers(data.docs.map((doc) => doc.data()));
-			console.log(users);
-			setLoading(false);
-		};
-		getUserDetails();
-	}, []);
+	const navigation = useNavigation();
+	const handleLogout = () => {
+		removeToken();
+		navigation.replace("Auth", { screen: "Login" });
+	};
 	return (
 		<View style={styles.container}>
-			<Text>{loading ? "Loading..." : users[0].age}</Text>
+			<Button text='Logout' onPress={handleLogout} variant='primary' size='medium' />
 		</View>
 	);
 };

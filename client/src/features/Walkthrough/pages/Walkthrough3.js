@@ -10,7 +10,7 @@ const Walkthrough3 = ({ navigation }) => {
 			<View style={styles.image}></View>
 			<Headings {...walkthrough3Texts}></Headings>
 			<View style={{ gap: 16 }}>
-				<Button variant={"primary"} text='Comenzar' onPress={() => navigation.navigate("Welcome")} />
+				<Button variant={"primary"} text='Comenzar' onPress={() => navigation.replace("Welcome")} />
 			</View>
 		</View>
 	);

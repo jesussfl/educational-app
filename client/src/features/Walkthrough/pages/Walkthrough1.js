@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { Headings, Button } from "@components";
 import { SemanticColors } from "@utils/Theme";
 import { walkthrough1Texts } from "../utils/walkthroughTexts";
-
+import { useAuthContext } from "../../Auth/contexts/auth.context";
 const Walkthrough1 = ({ navigation }) => {
+	const { user } = useAuthContext();
+
+	useEffect(() => {
+		if (user) {
+			navigation.replace("Main", { screen: "Lessons" });
+		}
+	}, [user]);
+
 	return (
 		<View style={styles.pageContainer}>
 			<View style={styles.image}></View>
@@ -13,7 +21,7 @@ const Walkthrough1 = ({ navigation }) => {
 
 			<View style={{ gap: 16, flexDirection: "row-reverse" }}>
 				<Button style={{ flex: 1 }} variant={"primary"} text='Continuar' size='medium' onPress={() => navigation.navigate("Walkthrough2")} />
-				<Button style={{ flex: 1 }} variant={"secondary"} text='Saltar' size='medium' onPress={() => navigation.navigate("Welcome")} />
+				<Button style={{ flex: 1 }} variant={"secondary"} text='Saltar' size='medium' onPress={() => navigation.replace("Welcome")} />
 			</View>
 		</View>
 	);

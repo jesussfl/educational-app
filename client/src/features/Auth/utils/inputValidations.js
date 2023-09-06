@@ -15,7 +15,22 @@ export const emailValidations = {
 		},
 	},
 };
-
+export const usernameValidations = {
+	label: "Nombre de usuario",
+	name: "username",
+	placeholder: "Nombre de usuario",
+	rules: {
+		required: "El nombre de usuario es requerido",
+		minLength: {
+			value: 3,
+			message: "El nombre de usuario debe tener al menos 3 caracteres",
+		},
+		maxLength: {
+			value: 80,
+			message: "El nombre de usuario no debe exceder los 80 caracteres",
+		},
+	},
+};
 export const passwordValidations = {
 	label: "Contraseña",
 	name: "password",

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
-import { SemanticColors } from "../../utils/Theme";
+import { SemanticColors } from "@utils/Theme";
 
 const buttonVariants = {
 	PRIMARY: "primary",
@@ -8,61 +8,33 @@ const buttonVariants = {
 	GHOST: "ghost",
 };
 
-const commonTextStyles = {
-	fontFamily: "Sora-Bold",
-	textTransform: "uppercase",
-};
 const buttonSizes = {
 	S: "small",
 	M: "medium",
 	L: "large",
 };
-const Button = ({ variant, text = "Button", leftIcon, rightIcon, onPress, size = "large", style }) => {
-	// State to track whether the button is currently pressed
-	const [isPressed, setIsPressed] = useState(false);
 
-	// Function called when the button is pressed down
+const Button = ({ variant, text = "Button", leftIcon, rightIcon, onPress, size = "large", style }) => {
+	const [isPressed, setIsPressed] = useState(false);
 	const handlePressIn = () => {
 		setIsPressed(true);
 	};
 
-	// Function called when the button is released
 	const handlePressOut = () => {
 		setIsPressed(false);
 
-		// If an onPress function is provided and it is a valid function, call it
 		if (onPress && typeof onPress === "function") {
 			onPress();
 		}
 	};
 
-	// Function to get the button styles based on the variant and pressed state
 	const getButtonStyles = () => {
-		switch (variant) {
-			case buttonVariants.PRIMARY:
-				return {
-					backgroundColor: isPressed ? SemanticColors.bg.primary_active : SemanticColors.bg.primary_normal,
-					borderColor: isPressed ? SemanticColors.elevation.primary_active : SemanticColors.elevation.primary_normal,
-					borderBottomWidth: isPressed ? 3 : 7,
-				};
-			case buttonVariants.SECONDARY:
-				return {
-					backgroundColor: SemanticColors.app.bg_normal,
-					borderColor: SemanticColors.elevation.secondary_normal,
-					borderBottomWidth: isPressed ? 3 : 7,
-				};
-			case buttonVariants.GHOST:
-				return {
-					backgroundColor: SemanticColors.app.bg_normal,
-					borderColor: SemanticColors.app.bg_normal,
-				};
-
-			default:
-				return {};
-		}
+		const styles = isPressed ? buttonStyles[variant].pressed || buttonStyles[variant].default : buttonStyles[variant].default;
+		return {
+			...styles,
+			...buttonSizeStyles[size],
+		};
 	};
-
-	// Function to get the text styles based on the variant and pressed state
 	const getTextStyles = () => {
 		let fontSize;
 
@@ -76,42 +48,20 @@ const Button = ({ variant, text = "Button", leftIcon, rightIcon, onPress, size =
 				break;
 		}
 
-		switch (variant) {
-			case buttonVariants.PRIMARY:
-				return {
-					color: "#fff",
-					fontSize,
-				};
-			case buttonVariants.SECONDARY:
-				return {
-					color: isPressed ? SemanticColors.text.primary_active : SemanticColors.text.subdued_normal,
-					fontSize,
-				};
-			case buttonVariants.GHOST:
-				return {
-					color: isPressed ? SemanticColors.text.primary_active : SemanticColors.text.subdued_normal,
-					fontSize,
-				};
-		}
+		const buttonTextStyles = {
+			[buttonVariants.PRIMARY]: { color: "#fff", fontSize },
+			[buttonVariants.SECONDARY]: { color: isPressed ? SemanticColors.text.primary_active : SemanticColors.text.subdued_normal, fontSize },
+			[buttonVariants.GHOST]: { color: isPressed ? SemanticColors.text.primary_active : SemanticColors.text.subdued_normal, fontSize },
+		};
+		return buttonTextStyles[variant];
 	};
-	const getButtonSizeStyles = () => {
-		switch (size) {
-			case buttonSizes.S:
-				return { padding: 3 };
-			case buttonSizes.M:
-				return { padding: 6 };
-			case buttonSizes.L:
-				return { padding: 8 };
-			default:
-				return {};
-		}
-	};
+
 	return (
 		<View style={[styles.container, style]}>
-			<Pressable onPress={onPress} onPressIn={handlePressIn} onPressOut={handlePressOut} style={({ pressed }) => [getButtonStyles(), styles.button, getButtonSizeStyles()]}>
-				<View style={{ height: 30, flexDirection: "row", alignItems: "center", gap: 12 }}>
+			<Pressable onPress={onPress} onPressIn={handlePressIn} onPressOut={handlePressOut} style={[getButtonStyles(), styles.button]}>
+				<View style={styles.buttonTextContainer}>
 					{leftIcon}
-					<Text style={[commonTextStyles, getTextStyles()]}>{text}</Text>
+					<Text style={[styles.text, getTextStyles()]}>{text}</Text>
 					{rightIcon}
 				</View>
 			</Pressable>
@@ -124,12 +74,65 @@ const styles = StyleSheet.create({
 		height: 56,
 		justifyContent: "flex-end",
 	},
+	buttonTextContainer: {
+		height: 30,
+		flexDirection: "row",
+		alignItems: "center",
+		gap: 12,
+	},
 	button: {
 		borderRadius: 16,
 		alignItems: "center",
 		justifyContent: "center",
 		borderWidth: 3,
 	},
-});
+	text: {
+		textTransform: "uppercase",
 
+		fontFamily: "Sora-Bold",
+	},
+});
+const buttonSizeStyles = {
+	[buttonSizes.S]: {
+		padding: 3,
+	},
+	[buttonSizes.M]: {
+		padding: 6,
+	},
+	[buttonSizes.L]: {
+		padding: 8,
+	},
+};
+const buttonStyles = {
+	[buttonVariants.PRIMARY]: {
+		default: {
+			backgroundColor: SemanticColors.bg.primary_normal,
+			borderColor: SemanticColors.elevation.primary_normal,
+			borderBottomWidth: 7,
+		},
+		pressed: {
+			backgroundColor: SemanticColors.bg.primary_active,
+			borderColor: SemanticColors.elevation.primary_active,
+			borderBottomWidth: 3,
+		},
+	},
+	[buttonVariants.SECONDARY]: {
+		default: {
+			backgroundColor: SemanticColors.app.bg_normal,
+			borderColor: SemanticColors.elevation.secondary_normal,
+			borderBottomWidth: 7,
+		},
+		pressed: {
+			backgroundColor: SemanticColors.app.bg_normal,
+			borderColor: SemanticColors.elevation.secondary_normal,
+			borderBottomWidth: 3,
+		},
+	},
+	[buttonVariants.GHOST]: {
+		default: {
+			backgroundColor: SemanticColors.app.bg_normal,
+			borderColor: SemanticColors.app.bg_normal,
+		},
+	},
+};
 export default Button;

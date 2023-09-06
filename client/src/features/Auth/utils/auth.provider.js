@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { AuthContext } from "../contexts/auth.context";
 import { getToken } from "../../../utils/helpers/auth.helpers";
 import { API_URL } from "@env";
-
 const AuthProvider = ({ children }) => {
 	const [userData, setUserData] = useState();
 	const [isLoading, setIsLoading] = useState(true);
@@ -15,6 +14,7 @@ const AuthProvider = ({ children }) => {
 				headers: { Authorization: `Bearer ${token}` },
 			});
 			const data = await response.json();
+			console.log("dataaaaa", data);
 			setUserData(data);
 		} catch (error) {
 			console.error(error);
@@ -42,6 +42,7 @@ const AuthProvider = ({ children }) => {
 	useEffect(() => {
 		// Usamos authToken aquí después de que se haya actualizado
 		if (authToken) {
+			console.log(authToken);
 			fetchLoggedInUser(authToken);
 		}
 	}, [authToken]); // Dependencia en authToken

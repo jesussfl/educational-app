@@ -1,11 +1,11 @@
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
 
-import { query } from "../../../utils/graphql/client/GraphQLCLient";
-import { SemanticColors, Colors } from "../../../utils/Theme";
-import { querySectionsByWorldId } from "../../../utils/graphql/queries/section.queries";
+import { query } from "@utils/graphql/client/GraphQLCLient";
+import { SemanticColors, Colors } from "@utils/Theme";
+import { querySectionsByWorldId } from "@utils/graphql/queries/section.queries";
 import { LessonButton } from "@components";
 import { BottomSheetModal, BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { Flag } from "iconsax-react-native";
@@ -13,19 +13,12 @@ const WorldScreen = ({ navigation }) => {
 	const { data, isLoading, error } = useQuery(["sections"], () => query(querySectionsByWorldId, { id: 1, start: 1, limit: 10 }));
 	const worldName = isLoading ? "Cargando..." : data.sectionsByWorld.world.name;
 
-	// ref
-	const bottomSheetRef = useRef(null);
+	useEffect(() => {
+		navigation.setOptions({
+			title: worldName,
+		});
+	}, [worldName]);
 
-	// variables
-	const snapPoints = useMemo(() => ["48%"], []);
-
-	// callbacks
-	const handlePresentModal = () => {
-		bottomSheetRef.current?.present();
-	};
-	navigation.setOptions({
-		title: worldName,
-	});
 	return isLoading ? (
 		<Text>Cargando...</Text>
 	) : (
@@ -37,9 +30,7 @@ const WorldScreen = ({ navigation }) => {
 						<View key={section.id} style={styles.sectionContainer}>
 							<View style={styles.sectionBanner}>
 								<Flag variant='Bold' size={24} color={Colors.gray_400} />
-								<Text onPress={handlePresentModal} style={styles.sectionBannerText}>
-									{section.attributes.description}
-								</Text>
+								<Text style={styles.sectionBannerText}>{section.attributes.description}</Text>
 							</View>
 
 							{/* Render Lessons By Section */}
@@ -48,11 +39,6 @@ const WorldScreen = ({ navigation }) => {
 							))}
 						</View>
 					))}
-					<BottomSheetModal ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
-						<View style={{ flex: 1, alignItems: "center" }}>
-							<Text>Awesome 🎉</Text>
-						</View>
-					</BottomSheetModal>
 				</View>
 			</ScrollView>
 		</BottomSheetModalProvider>
