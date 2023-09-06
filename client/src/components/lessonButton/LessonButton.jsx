@@ -1,15 +1,17 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableWithoutFeedback } from "react-native";
 import React from "react";
 import { SemanticColors, Colors } from "@utils/Theme";
 
 let isLocked = true;
-const LessonButton = ({ isLocked }) => {
+const LessonButton = ({ isLocked, onPress }) => {
 	return (
-		<View style={styles.wrapper}>
-			<View style={styles.rhombus}></View>
-			<View style={styles.rectangle}></View>
-			<View style={styles.rhombusBefore}></View>
-		</View>
+		<TouchableWithoutFeedback onPress={onPress}>
+			<View style={styles.wrapper}>
+				<View style={styles.rhombus}></View>
+				<View style={styles.rectangle}></View>
+				<View style={styles.rhombusBefore}></View>
+			</View>
+		</TouchableWithoutFeedback>
 	);
 };
 

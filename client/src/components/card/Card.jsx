@@ -4,7 +4,7 @@ import Button from "../button/Button";
 import Headings from "../headings/Headings";
 // import { Headings, Button } from "../index";
 import { Colors } from "../../utils/Theme";
-const Card = ({ name, description, imgSource }) => {
+const Card = ({ name, description, imgSource, mainAction }) => {
 	return (
 		<View
 			style={{
@@ -22,7 +22,7 @@ const Card = ({ name, description, imgSource }) => {
 			<Headings title={name} description={description} align={"left"} />
 			<View style={{ gap: 16 }}>
 				<Button text='0/24 Lecciones' variant='secondary' size='small' />
-				<Button text='Explorar' variant='primary' />
+				<Button text='Explorar' variant='primary' onPress={mainAction} />
 			</View>
 		</View>
 	);

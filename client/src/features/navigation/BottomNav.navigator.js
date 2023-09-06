@@ -5,11 +5,12 @@ import { Home, Weight, Signpost, Notification, UserOctagon } from "iconsax-react
 
 import { SemanticColors, Colors } from "@utils/Theme";
 import * as Screens from "../index";
-import WorldScreen from "../World/pages/WorldScreen";
-
+import { getFocusedRouteNameFromRoute, useNavigation } from "@react-navigation/native";
+import WorldStackNavigator from "../World/navigation/WorldStack.navigator";
 const BottomNavStack = createBottomTabNavigator();
 
 export const BottomNavStackNavigator = () => {
+	const navigation = useNavigation();
 	return (
 		<BottomNavStack.Navigator
 			screenOptions={{
@@ -19,17 +20,25 @@ export const BottomNavStackNavigator = () => {
 			}}>
 			<BottomNavStack.Screen
 				name='Lessons'
-				component={WorldScreen}
-				options={{
-					tabBarIcon: ({ focused }) => <Home variant='Bold' size={28} color={focused ? SemanticColors.bg.primary_active : SemanticColors.elevation.secondary_normal} />,
-					headerShown: true,
-					headerTitleStyle: {
-						color: Colors.gray_400,
-						fontFamily: "Sora-SemiBold",
-						fontSize: 18,
+				component={WorldStackNavigator}
+				listeners={() => ({
+					tabPress: (e) => {
+						e.preventDefault();
+						navigation.navigate("Lessons", { screen: "World" });
 					},
-				}}
-				initialParams={{ headerShown: true, headerTitle: "" }}
+				})}
+				options={({ route }) => ({
+					tabBarIcon: ({ focused }) => <Home variant='Bold' size={28} color={focused ? SemanticColors.bg.primary_active : SemanticColors.elevation.secondary_normal} />,
+					headerShown: false,
+					tabBarStyle: ((route) => {
+						const routeName = getFocusedRouteNameFromRoute(route) ?? "";
+						if (routeName === "Exercise") {
+							return { display: "none" };
+						}
+						return { height: 72, elevation: 0, shadowOpacity: 0, borderTopColor: Colors.gray_50, borderTopWidth: 6 };
+					})(route),
+				})}
+				initialParams={{ headerShown: false, headerTitle: "" }}
 			/>
 
 			<BottomNavStack.Screen
