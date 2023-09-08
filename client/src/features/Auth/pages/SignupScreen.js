@@ -1,19 +1,28 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { StyleSheet, Text, View, TextInput } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import React, { useRef } from "react";
 import SignupForm from "../components/SignupForm";
 import { SemanticColors } from "@utils/Theme";
 import { Headings } from "@components";
 const SignupScreen = () => {
-	return (
-		<View style={styles.container}>
-			<Headings title='¡Crea tu cuenta!' description='Completa la información para comenzar a aprender'></Headings>
-			<SignupForm></SignupForm>
-		</View>
-	);
+   const scrollRef = useRef(null);
+
+   const scrollToInput = (reactNode) => {
+      if (scrollRef.current) {
+         scrollRef.current.scrollToFocusedInput(reactNode, 120);
+      }
+   };
+   return (
+      <KeyboardAwareScrollView style={styles.container} ref={scrollRef}>
+         <Headings title="¡Crea tu cuenta!" description="Completa la información para comenzar a aprender"></Headings>
+
+         <SignupForm scroll={scrollToInput}></SignupForm>
+      </KeyboardAwareScrollView>
+   );
 };
 
 export default SignupScreen;
 
 const styles = StyleSheet.create({
-	container: { flex: 1, alignItems: "center", padding: 24, backgroundColor: SemanticColors.app.bg_normal },
+   container: { flex: 1, padding: 24 },
 });
