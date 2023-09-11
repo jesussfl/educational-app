@@ -1,7 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import WorldScreen from "../pages/WorldScreen";
-import LevelsScreen from "../pages/LevelsScreen";
+
 import ExerciseScreen from "../pages/ExercisePage";
 const WorldStack = createStackNavigator();
 import { Colors } from "@utils/Theme";
@@ -21,7 +21,7 @@ const WorldStackNavigator = () => {
 				}}
 				initialParams={{ headerShown: true, headerTitle: "" }}
 			/>
-			<WorldStack.Screen name='Exercise' component={ExerciseScreen} options={{ headerShown: true }} />
+			<WorldStack.Screen name='Exercise' component={ExerciseScreen} options={{ headerShown: false }} />
 		</WorldStack.Navigator>
 	);
 };
