@@ -23,9 +23,9 @@ const Button = ({ variant, text = "Button", leftIcon, rightIcon, onPress, size =
 	const handlePressOut = () => {
 		setIsPressed(false);
 
-		if (onPress && typeof onPress === "function") {
-			onPress();
-		}
+		// if (onPress && typeof onPress === "function") {
+		// 	onPress();
+		// }
 	};
 
 	const getButtonStyles = () => {

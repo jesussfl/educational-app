@@ -1,6 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-
+import { SemanticColors } from "@utils/Theme";
 import { LoginScreen, RecoverPasswordStep1, RecoverPasswordStep2, RecoverPasswordStep3, SignupScreen } from "../../index";
 
 const AuthStack = createStackNavigator();
@@ -8,7 +8,7 @@ const RecoverPasswordStack = createStackNavigator();
 
 const RecoverPasswordStackNavigator = () => {
 	return (
-		<RecoverPasswordStack.Navigator>
+		<RecoverPasswordStack.Navigator screenOptions={{ headerStyle: { backgroundColor: SemanticColors.app.bg_normal } }}>
 			<RecoverPasswordStack.Screen name='RecoverPasswordStep1' component={RecoverPasswordStep1} options={{ headerShown: true, headerTitle: "" }} initialParams={{ headerShown: true, headerTitle: "" }} />
 			<RecoverPasswordStack.Screen name='RecoverPasswordStep2' component={RecoverPasswordStep2} options={{ headerShown: true, headerTitle: "" }} initialParams={{ headerShown: true, headerTitle: "" }} />
 			<RecoverPasswordStack.Screen name='RecoverPasswordStep3' component={RecoverPasswordStep3} options={{ headerShown: true, headerTitle: "" }} initialParams={{ headerShown: true, headerTitle: "" }} />
@@ -18,7 +18,7 @@ const RecoverPasswordStackNavigator = () => {
 
 const AuthStackNavigator = () => {
 	return (
-		<AuthStack.Navigator>
+		<AuthStack.Navigator screenOptions={{ headerStyle: { backgroundColor: SemanticColors.app.bg_normal } }}>
 			<AuthStack.Screen name='Login' component={LoginScreen} options={{ headerShown: true, headerTitle: "" }} />
 			<AuthStack.Screen name='Signup' component={SignupScreen} options={{ headerShown: true, headerTitle: "" }} />
 			<AuthStack.Screen name='RecoverPassword' component={RecoverPasswordStackNavigator} options={{ headerShown: false }} />

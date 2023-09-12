@@ -13,7 +13,7 @@ const Walkthrough2 = ({ navigation }) => {
 
 			<View style={{ gap: 16, flexDirection: "row-reverse" }}>
 				<Button style={{ flex: 1 }} variant={"primary"} text='Continuar' onPress={() => navigation.navigate("Walkthrough3")} />
-				<Button style={{ flex: 1 }} variant={"secondary"} text='Saltar' onPress={() => navigation.replace("Welcome")} />
+				<Button style={{ flex: 1 }} variant={"secondary"} text='Saltar' onPress={() => navigation.replace("Walkthrough", { screen: "Welcome" })} />
 			</View>
 		</View>
 	);
@@ -29,6 +29,6 @@ const styles = StyleSheet.create({
 	},
 	image: {
 		backgroundColor: SemanticColors.elevation.secondary_normal,
-		height: 300,
+		height: "30%",
 	},
 });

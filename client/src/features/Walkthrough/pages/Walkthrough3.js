@@ -10,7 +10,7 @@ const Walkthrough3 = ({ navigation }) => {
 			<View style={styles.image}></View>
 			<Headings {...walkthrough3Texts}></Headings>
 			<View style={{ gap: 16 }}>
-				<Button variant={"primary"} text='Comenzar' onPress={() => navigation.replace("Welcome")} />
+				<Button variant={"primary"} text='Comenzar' onPress={() => navigation.replace("Walkthrough", { screen: "Welcome" })} />
 			</View>
 		</View>
 	);
@@ -26,6 +26,6 @@ const styles = StyleSheet.create({
 	},
 	image: {
 		backgroundColor: SemanticColors.elevation.secondary_normal,
-		height: 300,
+		height: "30%",
 	},
 });

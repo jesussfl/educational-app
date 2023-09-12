@@ -3,6 +3,7 @@ import { setToken } from "../../../utils/helpers/auth.helpers";
 import { useNavigation } from "@react-navigation/native";
 import { useAuthContext } from "../contexts/auth.context";
 import { API_URL } from "@env";
+
 export const useLogin = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
@@ -10,6 +11,7 @@ export const useLogin = () => {
 	const { setUser } = useAuthContext();
 
 	const loginSubmit = async (values) => {
+		setIsLoading(true);
 		try {
 			const userData = {
 				identifier: values.email,
@@ -31,14 +33,14 @@ export const useLogin = () => {
 				setToken(data.jwt);
 				// set the user
 				setUser(data.user);
-
+				setIsLoading(false);
 				navigation.replace("Main", { screen: "Lessons" });
 			}
 		} catch (error) {
 			setError(error.name);
-			console.error(error);
-		} finally {
 			setIsLoading(false);
+
+			console.error(error);
 		}
 	};
 
