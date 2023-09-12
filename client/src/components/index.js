@@ -1,5 +1,5 @@
-export { default as Button } from "./button/Button";
-export { default as Headings } from "./headings/Headings";
-export { default as TextField } from "./textField/TextField";
-export { default as Card } from "./card/Card";
-export { default as LessonButton } from "./lessonButton/LessonButton";
+export { default as Button } from "./Button/Button";
+export { default as Headings } from "./Headings/Headings";
+export { default as TextField } from "./TextField/TextField";
+export { default as Card } from "./Card/Card";
+export { default as LessonButton } from "./LessonButton/LessonButton";

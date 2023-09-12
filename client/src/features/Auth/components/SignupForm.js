@@ -9,11 +9,11 @@ import Icon from "react-native-remix-icon";
 import { useForm } from "react-hook-form";
 import { Button } from "@components";
 import Spinner from "react-native-loading-spinner-overlay";
-import { useSignupSubmit } from "../hooks/useSignupSubmit";
+import { useAuthSubmit } from "../hooks/useAuthSubmit";
 import { useNavigation } from "@react-navigation/native";
 const SignupForm = ({ currentRef }) => {
 	const { control, handleSubmit } = useForm();
-	const { signupSubmit, isLoading } = useSignupSubmit();
+	const { authSubmit, isLoading } = useAuthSubmit({ isRegister: true });
 	const navigation = useNavigation();
 
 	const scrollToInput = (reactNode) => {
@@ -31,7 +31,7 @@ const SignupForm = ({ currentRef }) => {
 				<TextField {...passwordValidations} onFocus={(event) => scrollToInput(event.target)} control={control} leftIcon={<Icon name='lock-fill' size='20' color={Colors.gray_300} />} />
 			</View>
 			<View style={styles.bottomActions}>
-				<Button variant={"primary"} text='Crear mi cuenta' size='medium' onPress={handleSubmit((values) => signupSubmit(values))} />
+				<Button variant={"primary"} text='Crear mi cuenta' size='medium' onPress={handleSubmit(authSubmit)} />
 				<Button variant={"secondary"} text='Ya tengo una cuenta' size='medium' onPress={() => navigation.replace("Auth", { screen: "Login" })} />
 			</View>
 		</View>

@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
-import Button from "../button/Button";
-import Headings from "../headings/Headings";
+import Button from "../Button/Button";
+import Headings from "../Headings/Headings";
 // import { Headings, Button } from "../index";
 import { Colors } from "../../utils/Theme";
 const Card = ({ name, description, imgSource, mainAction }) => {

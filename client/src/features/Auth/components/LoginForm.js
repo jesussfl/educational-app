@@ -8,11 +8,11 @@ import { emailValidations, loginPasswordValidations } from "../utils/inputValida
 //components
 import Icon from "react-native-remix-icon";
 import { TextField, Button } from "@components";
-import { useLogin } from "../hooks/useLogin";
+import { useAuthSubmit } from "../hooks/useAuthSubmit";
 import Spinner from "react-native-loading-spinner-overlay";
 const LoginForm = () => {
 	const navigation = useNavigation();
-	const { isLoading, loginSubmit, error } = useLogin();
+	const { isLoading, authSubmit, error } = useAuthSubmit({ isRegister: false });
 	const { control, handleSubmit } = useForm();
 
 	return (
@@ -24,7 +24,7 @@ const LoginForm = () => {
 				<Button variant={"ghost"} text='Olvidé mi contraseña' size='small' style={{ alignSelf: "flex-end" }} onPress={() => navigation.navigate("Auth", { screen: "RecoverPassword" })} />
 			</View>
 			<View style={{ gap: 16 }}>
-				<Button variant={"primary"} text='Iniciar Sesión' size='medium' onPress={handleSubmit(loginSubmit)} />
+				<Button variant={"primary"} text='Iniciar Sesión' size='medium' onPress={handleSubmit(authSubmit)} />
 				<Button variant={"secondary"} text='No tengo una cuenta' size='medium' onPress={() => navigation.replace("Auth", { screen: "Signup" })} />
 			</View>
 		</View>

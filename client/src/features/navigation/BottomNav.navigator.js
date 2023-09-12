@@ -23,10 +23,9 @@ export const BottomNavStackNavigator = () => {
 				component={WorldStackNavigator}
 				listeners={() => ({
 					tabPress: (e) => {
-						console.log("hola");
 						e.preventDefault();
 
-						// navigation.navigate("Lessons", { screen: "World" });
+						navigation.navigate("Lessons", { screen: "World" });
 					},
 				})}
 				options={({ route }) => ({
