@@ -1,0 +1,14 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sections_completed",
+  "info": {
+    "singularName": "section-completed",
+    "pluralName": "sections-completed",
+    "displayName": "Section Completed"
+  },
+  "options": {
+    "draftAndPublish": false,
+    "comment": ""
+  },
+  "attributes": {}
+}

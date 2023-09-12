@@ -18,9 +18,10 @@ const WorldScreen = ({ navigation }) => {
 	const worldName = isLoading ? "Cargando..." : data.sectionsByWorld.world.name;
 	const bottomSheetModalRef = useRef(null);
 	const [lessonId, setLessonId] = useState(null);
+	const completed_lessons = ["6", "1", "7", "4"];
 	// variables
 	const snapPoints = useMemo(() => ["25%", "50%"], []);
-
+	let last_index;
 	useEffect(() => {
 		navigation.setOptions({
 			title: worldName,
@@ -45,11 +46,17 @@ const WorldScreen = ({ navigation }) => {
 								<Flag variant='Bold' size={24} color={Colors.gray_400} />
 								<Text style={styles.sectionBannerText}>{section.attributes.description}</Text>
 							</View>
-
 							{/* Render Lessons By Section */}
-							{section.attributes.lessons.data.map((lesson) => (
-								<LessonButton key={lesson.id} isLocked={true} onPress={() => handlePresentModalPress(lesson.id)} />
-							))}
+							{section.attributes.lessons.data.map((lesson, index) => {
+								if (completed_lessons.includes(lesson.id)) {
+									last_index = index;
+									return <LessonButton key={lesson.id} isLocked={false} isCompleted={true} onPress={() => handlePresentModalPress(lesson.id)} />;
+								} else if (index == last_index + 1) {
+									return <LessonButton key={lesson.id} isLocked={false} isCompleted={false} isUnlocked={true} onPress={() => handlePresentModalPress(lesson.id)} />;
+								} else {
+									return <LessonButton key={lesson.id} isLocked={true} isCompleted={false} onPress={() => handlePresentModalPress(lesson.id)} />;
+								}
+							})}
 						</View>
 					))}
 				</View>

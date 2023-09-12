@@ -1,0 +1,14 @@
+{
+  "kind": "collectionType",
+  "collectionName": "worlds_completed",
+  "info": {
+    "singularName": "world-completed",
+    "pluralName": "worlds-completed",
+    "displayName": "World Completed"
+  },
+  "options": {
+    "draftAndPublish": false,
+    "comment": ""
+  },
+  "attributes": {}
+}

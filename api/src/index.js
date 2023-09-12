@@ -1,6 +1,7 @@
 const { resolvers: sectionsResolvers } = require("./plugins/crefinex/server/graphql/modules/sections");
 const { resolvers: lessonsBySectionResolvers } = require("./plugins/crefinex/server/graphql/modules/lessonsBySection");
 const { resolvers: exerciseResolvers } = require("./plugins/crefinex/server/graphql/modules/exercise.module");
+const { resolvers: lessonsCompletedResolvers } = require("./plugins/crefinex/server/graphql/modules/lessonCompleted.module");
 module.exports = {
   /**
    * An asynchronous register function that runs before
@@ -23,6 +24,9 @@ module.exports = {
     extend type Query {
       sectionsByWorld(id:ID!, start:Int, limit:Int): SectionsByWorld!
     }
+    extend type Query {
+      lessonsCompletedByUser(id:ID!, start:Int, limit:Int): LessonsCompletedByUser!
+    }
     type LessonsBySection {
       lessons: [CrefinexLessonEntity]
       pagination: Pagination
@@ -38,10 +42,14 @@ module.exports = {
       pagination: Pagination
       world: CrefinexWorld
     }
+    type LessonsCompletedByUser {
+      lessonsCompleted: [CrefinexLessonCompletedEntity]
+      pagination: Pagination
+    }
     `;
     extensionService.use(({ strapi }) => ({
       typeDefs: Query,
-      resolvers: { Query: { ...lessonsBySectionResolvers, ...sectionsResolvers, ...exerciseResolvers } },
+      resolvers: { Query: { ...lessonsBySectionResolvers, ...sectionsResolvers, ...exerciseResolvers, ...lessonsCompletedResolvers } },
     }));
   },
 

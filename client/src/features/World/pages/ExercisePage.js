@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { query } from "@utils/graphql/client/GraphQLCLient";
 import { queryExercisesByLessonId } from "@utils/graphql/queries/exercise.queries";
@@ -17,30 +17,28 @@ const ExercisePage = () => {
 	const route = useRoute();
 	const params = route.params;
 	const { data, isLoading, error } = useQuery(["exercises"], () => query(queryExercisesByLessonId, { id: params.lessonId, start: 1, limit: 100 }));
-
+	const [currentExercise, setCurrentExercise] = useState(0);
 	if (isLoading) {
 		return <Spinner visible={isLoading} />;
 	}
 	const exercises = data.exercisesByLesson.exercises;
 	const sortedExercises = exercises.sort((a, b) => a.order - b.order);
-	let currentExercise = 0;
 	let percentage = ((currentExercise + 1) * 100) / sortedExercises.length;
+
+	const handleNext = () => {
+		if (currentExercise < sortedExercises.length - 1) {
+			setCurrentExercise(currentExercise + 1);
+		}
+	};
 	return (
 		<View style={{ justifyContent: "space-between", flex: 1 }}>
 			<View style={{ alignItems: "center", justifyContent: "center", flexDirection: "row", padding: 24, gap: 16 }}>
 				<CloseCircle size={32} color={Colors.gray_300} onPress={navigation.goBack} />
 				<ProgressBar percentage={`${percentage}%`} />
 			</View>
-			<View>
-				{sortedExercises[currentExercise].attributes.type === "Completion" && <Completion content={sortedExercises[currentExercise].attributes.content} />}
+			{sortedExercises[currentExercise].attributes.type === "Completion" && <Completion content={sortedExercises[currentExercise].attributes.content} handleNext={handleNext} />}
 
-				{sortedExercises[currentExercise].attributes.type === "selection" && <SimpleSelection content={sortedExercises[currentExercise].attributes.content} />}
-			</View>
-
-			<View style={{ gap: 16, flexDirection: "row", alignItems: "center", padding: 16 }}>
-				<Button text='Volver' variant='secondary' style={{ flex: 1 }} onPress={() => navigation.goBack()} />
-				<Button text='Comprobar' variant='primary' style={{ flex: 1 }} onPress={() => navigation.navigate("Test")} />
-			</View>
+			{sortedExercises[currentExercise].attributes.type === "selection" && <SimpleSelection content={sortedExercises[currentExercise].attributes.content} handleNext={handleNext} />}
 		</View>
 	);
 };

@@ -77,6 +77,18 @@
       "type": "integer",
       "default": 5,
       "max": 6
+    },
+    "world_completeds": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "plugin::crefinex.world-completed",
+      "mappedBy": "user"
+    },
+    "lesson_completeds": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "plugin::crefinex.lesson-completed",
+      "mappedBy": "user"
     }
   }
 }

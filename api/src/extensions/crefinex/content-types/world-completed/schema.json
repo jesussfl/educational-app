@@ -1,0 +1,21 @@
+{
+  "kind": "collectionType",
+  "collectionName": "worlds_completed",
+  "info": {
+    "singularName": "world-completed",
+    "pluralName": "worlds-completed",
+    "displayName": "World Completed",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "world_completeds"
+    }
+  }
+}

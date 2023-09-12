@@ -1,0 +1,14 @@
+{
+  "kind": "collectionType",
+  "collectionName": "exercises_completed",
+  "info": {
+    "singularName": "exercise-completed",
+    "pluralName": "exercises-completed",
+    "displayName": "Exercise Completed"
+  },
+  "options": {
+    "draftAndPublish": false,
+    "comment": ""
+  },
+  "attributes": {}
+}

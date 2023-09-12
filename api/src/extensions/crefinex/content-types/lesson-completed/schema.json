@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "lessons_completed",
+  "info": {
+    "singularName": "lesson-completed",
+    "pluralName": "lessons-completed",
+    "displayName": "Lesson Completed",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "completed_date": {
+      "type": "datetime"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "lesson_completeds"
+    },
+    "lesson": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::crefinex.lesson"
+    }
+  }
+}

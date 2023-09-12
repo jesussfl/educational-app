@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "lessons_completed",
+  "info": {
+    "singularName": "lesson-completed",
+    "pluralName": "lessons-completed",
+    "displayName": "Lesson Completed"
+  },
+  "options": {
+    "draftAndPublish": false,
+    "comment": ""
+  },
+  "attributes": {
+    "completed_date": {
+      "type": "datetime"
+    }
+  }
+}
