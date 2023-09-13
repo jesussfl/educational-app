@@ -8,7 +8,6 @@ export { default as Walkthrough1 } from "./Walkthrough/pages/Walkthrough1";
 export { default as Walkthrough2 } from "./Walkthrough/pages/Walkthrough2";
 export { default as Walkthrough3 } from "./Walkthrough/pages/Walkthrough3";
 
-export { default as HomeScreen } from "./World/pages/HomeScreen";
 export { default as ProfileScreen } from "./Profile/pages/ProfileScreen";
 export { default as NotificationsScreen } from "./Notifications/NotificationsScreen";
 export { default as ReviewsScreen } from "./Reviews/pages/Reviews";
