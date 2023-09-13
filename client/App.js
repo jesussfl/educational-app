@@ -12,29 +12,29 @@ const queryClient = new QueryClient();
 WebBrowser.maybeCompleteAuthSession();
 
 export default function App() {
-	const [isAppReady, setIsAppReady] = useState(false);
-	const isFontsLoaded = useCustomFonts();
+   const [isAppReady, setIsAppReady] = useState(false);
+   const isFontsLoaded = useCustomFonts();
 
-	useEffect(() => {
-		setIsAppReady(isFontsLoaded);
-	}, [isFontsLoaded]);
+   useEffect(() => {
+      setIsAppReady(isFontsLoaded);
+   }, [isFontsLoaded]);
 
-	if (!isAppReady) {
-		return null;
-	}
-	return (
-		<AuthProvider>
-			<GestureHandlerRootView style={{ flex: 1 }}>
-				<QueryClientProvider client={queryClient}>
-					<WithSplashScreen isAppReady={isAppReady}>
-						<NavigationContainer>
-							<IntroductoryStackNavigator />
-						</NavigationContainer>
-					</WithSplashScreen>
-				</QueryClientProvider>
-			</GestureHandlerRootView>
-		</AuthProvider>
-	);
+   if (!isAppReady) {
+      return null;
+   }
+   return (
+      <AuthProvider>
+         <GestureHandlerRootView style={{ flex: 1 }}>
+            <QueryClientProvider client={queryClient}>
+               <WithSplashScreen isAppReady={isAppReady}>
+                  <NavigationContainer>
+                     <IntroductoryStackNavigator />
+                  </NavigationContainer>
+               </WithSplashScreen>
+            </QueryClientProvider>
+         </GestureHandlerRootView>
+      </AuthProvider>
+   );
 }
 
 const styles = StyleSheet.create({});

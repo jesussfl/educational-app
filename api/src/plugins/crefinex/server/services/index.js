@@ -10,5 +10,5 @@ module.exports = {
   lesson,
   exercise,
   world,
-  lessonCompleted,
+  "lesson-completed": lessonCompleted,
 };
