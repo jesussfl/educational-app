@@ -1,6 +1,6 @@
 import { GraphQLClient } from "graphql-request";
 import { API_URL, STRAPI_API_KEY } from "@env";
-console.log(API_URL);
+
 const client = new GraphQLClient(`${API_URL}/graphql`, {
 	headers: {
 		authorization: `${STRAPI_API_KEY}`,

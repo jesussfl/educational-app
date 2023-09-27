@@ -13,18 +13,15 @@ const SimpleSelection = ({ content, handleNext }) => {
 	const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
 	const [isAnswerWrong, setIsAnswerWrong] = useState(false);
 	async function playSound() {
-		console.log("Loading Soundd");
 		const { sound } = await Audio.Sound.createAsync(require("../pages/success-sound.mp3"));
 		setSound(sound);
 
-		console.log("Playing Sound");
 		await sound.playAsync();
 	}
 
 	React.useEffect(() => {
 		return sound
 			? () => {
-					console.log("Unloading Sound");
 					sound.unloadAsync();
 			  }
 			: undefined;

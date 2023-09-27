@@ -5,7 +5,9 @@ const config = {
     // 'cs',
     // 'de',
     // 'dk',
-    // 'es',
+    "es-VE",
+    "es",
+    "es-MX",
     // 'he',
     // 'id',
     // 'it',
@@ -27,6 +29,12 @@ const config = {
     // 'zh-Hans',
     // 'zh',
   ],
+  translations: {
+    es: {
+      "app.components.LeftMenu.navbrand.title": "Panel de Control",
+      "app.components.LeftMenu.navbrand.workplace": "Crefinex",
+    },
+  },
 };
 
 const bootstrap = (app) => {

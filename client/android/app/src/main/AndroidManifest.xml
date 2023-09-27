@@ -30,6 +30,7 @@
         <data android:scheme="dev.jeflr.educationalApp"/>
         <data android:scheme="exp+client"/>
         <data android:scheme="navigation-test"/>
+        <data android:scheme="exp+finex"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>
