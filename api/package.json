@@ -24,6 +24,7 @@
     "eslint-plugin-import": "^2.28.0",
     "graphql": "^15.5.0",
     "graphql-request": "^6.1.0",
+    "node-postgres": "^0.6.2",
     "pg": "^8.11.3",
     "pg-connection-string": "^2.6.2",
     "react-hook-form": "^7.45.4",
