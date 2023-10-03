@@ -3,11 +3,8 @@ import React from "react";
 import { Button } from "@components";
 
 const Completion = ({ content }) => {
-   const data = JSON.parse(content);
-   const texto = "Ahorrar dinero es esencial para {asegurar} futuras {metas} {financieras} y {afrontar} {situaciones} de emergencia.";
-
    // Utilizamos una expresión regular para dividir el texto en partes con y sin llaves
-   const partes = texto.split(/(\{[^}]*\})/);
+   const partes = content.completionText.split(/(\{[^}]*\})/);
 
    // Eliminamos elementos vacíos del arreglo resultante
    const resultado = partes.filter((part) => part.trim() !== "");
@@ -34,7 +31,7 @@ const Completion = ({ content }) => {
             })}
          </View>
          <View style={{ gap: 24, flexDirection: "row", alignItems: "center", padding: 16, flexWrap: "wrap" }}>
-            {data.words.map((word, index) => (
+            {content.incorrectWords.map((word, index) => (
                <Button key={index} text={word} variant="secondary" size="small" />
             ))}
          </View>
@@ -53,15 +50,13 @@ const styles = StyleSheet.create({
       width: 50,
       borderBottomWidth: 2,
       borderColor: "black",
-      paddingHorizontal: 4, // Añade un espacio horizontal para separar el borde del texto
+      paddingHorizontal: 4,
    },
    borderText: {
-      opacity: 0, // Oculta el contenido real dentro del borde
+      opacity: 0,
    },
    text: {
-      // Estilos para el texto normal
-      // Puedes personalizar esto según tus necesidades
       fontSize: 16,
-      margin: 4, // Añade un espacio alrededor del texto normal
+      margin: 4,
    },
 });
