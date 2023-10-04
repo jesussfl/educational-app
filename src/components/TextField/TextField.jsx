@@ -16,6 +16,7 @@ const TextField = ({
    secureTextEntry,
    onFocus,
    ref,
+   defaultValue,
 }) => {
    const [secureText, setSecureText] = useState(secureTextEntry);
    return (

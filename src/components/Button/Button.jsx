@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
-import { SemanticColors } from "@utils/Theme";
+import { SemanticColors, Colors } from "@utils/Theme";
 
 const buttonVariants = {
    PRIMARY: "primary",
    SECONDARY: "secondary",
    GHOST: "ghost",
+   SUCCESS: "success",
+   WRONG: "wrong",
 };
 
 const buttonSizes = {
@@ -55,6 +57,8 @@ const Button = ({ variant, text = "Button", leftIcon, rightIcon, onPress, size =
             fontSize,
          },
          [buttonVariants.GHOST]: { color: isPressed ? SemanticColors.text.primary_active : SemanticColors.text.subdued_normal, fontSize },
+         [buttonVariants.SUCCESS]: { color: "#fff", fontSize },
+         [buttonVariants.WRONG]: { color: "#fff", fontSize },
       };
       return buttonTextStyles[variant];
    };
@@ -135,6 +139,30 @@ const buttonStyles = {
       default: {
          backgroundColor: SemanticColors.app.bg_normal,
          borderColor: SemanticColors.app.bg_normal,
+      },
+   },
+   [buttonVariants.SUCCESS]: {
+      default: {
+         backgroundColor: Colors.success_500,
+         borderColor: Colors.success_700,
+         borderBottomWidth: 7,
+      },
+      pressed: {
+         backgroundColor: Colors.success_600,
+         borderColor: Colors.success_700,
+         borderBottomWidth: 3,
+      },
+   },
+   [buttonVariants.WRONG]: {
+      default: {
+         backgroundColor: Colors.error_500,
+         borderColor: Colors.error_700,
+         borderBottomWidth: 7,
+      },
+      pressed: {
+         backgroundColor: Colors.error_600,
+         borderColor: Colors.error_700,
+         borderBottomWidth: 3,
       },
    },
 };

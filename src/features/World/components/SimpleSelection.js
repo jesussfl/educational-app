@@ -51,7 +51,7 @@ const SimpleSelection = ({ content, handleNext }) => {
          </View>
          <View style={{ gap: 16, flexDirection: "row", alignItems: "center" }}>
             {isAnswerCorrect || isAnswerWrong ? (
-               <Button text="Continuar" variant="primary" style={{ flex: 1 }} onPress={handleNext} />
+               <Button text="Continuar" variant={isAnswerCorrect ? "success" : "wrong"} style={{ flex: 1 }} onPress={handleNext} />
             ) : (
                <Button text="Comprobar" variant="primary" style={{ flex: 1 }} onPress={checkAnswer} />
             )}
