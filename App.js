@@ -23,17 +23,17 @@ export default function App() {
       return null;
    }
    return (
-      <AuthProvider>
-         <GestureHandlerRootView style={{ flex: 1 }}>
-            <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+         <AuthProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
                <WithSplashScreen isAppReady={isAppReady}>
                   <NavigationContainer>
                      <IntroductoryStackNavigator />
                   </NavigationContainer>
                </WithSplashScreen>
-            </QueryClientProvider>
-         </GestureHandlerRootView>
-      </AuthProvider>
+            </GestureHandlerRootView>
+         </AuthProvider>
+      </QueryClientProvider>
    );
 }
 

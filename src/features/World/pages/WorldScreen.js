@@ -4,11 +4,9 @@ import WorldSections from "../components/WorldSections";
 
 import { Button } from "@components";
 import { BottomSheetModal, BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-
 import useBottomSheet from "@utils/hooks/useBottomSheet";
 const WorldScreen = ({ navigation }) => {
    const { bottomSheetModalRef, snapPoints, handlePresentModalPress, handleSheetChanges } = useBottomSheet();
-
    const [lessonId, setLessonId] = useState(null);
 
    return (

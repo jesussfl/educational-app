@@ -15,6 +15,9 @@ const WorldStackNavigator = () => {
             component={WorldScreen}
             options={{
                headerShown: true,
+               headerRightContainerStyle: {
+                  marginRight: 16,
+               },
                headerTitleStyle: {
                   color: Colors.gray_400,
                   fontFamily: "Sora-SemiBold",

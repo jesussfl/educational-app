@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { StyleSheet, View, ScrollView } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Headings, Button } from "@components";
 import { SemanticColors } from "@utils/Theme";
 import { walkthrough1Texts } from "../utils/walkthroughTexts";

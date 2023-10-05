@@ -7,6 +7,7 @@ import Spinner from "react-native-loading-spinner-overlay";
 import ProgressBar from "../components/ProgressBar";
 import { Button } from "@components";
 import useExerciseManagement from "../hooks/useExerciseManagement";
+import UserStats from "../../World/components/UserStats";
 const ExercisePage = () => {
    const { status, handler, answer } = useExerciseManagement();
    if (status.isLoading) {
@@ -18,6 +19,7 @@ const ExercisePage = () => {
          <View style={styles.topBar}>
             <CloseCircle size={32} color={Colors.gray_300} onPress={() => handler.close()} />
             {status.isEmpty ? null : <ProgressBar percentage={`${handler.percentage}%`} />}
+            <UserStats statusToShow={"lives"} />
          </View>
          {status.isEmpty ? <Text>Vacio</Text> : handler.render()}
          <View style={styles.buttonContainer}>

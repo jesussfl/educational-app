@@ -8,14 +8,14 @@ import SimpleSelectionExercise from "../components/SimpleSelectionExercise";
 import CompletionExercise from "../components/CompletionExercise";
 import { Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-
+import useUserStats from "../../../hooks/useUserStats";
 // Define a custom hook for exercise management
 export default useExerciseManagement = () => {
    // Initialize navigation and route for navigation control and route parameters
    const navigation = useNavigation();
    const route = useRoute();
    const params = route.params;
-
+   const { decreaseLives } = useUserStats();
    // Fetch exercise data using React Query
    const { data, isLoading, error } = useQuery([`exercises${params.lessonId}`], () =>
       query(queryExercisesByLessonId, { id: params.lessonId, start: 1, limit: 100 })
@@ -48,18 +48,19 @@ export default useExerciseManagement = () => {
       // Parse the correct answer from the exercise content
       const mainAnswer = JSON.parse(exercises[currentIndex].attributes.content);
       if (exercises[currentIndex].attributes.type === "simpleSelection") {
-         console.log(userAnswer, mainAnswer);
          if (userAnswer === mainAnswer.correctAnswerIndex) {
             // Check if the user's answer matches the correct answer index
             return setIsAnswerCorrect(true);
          } else {
             // If not, set isAnswerCorrect to false
+            decreaseLives();
             return setIsAnswerCorrect(false);
          }
       } else if (exercises[currentIndex].attributes.type === "completion") {
          console.log(userAnswer, mainAnswer);
          if (userAnswer.length !== mainAnswer.correctWords.length) {
             // Check if the number of user-selected words matches the correct number
+            decreaseLives();
             return setIsAnswerCorrect(false);
          }
 
@@ -70,6 +71,7 @@ export default useExerciseManagement = () => {
          for (let i = 0; i < userAnswer.length; i++) {
             if (correctWords[i] !== userSelectedWords[i]) {
                // Compare each word in the user's answer with the correct answer
+               decreaseLives();
                return setIsAnswerCorrect(false);
             }
          }

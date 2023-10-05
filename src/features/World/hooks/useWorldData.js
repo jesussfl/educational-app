@@ -8,7 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const useWorldData = () => {
    const navigation = useNavigation();
-   const { user } = useAuthContext();
+   const { user, refreshUserData } = useAuthContext();
    const queryClient = useQueryClient(); // Get the query client
 
    const results = useQueries({
@@ -46,6 +46,8 @@ const useWorldData = () => {
       // Refetch the data for sections and lessons completed
       await queryClient.invalidateQueries(["sections", user.currentWorld]);
       await queryClient.invalidateQueries(["lessons_completed"]);
+      await queryClient.invalidateQueries(["user"]);
+      refreshUserData();
    };
 
    return { isLoading, worldData, lessonsCompleted, refreshData };

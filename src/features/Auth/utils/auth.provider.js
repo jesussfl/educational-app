@@ -2,51 +2,89 @@ import React, { useState, useEffect } from "react";
 import { AuthContext } from "../contexts/auth.context";
 import { getToken } from "../../../utils/helpers/auth.helpers";
 import { API_URL } from "@env";
+
+/**
+ * AuthProvider component provides authentication-related data and functions to its children.
+ * It manages user data, loading state, and authentication token.
+ *
+ * @param {Object} children - The child components to which authentication context is provided.
+ */
 const AuthProvider = ({ children }) => {
-	const [userData, setUserData] = useState();
-	const [isLoading, setIsLoading] = useState(true);
-	const [authToken, setAuthToken] = useState(null); // Inicialmente, authToken es nulo
+   // State to store user data
+   const [userData, setUserData] = useState();
+   // State to track loading state
+   const [isLoading, setIsLoading] = useState(true);
+   // State to store authentication token
+   const [authToken, setAuthToken] = useState(null);
 
-	const fetchLoggedInUser = async (token) => {
-		setIsLoading(true);
-		try {
-			const response = await fetch(`${API_URL}/api/users/me`, {
-				headers: { Authorization: `Bearer ${token}` },
-			});
-			const data = await response.json();
+   /**
+    * Fetches the user data using the provided token.
+    *
+    * @param {string} token - The authentication token.
+    */
+   const fetchLoggedInUser = async (token) => {
+      setIsLoading(true);
+      try {
+         const response = await fetch(`${API_URL}/api/users/me`, {
+            headers: { Authorization: `Bearer ${token}` },
+         });
+         const data = await response.json();
 
-			setUserData(data);
-		} catch (error) {
-			console.error(error);
-			console.error("Error While Getting Logged In User Details");
-		} finally {
-			setIsLoading(false);
-		}
-	};
+         setUserData(data);
+      } catch (error) {
+         console.error(error);
+         console.error("Error While Getting Logged In User Details");
+      } finally {
+         setIsLoading(false);
+      }
+   };
 
-	const handleUser = (user) => {
-		setUserData(user);
-	};
+   /**
+    * Refreshes the user data using the current authentication token.
+    */
+   const refreshUserData = async () => {
+      await fetchLoggedInUser(authToken);
+   };
 
-	useEffect(() => {
-		const loadToken = async () => {
-			const authToken = await getToken();
-			if (authToken) {
-				setAuthToken(authToken); // Actualizamos authToken una vez que tengamos el valor
-			}
-		};
+   /**
+    * Sets the user data.
+    *
+    * @param {Object} user - The user data to set.
+    */
+   const handleUser = (user) => {
+      setUserData(user);
+   };
 
-		loadToken();
-	}, []);
+   // Load the authentication token when the component mounts
+   useEffect(() => {
+      const loadToken = async () => {
+         const authToken = await getToken();
+         if (authToken) {
+            setAuthToken(authToken);
+         }
+      };
 
-	useEffect(() => {
-		// Usamos authToken aquí después de que se haya actualizado
-		if (authToken) {
-			fetchLoggedInUser(authToken);
-		}
-	}, [authToken]); // Dependencia en authToken
+      loadToken();
+   }, []);
 
-	return <AuthContext.Provider value={{ user: userData, setUser: handleUser, isLoading }}>{children}</AuthContext.Provider>;
+   // Fetch user data when the authentication token changes
+   useEffect(() => {
+      if (authToken) {
+         fetchLoggedInUser(authToken);
+      }
+   }, [authToken]);
+
+   return (
+      <AuthContext.Provider
+         value={{
+            user: userData,
+            setUser: handleUser,
+            isLoading,
+            refreshUserData,
+         }}>
+         {children}
+      </AuthContext.Provider>
+   );
 };
 
 export default AuthProvider;
