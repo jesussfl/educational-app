@@ -11,7 +11,6 @@ const CompletionExercise = ({ content, setUserAnswer, userAnswer }) => {
 
    // Handle the selection of words by updating the user's answer.
    const handleSelectedWords = (selectedWord) => {
-      console.log(selectedWord);
       setUserAnswer([...userAnswer, selectedWord]);
    };
 

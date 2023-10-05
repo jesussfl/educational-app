@@ -9,6 +9,7 @@ import CompletionExercise from "../components/CompletionExercise";
 import { Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import useUserStats from "../../../hooks/useUserStats";
+import CongratsPage from "../pages/CongratsPage";
 // Define a custom hook for exercise management
 export default useExerciseManagement = () => {
    // Initialize navigation and route for navigation control and route parameters
@@ -57,7 +58,6 @@ export default useExerciseManagement = () => {
             return setIsAnswerCorrect(false);
          }
       } else if (exercises[currentIndex].attributes.type === "completion") {
-         console.log(userAnswer, mainAnswer);
          if (userAnswer.length !== mainAnswer.correctWords.length) {
             // Check if the number of user-selected words matches the correct number
             decreaseLives();
@@ -82,10 +82,7 @@ export default useExerciseManagement = () => {
 
    // Handle navigation to the next exercise
    const handleNext = () => {
-      if (currentIndex < exercises.length - 1) {
-         // Move to the next exercise if available
-         setCurrentIndex(currentIndex + 1);
-      }
+      setCurrentIndex(currentIndex + 1);
    };
 
    // Handle exercise completion and return to the main screen
@@ -95,6 +92,10 @@ export default useExerciseManagement = () => {
 
    // Render the current exercise based on its type
    const renderExercise = () => {
+      if (currentIndex > exercises.length - 1) {
+         // If the current index is greater than the number of exercises available, close the screen
+         return navigation.navigate("Lessons", { screen: "Congrats" });
+      }
       if (exercises.length === 0) {
          // If there are no exercises available, set isEmpty flag to true
          setIsEmpty(true);

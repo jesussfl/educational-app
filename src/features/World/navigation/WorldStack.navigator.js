@@ -7,6 +7,7 @@ const WorldStack = createStackNavigator();
 import { Colors } from "@utils/Theme";
 
 import UserStats from "../components/UserStats";
+import CongratsPage from "../../Exercises/pages/CongratsPage";
 const WorldStackNavigator = () => {
    return (
       <WorldStack.Navigator initialRouteName="World">
@@ -28,6 +29,7 @@ const WorldStackNavigator = () => {
             initialParams={{ headerShown: true, headerTitle: "" }}
          />
          <WorldStack.Screen name="Exercise" component={ExerciseScreen} options={{ headerShown: false }} />
+         <WorldStack.Screen name="Congrats" component={CongratsPage} options={{ headerShown: false }} />
       </WorldStack.Navigator>
    );
 };

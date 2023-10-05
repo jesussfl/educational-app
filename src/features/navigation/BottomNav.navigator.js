@@ -10,86 +10,117 @@ import WorldStackNavigator from "../World/navigation/WorldStack.navigator";
 const BottomNavStack = createBottomTabNavigator();
 
 export const BottomNavStackNavigator = () => {
-	const navigation = useNavigation();
-	return (
-		<BottomNavStack.Navigator
-			screenOptions={{
-				headerShown: false,
-				tabBarShowLabel: false,
-				tabBarStyle: { height: 72, elevation: 0, shadowOpacity: 0, borderTopColor: Colors.gray_50, borderTopWidth: 6 },
-			}}>
-			<BottomNavStack.Screen
-				name='Lessons'
-				component={WorldStackNavigator}
-				listeners={() => ({
-					tabPress: (e) => {
-						e.preventDefault();
+   const navigation = useNavigation();
+   return (
+      <BottomNavStack.Navigator
+         screenOptions={{
+            headerShown: false,
+            tabBarShowLabel: false,
+            tabBarStyle: { height: 72, elevation: 0, shadowOpacity: 0, borderTopColor: Colors.gray_50, borderTopWidth: 6 },
+         }}>
+         <BottomNavStack.Screen
+            name="Lessons"
+            component={WorldStackNavigator}
+            listeners={() => ({
+               tabPress: (e) => {
+                  e.preventDefault();
 
-						navigation.navigate("Lessons", { screen: "World" });
-					},
-				})}
-				options={({ route }) => ({
-					tabBarIcon: ({ focused }) => <Home variant='Bold' size={28} color={focused ? SemanticColors.bg.primary_active : SemanticColors.elevation.secondary_normal} />,
-					headerShown: false,
-					tabBarStyle: ((route) => {
-						const routeName = getFocusedRouteNameFromRoute(route) ?? "";
-						if (routeName === "Exercise") {
-							return { display: "none" };
-						}
-						return { height: 72, elevation: 0, shadowOpacity: 0, borderTopColor: Colors.gray_50, borderTopWidth: 6 };
-					})(route),
-				})}
-				initialParams={{ headerShown: false, headerTitle: "" }}
-			/>
+                  navigation.navigate("Lessons", { screen: "World" });
+               },
+            })}
+            options={({ route }) => ({
+               tabBarIcon: ({ focused }) => (
+                  <Home
+                     variant="Bold"
+                     size={28}
+                     color={focused ? SemanticColors.bg.primary_active : SemanticColors.elevation.secondary_normal}
+                  />
+               ),
+               headerShown: false,
+               tabBarStyle: ((route) => {
+                  const routeName = getFocusedRouteNameFromRoute(route) ?? "";
+                  if (routeName === "Exercise" || routeName === "Congrats") {
+                     return { display: "none" };
+                  }
 
-			<BottomNavStack.Screen
-				name='Reviews'
-				options={{
-					tabBarIcon: ({ focused }) => <Weight size={28} variant='Bold' color={focused ? SemanticColors.bg.primary_active : SemanticColors.elevation.secondary_normal} />,
-				}}
-				component={Screens.ReviewsScreen}
-			/>
+                  return { height: 72, elevation: 0, shadowOpacity: 0, borderTopColor: Colors.gray_50, borderTopWidth: 6 };
+               })(route),
+            })}
+            initialParams={{ headerShown: false, headerTitle: "" }}
+         />
 
-			<BottomNavStack.Screen
-				name='Levels'
-				options={{
-					headerShown: true,
-					headerTitle: "Explora los distintos niveles",
-					headerTitleStyle: {
-						color: Colors.gray_400,
-						fontFamily: "Sora-SemiBold",
-						fontSize: 18,
-					},
-					tabBarItemStyle: {
-						transform: [{ rotate: "45deg" }],
-						bottom: 44,
-						borderWidth: 6,
-						height: 80,
+         <BottomNavStack.Screen
+            name="Reviews"
+            options={{
+               tabBarIcon: ({ focused }) => (
+                  <Weight
+                     size={28}
+                     variant="Bold"
+                     color={focused ? SemanticColors.bg.primary_active : SemanticColors.elevation.secondary_normal}
+                  />
+               ),
+            }}
+            component={Screens.ReviewsScreen}
+         />
 
-						backgroundColor: "#fff",
-						borderColor: Colors.gray_50,
-						borderRadius: 12,
-					},
-					tabBarIconStyle: { transform: [{ rotate: "-45deg" }] },
-					tabBarBadgeStyle: { backgroundColor: "red" },
-					tabBarIcon: ({ focused }) => <Signpost size={28} variant='Bold' color={focused ? SemanticColors.bg.primary_active : SemanticColors.elevation.secondary_normal} />,
-				}}
-				component={Screens.LevelsScreen}
-			/>
-			<BottomNavStack.Screen
-				name='Notifications'
-				options={{
-					tabBarIcon: ({ focused }) => <Notification size={28} variant='Bold' color={focused ? SemanticColors.bg.primary_active : SemanticColors.elevation.secondary_normal} />,
-				}}
-				component={Screens.NotificationsScreen}
-			/>
-			<BottomNavStack.Screen
-				name='Profile'
-				options={{
-					tabBarIcon: ({ focused }) => <UserOctagon variant='Bold' size={28} color={focused ? SemanticColors.bg.primary_active : SemanticColors.elevation.secondary_normal} />,
-				}}
-				component={Screens.ProfileScreen}
-			/>
-		</BottomNavStack.Navigator>
-	);
+         <BottomNavStack.Screen
+            name="Levels"
+            options={{
+               headerShown: true,
+               headerTitle: "Explora los distintos niveles",
+               headerTitleStyle: {
+                  color: Colors.gray_400,
+                  fontFamily: "Sora-SemiBold",
+                  fontSize: 18,
+               },
+               tabBarItemStyle: {
+                  transform: [{ rotate: "45deg" }],
+                  bottom: 44,
+                  borderWidth: 6,
+                  height: 80,
+
+                  backgroundColor: "#fff",
+                  borderColor: Colors.gray_50,
+                  borderRadius: 12,
+               },
+               tabBarIconStyle: { transform: [{ rotate: "-45deg" }] },
+               tabBarBadgeStyle: { backgroundColor: "red" },
+               tabBarIcon: ({ focused }) => (
+                  <Signpost
+                     size={28}
+                     variant="Bold"
+                     color={focused ? SemanticColors.bg.primary_active : SemanticColors.elevation.secondary_normal}
+                  />
+               ),
+            }}
+            component={Screens.LevelsScreen}
+         />
+         <BottomNavStack.Screen
+            name="Notifications"
+            options={{
+               tabBarIcon: ({ focused }) => (
+                  <Notification
+                     size={28}
+                     variant="Bold"
+                     color={focused ? SemanticColors.bg.primary_active : SemanticColors.elevation.secondary_normal}
+                  />
+               ),
+            }}
+            component={Screens.NotificationsScreen}
+         />
+         <BottomNavStack.Screen
+            name="Profile"
+            options={{
+               tabBarIcon: ({ focused }) => (
+                  <UserOctagon
+                     variant="Bold"
+                     size={28}
+                     color={focused ? SemanticColors.bg.primary_active : SemanticColors.elevation.secondary_normal}
+                  />
+               ),
+            }}
+            component={Screens.ProfileScreen}
+         />
+      </BottomNavStack.Navigator>
+   );
 };
