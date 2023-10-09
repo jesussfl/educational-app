@@ -47,7 +47,10 @@ export default useExerciseManagement = () => {
 
    const checkAnswer = () => {
       // Parse the correct answer from the exercise content
-      const mainAnswer = JSON.parse(exercises[currentIndex].attributes.content);
+      const mainAnswer =
+         typeof exercises[currentIndex].attributes.content === "string"
+            ? JSON.parse(exercises[currentIndex].attributes.content)
+            : exercises[currentIndex].attributes.content;
       if (exercises[currentIndex].attributes.type === "simpleSelection") {
          if (userAnswer === mainAnswer.correctAnswerIndex) {
             // Check if the user's answer matches the correct answer index
@@ -94,7 +97,8 @@ export default useExerciseManagement = () => {
    const renderExercise = () => {
       if (currentIndex > exercises.length - 1) {
          // If the current index is greater than the number of exercises available, close the screen
-         return navigation.navigate("Lessons", { screen: "Congrats" });
+         navigation.replace("Congrats");
+         return;
       }
       if (exercises.length === 0) {
          // If there are no exercises available, set isEmpty flag to true
@@ -109,7 +113,11 @@ export default useExerciseManagement = () => {
       const exerciseTypes = {
          simpleSelection: () => (
             <SimpleSelectionExercise
-               content={JSON.parse(exercises[currentIndex].attributes.content)}
+               content={
+                  typeof exercises[currentIndex].attributes.content === "string"
+                     ? JSON.parse(exercises[currentIndex].attributes.content)
+                     : exercises[currentIndex].attributes.content
+               }
                setUserAnswer={setUserAnswer}
                isAnswerCorrect={isAnswerCorrect}
                userAnswer={userAnswer}
@@ -118,7 +126,11 @@ export default useExerciseManagement = () => {
          completion: () => {
             return (
                <CompletionExercise
-                  content={JSON.parse(exercises[currentIndex].attributes.content)}
+                  content={
+                     typeof exercises[currentIndex].attributes.content === "string"
+                        ? JSON.parse(exercises[currentIndex].attributes.content)
+                        : exercises[currentIndex].attributes.content
+                  }
                   setUserAnswer={setUserAnswer}
                   userAnswer={userAnswer}
                   isAnswerCorrect={isAnswerCorrect}

@@ -3,11 +3,27 @@
       "version": ">= 3.17.0"
    },
    "build": {
-      "development": {
-         "developmentClient": true,
+      "preview": {
+         "env": {
+            "EXPO_PUBLIC_API_URL": "https://crefinex-admin-panel-production.up.railway.app",
+            "EXPO_PUBLIC_STRAPI_API_KEY": "Bearer 976f641b63fbe854f39eb415a39a940b278a8189ba7718b2b22cbffeadfe6949868e17f0f86c04d3ccf587f7c6faa687f5c155c46f80f6d200cdc39b688dfad943eb877ce8ab6275f3209e746746abe5e17eb14e3ee8adf67ea2015ac42971188171690219da63a151af6465f0077764b3cc91a3ab0d135d77c048bff1787cdb",
+            "EXPO_PUBLIC_AUTH_TOKEN": "authToken"
+         },
+         "android": {
+            "buildType": "apk"
+         },
          "distribution": "internal"
       },
-      "preview": {
+      "preview2": {
+         "android": {
+            "gradleCommand": ":app:assembleRelease"
+         }
+      },
+      "preview3": {
+         "developmentClient": true
+      },
+      "development": {
+         "developmentClient": true,
          "distribution": "internal"
       },
       "production": {}

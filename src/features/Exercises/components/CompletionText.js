@@ -2,27 +2,27 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Colors } from "@utils/Theme";
 import { Button } from "@components";
-const CompletionText = ({ result, userAnswer, wordCounter, removeLastWordInSelectedWords }) => {
+const CompletionText = ({ result, userAnswer, wordCounter, removeLastSelectedWord }) => {
    return (
-      <View style={{ flexDirection: "row", alignItems: "center", flexWrap: "wrap" }}>
+      <View style={{ flexDirection: "row", alignItems: "center", flexWrap: "wrap", gap: 0 }}>
          {result.map((part, index) => {
             if (part.startsWith("{") && part.endsWith("}")) {
                // If the part starts and ends with curly braces, show a border around it
                wordCounter++;
                return (
-                  <View key={index} style={styles.borderContainer}>
+                  <View key={index}>
                      {Array.isArray(userAnswer) && userAnswer.includes(userAnswer[wordCounter - 1]) ? (
-                        <Button
-                           key={index}
-                           text={userAnswer[wordCounter - 1]}
-                           variant="secondary"
-                           size="small"
-                           onPress={() => removeLastWordInSelectedWords()}
-                        />
+                        <View style={[styles.borderText, { borderColor: Colors.primary_600 }]}>
+                           <Button
+                              key={index}
+                              text={userAnswer[wordCounter - 1]}
+                              variant="secondary"
+                              size="small"
+                              onPress={() => removeLastSelectedWord()}
+                           />
+                        </View>
                      ) : (
-                        <Text key={index} style={styles.borderText}>
-                           {"            "}
-                        </Text>
+                        <View style={styles.borderText}></View>
                      )}
                   </View>
                );
@@ -42,19 +42,19 @@ const CompletionText = ({ result, userAnswer, wordCounter, removeLastWordInSelec
 const styles = StyleSheet.create({
    container: {
       flex: 1,
-      padding: 16,
+      paddingHorizontal: 16,
       gap: 16,
       justifyContent: "space-between",
    },
-   borderContainer: {
+   borderText: {
       height: 72,
-      borderBottomWidth: 2,
       borderColor: Colors.gray_300,
       paddingHorizontal: 4,
       paddingVertical: 4,
-   },
-   borderText: {
+      borderBottomWidth: 3,
+      borderStyle: "dotted",
       opacity: 1,
+      width: 130,
    },
    text: {
       fontFamily: "Sora-SemiBold",

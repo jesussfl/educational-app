@@ -1,6 +1,6 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
-
+import { StyleSheet, View, Text } from "react-native";
+import { Colors } from "@utils/Theme";
 import CompletionText from "./CompletionText";
 import WordSelection from "./WordSelection";
 
@@ -31,12 +31,15 @@ const CompletionExercise = ({ content, setUserAnswer, userAnswer }) => {
    return (
       <View style={styles.container}>
          {/* Render the CompletionText component */}
-         <CompletionText
-            result={nonEmptyParts}
-            userAnswer={userAnswer}
-            wordCounter={wordCounter}
-            removeLastSelectedWord={removeLastSelectedWord}
-         />
+         <View style={{ gap: 24 }}>
+            <Text style={styles.titleText}>Completa los espacios vacíos</Text>
+            <CompletionText
+               result={nonEmptyParts}
+               userAnswer={userAnswer}
+               wordCounter={wordCounter}
+               removeLastSelectedWord={removeLastSelectedWord}
+            />
+         </View>
 
          {/* Render the WordSelection component */}
          <WordSelection combinedWords={allWords} handleSelectedWords={handleSelectedWords} />
@@ -50,8 +53,15 @@ export default CompletionExercise;
 const styles = StyleSheet.create({
    container: {
       flex: 1,
-      padding: 16,
+      paddingHorizontal: 16,
+      paddingBottom: 16,
       gap: 16,
       justifyContent: "space-between",
+   },
+   titleText: {
+      fontSize: 20,
+      fontFamily: "Sora-SemiBold",
+      lineHeight: 32,
+      color: Colors.gray_600,
    },
 });

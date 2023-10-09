@@ -1,15 +1,19 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 import { LessonButton } from "@components";
 import { Svg, Line } from "react-native-svg";
 import { Colors } from "../../../utils/Theme";
+import Door from "../../../../assets/door.svg";
+
+import { Button } from "@components";
+import { Key } from "iconsax-react-native";
 const positions = [0, 44, 70];
 
 const Lessons = ({ lessons, lessonsCompleted, handlePresentModalPress, setLessonId }) => {
    let lastUnlockedIndex; // Inicializamos la variable para rastrear la última lección desbloqueada
 
    return (
-      <View>
+      <View style={{ gap: -5, alignItems: "center", flexDirection: "column-reverse" }}>
          {lessons.map((lesson, index) => {
             // Calcular la posición izquierda según el índice
             const positionIndex = index % positions.length;
@@ -51,6 +55,7 @@ const Lessons = ({ lessons, lessonsCompleted, handlePresentModalPress, setLesson
                               setLessonId(lesson.id);
                            }
                         }}
+                        scale={0.88}
                      />
                   </View>
                   <Line x1={38} y1={0} x2={100} y2={200} stroke={isLocked ? Colors.gray_200 : Colors.gray_200} strokeWidth={44} />
@@ -58,6 +63,11 @@ const Lessons = ({ lessons, lessonsCompleted, handlePresentModalPress, setLesson
                </React.Fragment>
             );
          })}
+         <Image source={require("../../../../assets/Gift.png")} style={{ width: 150, height: 150, marginVertical: 16 }} />
+         <View style={{ gap: 2, marginBottom: 24, alignItems: "center" }}>
+            <Image source={require("../../../../assets/Door.png")} style={styles.image} />
+            <Button text="Siguiente Sección" variant="secondary" rightIcon={<Key size={20} variant="Bold" color={Colors.gray_300} />} />
+         </View>
       </View>
    );
 };
@@ -67,5 +77,9 @@ export default Lessons;
 const styles = StyleSheet.create({
    svgContainer: {
       position: "relative",
+   },
+   image: {
+      width: 200,
+      height: 200,
    },
 });

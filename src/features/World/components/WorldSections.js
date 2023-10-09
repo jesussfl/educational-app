@@ -1,53 +1,59 @@
 import { StyleSheet, ScrollView, View, RefreshControl } from "react-native";
-import React, { useState, useEffect } from "react"; // Import useState and useEffect
+import React, { useState, useEffect, useRef } from "react";
 import Lessons from "./Lessons";
 import { Colors } from "@utils/Theme";
 import Spinner from "react-native-loading-spinner-overlay";
 import useWorldData from "../hooks/useWorldData";
 import WorldSectionBanner from "./WorldSectionBanner";
 
+const sectionColors = [Colors.primary_500, "#12B76A", "#9A4CFF", "#F1733D"];
+
 const WorldSections = ({ handlePresentModalPress, setLessonId }) => {
-   const { isLoading, worldData, lessonsCompleted, refreshData } = useWorldData(); // Include a refreshData function
+   const { isLoading, worldData, lessonsCompleted, refreshData } = useWorldData();
+   const [refreshing, setRefreshing] = useState(false);
 
-   const [refreshing, setRefreshing] = useState(false); // State to control the refresh indicator
-   let last_index = 0;
-   // Function to handle the pull to refresh action
+   const scrollViewRef = useRef(null);
    const onRefresh = () => {
-      setRefreshing(true); // Set refreshing to true when the user pulls to refresh
-      refreshData(); // Call the refreshData function to fetch new data
-
-      // Simulate a delay and then stop the refresh indicator
+      setRefreshing(true);
+      refreshData();
       setTimeout(() => {
          setRefreshing(false);
-      }, 2000); // Simulating a 2-second refresh delay
+      }, 2000);
    };
 
    useEffect(() => {
-      // Here you can put any additional logic you need when the data in WorldSections changes.
+      // Additional logic here
    }, [worldData, lessonsCompleted]);
+
+   useEffect(() => {
+      // Scroll al final cuando el componente se carga
+      if (scrollViewRef.current) {
+         scrollViewRef.current.scrollToEnd({ animated: false }); // Coloca el scroll al final
+      }
+   }, []);
 
    return isLoading ? (
       <Spinner visible={isLoading} />
    ) : (
       <ScrollView
+         ref={scrollViewRef}
          style={styles.pageContainer}
-         refreshControl={
-            // Attach the RefreshControl to enable pull to refresh
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-         }>
-         <View>
-            {/* Render World By Sections */}
-            {worldData.sectionsByWorld.sections.map((section) => {
+         onContentSizeChange={() => {
+            scrollViewRef.current?.scrollToEnd();
+         }}
+         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+         <View style={{ flexDirection: "column-reverse", paddingBottom: 48 }}>
+            {worldData.sectionsByWorld.sections.map((section, index) => {
+               const randomColor = sectionColors[index % sectionColors.length];
                return (
                   <View key={section.id} style={styles.sectionContainer}>
-                     <WorldSectionBanner text={section.attributes.description} />
                      <Lessons
                         lessons={section.attributes.lessons.data}
-                        last_index={last_index}
                         handlePresentModalPress={handlePresentModalPress}
                         setLessonId={setLessonId}
                         lessonsCompleted={lessonsCompleted}
                      />
+                     <WorldSectionBanner text={section.attributes.description} backgroundColor={randomColor} />
                   </View>
                );
             })}
@@ -59,7 +65,7 @@ const WorldSections = ({ handlePresentModalPress, setLessonId }) => {
 export default WorldSections;
 
 const styles = StyleSheet.create({
-   pageContainer: { gap: 24, backgroundColor: Colors.gray_50 },
+   pageContainer: { gap: 24, backgroundColor: Colors.gray_25 },
 
    sectionContainer: {
       flex: 1,

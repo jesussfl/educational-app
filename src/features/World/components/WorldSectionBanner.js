@@ -1,33 +1,67 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
-import { Flag } from "iconsax-react-native";
+import React, { useState } from "react";
+import { Flag, Book1 } from "iconsax-react-native";
 import { Colors } from "@utils/Theme";
-
-const WorldSectionBanner = ({ text }) => {
-	return (
-		<View style={styles.sectionBanner}>
-			<Flag variant='Bold' size={24} color={Colors.gray_400} />
-			<Text style={styles.sectionBannerText}>{text}</Text>
-		</View>
-	);
+import { Button } from "@components";
+import { useNavigation } from "@react-navigation/native";
+const WorldSectionBanner = ({ text, description, backgroundColor, id }) => {
+   const navigation = useNavigation();
+   return (
+      <View style={[styles.sectionBanner, { backgroundColor: backgroundColor }]}>
+         <View style={{ flexDirection: "row", gap: 12, alignItems: "center" }}>
+            <View
+               style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "#fff",
+                  width: 50,
+                  height: 50,
+                  padding: 4,
+                  borderRadius: 8,
+               }}>
+               <Flag variant="Bold" size={36} color={backgroundColor} />
+            </View>
+            <View style={styles.textsContainer}>
+               <Text style={styles.sectionBannerText}>{text}</Text>
+               <Text style={[styles.sectionBannerText, { textTransform: "none", fontFamily: "Sora-Medium", lineHeight: 20 }]}>
+                  Este es un texto descriptivo de la seccion a mostrar
+               </Text>
+            </View>
+         </View>
+         <Button
+            text="Leer Teoria"
+            variant="secondary"
+            size="small"
+            rightIcon={<Book1 size={20} color={Colors.gray_500} variant="Bold" />}
+            onPress={() => {
+               navigation.navigate("Lessons", { screen: "TheoryScreen", params: { id } });
+            }}
+         />
+      </View>
+   );
 };
 
 export default WorldSectionBanner;
 
 const styles = StyleSheet.create({
-	sectionBanner: {
-		alignSelf: "stretch",
-		backgroundColor: Colors.gray_25,
-		paddingVertical: 16,
-		paddingHorizontal: 24,
-		flexDirection: "row",
-		alignItems: "center",
-		gap: 12,
-	},
-	sectionBannerText: {
-		fontSize: 14,
-		fontFamily: "Sora-Bold",
-		color: Colors.gray_400,
-		paddingRight: 16,
-	},
+   sectionBanner: {
+      marginHorizontal: 16,
+      alignSelf: "stretch",
+      paddingVertical: 24,
+      flexDirection: "column",
+      borderRadius: 16,
+      paddingHorizontal: 20,
+   },
+   textsContainer: {
+      flex: 1,
+      gap: 4,
+   },
+   sectionBannerText: {
+      fontSize: 14,
+      fontFamily: "Sora-Bold",
+      color: "#fff",
+      paddingRight: 16,
+      textTransform: "uppercase",
+   },
 });

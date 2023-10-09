@@ -8,6 +8,7 @@ import { Colors } from "@utils/Theme";
 
 import UserStats from "../components/UserStats";
 import CongratsPage from "../../Exercises/pages/CongratsPage";
+import TheoryScreen from "../pages/TheoryScreen";
 const WorldStackNavigator = () => {
    return (
       <WorldStack.Navigator initialRouteName="World">
@@ -17,7 +18,7 @@ const WorldStackNavigator = () => {
             options={{
                headerShown: true,
                headerRightContainerStyle: {
-                  marginRight: 16,
+                  paddingRight: 16,
                },
                headerTitleStyle: {
                   color: Colors.gray_400,
@@ -30,6 +31,7 @@ const WorldStackNavigator = () => {
          />
          <WorldStack.Screen name="Exercise" component={ExerciseScreen} options={{ headerShown: false }} />
          <WorldStack.Screen name="Congrats" component={CongratsPage} options={{ headerShown: false }} />
+         <WorldStack.Screen name="TheoryScreen" component={TheoryScreen} options={{ headerShown: true, headerTitle: "" }} />
       </WorldStack.Navigator>
    );
 };

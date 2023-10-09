@@ -7,7 +7,7 @@ const ProgressBar = ({ percentage }) => {
          <View
             style={{
                height: 36,
-               backgroundColor: Colors.gray_100,
+               backgroundColor: Colors.gray_50,
                borderRadius: 50,
                position: "absolute",
                left: 0,
@@ -46,9 +46,9 @@ const ProgressBar = ({ percentage }) => {
                left: 0,
                right: 0,
                zIndex: 4,
-               borderColor: Colors.gray_300,
+               borderColor: Colors.gray_100,
                borderWidth: 3,
-               opacity: 0.3,
+               opacity: 1,
             }}></View>
       </View>
    );

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { AuthContext } from "../contexts/auth.context";
 import { getToken } from "../../../utils/helpers/auth.helpers";
-import { API_URL } from "@env";
 
 /**
  * AuthProvider component provides authentication-related data and functions to its children.
@@ -25,7 +24,7 @@ const AuthProvider = ({ children }) => {
    const fetchLoggedInUser = async (token) => {
       setIsLoading(true);
       try {
-         const response = await fetch(`${API_URL}/api/users/me`, {
+         const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/users/me`, {
             headers: { Authorization: `Bearer ${token}` },
          });
          const data = await response.json();
