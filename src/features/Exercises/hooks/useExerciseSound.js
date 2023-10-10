@@ -8,7 +8,7 @@ export default useExerciseSound = () => {
       const { sound } = await Audio.Sound.createAsync(require("./success-sound.mp3"));
       setSound(sound);
 
-      await sound.playAsync();
+      await sound.playAsync({ volume: 10 });
    }
 
    useEffect(() => {
@@ -18,5 +18,6 @@ export default useExerciseSound = () => {
            }
          : undefined;
    }, [sound]);
+
    return { playSound };
 };

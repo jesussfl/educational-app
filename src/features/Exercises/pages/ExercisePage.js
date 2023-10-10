@@ -1,7 +1,7 @@
 import { StyleSheet, View, Text } from "react-native";
 import React from "react";
 import { StatusBar } from "expo-status-bar";
-import { CloseCircle, ArrowRight, TickCircle, InfoCircle } from "iconsax-react-native";
+import { CloseCircle, ArrowRight, TickCircle, InfoCircle, HeartSlash } from "iconsax-react-native";
 import { Colors } from "../../../utils/Theme";
 import Spinner from "react-native-loading-spinner-overlay";
 import ProgressBar from "../components/ProgressBar";
@@ -26,17 +26,35 @@ const ExercisePage = () => {
                <UserStats statusToShow={"lives"} />
             </View>
             {status.isEmpty ? <Text>Vacio</Text> : handler.render()}
-            <View style={styles.buttonContainer}>
-               <Button text="Pista" variant="secondary" style={{ flex: 0.5 }} />
-               {answer.isCorrect != null ? (
+
+            {answer.isCorrect != null ? (
+               <View style={styles.answeredContainer}>
+                  <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
+                     {answer.isCorrect ? (
+                        <TickCircle size={28} color={Colors.success_500} variant="Bold" />
+                     ) : (
+                        <HeartSlash size={28} color={Colors.error_500} variant="Bold" />
+                     )}
+                     <Text style={{ color: Colors.gray_500, fontSize: 20, fontFamily: "Sora-Bold" }}>
+                        {answer.isCorrect ? "Bien Hecho!" : "Incorrecto!"}
+                     </Text>
+                  </View>
                   <Button
                      text="Continuar"
                      variant={answer.isCorrect ? "success" : "wrong"}
-                     style={{ flex: 1 }}
-                     rightIcon={<TickCircle size={24} color={"#fff"} variant="Bold" />}
+                     rightIcon={
+                        answer.isCorrect ? (
+                           <ArrowRight size={24} color={"#fff"} variant="Bold" />
+                        ) : (
+                           <InfoCircle size={24} color={"#fff"} variant="Bold" />
+                        )
+                     }
                      onPress={handler.next}
                   />
-               ) : (
+               </View>
+            ) : (
+               <View style={styles.buttonContainer}>
+                  <Button text="Pista" variant="secondary" style={{ flex: 0.5 }} />
                   <Button
                      text="Comprobar"
                      variant="primary"
@@ -44,8 +62,8 @@ const ExercisePage = () => {
                      style={{ flex: 1 }}
                      onPress={answer.check}
                   />
-               )}
-            </View>
+               </View>
+            )}
          </View>
       </>
    );
@@ -74,5 +92,17 @@ const styles = StyleSheet.create({
       flexDirection: "row",
       alignItems: "center",
       padding: 16,
+   },
+   successBar: {
+      justifyContent: "center",
+      padding: 16,
+      backgroundColor: "#fff",
+   },
+   answeredContainer: {
+      padding: 16,
+      backgroundColor: "#fff",
+      gap: 16,
+      borderTopWidth: 2,
+      borderColor: Colors.gray_200,
    },
 });

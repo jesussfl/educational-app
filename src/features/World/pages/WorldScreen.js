@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { View } from "react-native";
 import WorldSections from "../components/WorldSections";
 import { StatusBar } from "expo-status-bar";
@@ -11,7 +11,7 @@ const WorldScreen = ({ navigation }) => {
    const { bottomSheetModalRef, snapPoints, handlePresentModalPress, handleSheetChanges } = useBottomSheet();
    const [lessonId, setLessonId] = useState(null);
    const renderBackdrop = useCallback(
-      (props) => <BottomSheetBackdrop {...props} opacity={0.3} disappearsOnIndex={1} appearsOnIndex={2} />,
+      (props) => <BottomSheetBackdrop {...props} opacity={0.3} disappearsOnIndex={-1} appearsOnIndex={1} />,
       []
    );
    return (
@@ -20,9 +20,8 @@ const WorldScreen = ({ navigation }) => {
          <WorldSections handlePresentModalPress={handlePresentModalPress} setLessonId={setLessonId}></WorldSections>
          <BottomSheet
             ref={bottomSheetModalRef}
-            index={1}
+            index={-1}
             snapPoints={snapPoints}
-            onChange={(index) => handleSheetChanges(index)}
             enableOverDrag={true}
             enableDismissOnClose={true}
             enablePanDownToClose={true}
@@ -33,8 +32,8 @@ const WorldScreen = ({ navigation }) => {
                   variant="primary"
                   size="medium"
                   rightIcon={<PlayCircle size={28} color={"#fff"} variant="Bold" />}
-                  onPress={() => {
-                     bottomSheetModalRef.current?.close();
+                  onPress={async () => {
+                     await bottomSheetModalRef.current?.close();
                      navigation.navigate("Lessons", { screen: "Exercise", params: { lessonId } });
                   }}
                />

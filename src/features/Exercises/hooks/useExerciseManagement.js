@@ -6,140 +6,98 @@ import { queryExercisesByLessonId } from "@utils/graphql/queries/exercise.querie
 import { useRoute } from "@react-navigation/native";
 import SimpleSelectionExercise from "../components/SimpleSelectionExercise";
 import CompletionExercise from "../components/CompletionExercise";
-import { Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import useUserStats from "../../../hooks/useUserStats";
-import CongratsPage from "../pages/CongratsPage";
+import { exercisesChecker } from "../helpers/checkAnswers";
+import useExerciseSound from "./useExerciseSound";
 // Define a custom hook for exercise management
 export default useExerciseManagement = () => {
-   // Initialize navigation and route for navigation control and route parameters
+   const [currentIndex, setCurrentIndex] = useState(0);
+   const [isEmpty, setIsEmpty] = useState(false);
+
+   const [userAnswer, setUserAnswer] = useState(null);
+   const [isAnswerCorrect, setIsAnswerCorrect] = useState(null);
+
    const navigation = useNavigation();
    const route = useRoute();
+   const { playSound } = useExerciseSound();
    const params = route.params;
    const { decreaseLives } = useUserStats();
-   // Fetch exercise data using React Query
    const { data, isLoading, error } = useQuery([`exercises${params.lessonId}`], () =>
       query(queryExercisesByLessonId, { id: params.lessonId, start: 1, limit: 100 })
    );
 
-   // Initialize current exercise index and isEmpty flag
-   const [currentIndex, setCurrentIndex] = useState(0);
-   const [isEmpty, setIsEmpty] = useState(false);
-   const [userAnswer, setUserAnswer] = useState(null);
-   const [isAnswerCorrect, setIsAnswerCorrect] = useState(null);
-
-   // Sort exercises if data is available
    const exercises = isLoading ? [] : data?.exercisesByLesson.exercises.sort((a, b) => a.order - b.order);
-   // Calculate percentage completion
    let percentage = ((currentIndex + 1) * 100) / exercises.length;
 
    useEffect(() => {
       if (exercises[currentIndex] && exercises[currentIndex].attributes.type === "completion") {
-         // If the exercise type is completion, initialize userAnswer as an empty array
          setUserAnswer([]);
       } else {
-         // For other exercise types, initialize userAnswer as null
          setUserAnswer(null);
       }
-      // Reset isAnswerCorrect to null when the current exercise changes
       setIsAnswerCorrect(null);
    }, [currentIndex, isLoading]);
 
-   const checkAnswer = () => {
-      // Parse the correct answer from the exercise content
-      const mainAnswer =
-         typeof exercises[currentIndex].attributes.content === "string"
-            ? JSON.parse(exercises[currentIndex].attributes.content)
-            : exercises[currentIndex].attributes.content;
-      if (exercises[currentIndex].attributes.type === "simpleSelection") {
-         if (userAnswer === mainAnswer.correctAnswerIndex) {
-            // Check if the user's answer matches the correct answer index
-            return setIsAnswerCorrect(true);
-         } else {
-            // If not, set isAnswerCorrect to false
-            decreaseLives();
-            return setIsAnswerCorrect(false);
-         }
-      } else if (exercises[currentIndex].attributes.type === "completion") {
-         if (userAnswer.length !== mainAnswer.correctWords.length) {
-            // Check if the number of user-selected words matches the correct number
-            decreaseLives();
-            return setIsAnswerCorrect(false);
-         }
+   const checkAnswer = async () => {
+      const currentExercise = exercises[currentIndex];
+      const mainAnswer = parseExerciseContent(currentExercise);
 
-         // Sort both correctWords and userSelectedWords for comparison
-         const correctWords = mainAnswer.correctWords.slice().sort();
-         const userSelectedWords = userAnswer.slice().sort();
+      const exerciseType = currentExercise.attributes.type;
+      const answerChecker = exercisesChecker[exerciseType];
 
-         for (let i = 0; i < userAnswer.length; i++) {
-            if (correctWords[i] !== userSelectedWords[i]) {
-               // Compare each word in the user's answer with the correct answer
-               decreaseLives();
-               return setIsAnswerCorrect(false);
-            }
-         }
-         // If all comparisons pass, set isAnswerCorrect to true
-         return setIsAnswerCorrect(true);
+      if (!answerChecker) {
+         // Manejar el caso en que no se encuentre una función de comprobación adecuada.
+         console.error(`No se encontró una función de comprobación para el tipo de ejercicio: ${exerciseType}`);
+         return;
+      }
+
+      const isCorrect = answerChecker(mainAnswer, userAnswer);
+
+      if (isCorrect) {
+         await playSound();
+         setIsAnswerCorrect(true);
+      } else {
+         decreaseLives();
+
+         setIsAnswerCorrect(false);
       }
    };
 
-   // Handle navigation to the next exercise
+   const renderExercise = () => {
+      if (currentIndex > exercises.length - 1) {
+         navigation.navigate("Congrats");
+         return;
+      }
+
+      const currentExercise = exercises[currentIndex];
+
+      return currentExercise.attributes.type === "simpleSelection" ? (
+         <SimpleSelectionExercise
+            content={parseExerciseContent(currentExercise)}
+            setUserAnswer={setUserAnswer}
+            isAnswerCorrect={isAnswerCorrect}
+            userAnswer={userAnswer}
+         />
+      ) : (
+         <CompletionExercise
+            content={parseExerciseContent(currentExercise)}
+            setUserAnswer={setUserAnswer}
+            userAnswer={userAnswer}
+            isAnswerCorrect={isAnswerCorrect}
+         />
+      );
+   };
+
+   const parseExerciseContent = (exercise) => {
+      return typeof exercise.attributes.content === "string" ? JSON.parse(exercise.attributes.content) : exercise.attributes.content;
+   };
    const handleNext = () => {
       setCurrentIndex(currentIndex + 1);
    };
 
-   // Handle exercise completion and return to the main screen
    const closeExercise = () => {
-      navigation.replace("Main", { screen: "Lessons" });
-   };
-
-   // Render the current exercise based on its type
-   const renderExercise = () => {
-      if (currentIndex > exercises.length - 1) {
-         // If the current index is greater than the number of exercises available, close the screen
-         navigation.replace("Congrats");
-         return;
-      }
-      if (exercises.length === 0) {
-         // If there are no exercises available, set isEmpty flag to true
-         setIsEmpty(true);
-         return <Text style={{ textAlign: "center" }}>No exercises available for this lesson</Text>;
-      }
-
-      if (isLoading) {
-         return <Text style={{ textAlign: "center" }}>Loading...</Text>;
-      }
-      // Define different exercise types and render the appropriate component
-      const exerciseTypes = {
-         simpleSelection: () => (
-            <SimpleSelectionExercise
-               content={
-                  typeof exercises[currentIndex].attributes.content === "string"
-                     ? JSON.parse(exercises[currentIndex].attributes.content)
-                     : exercises[currentIndex].attributes.content
-               }
-               setUserAnswer={setUserAnswer}
-               isAnswerCorrect={isAnswerCorrect}
-               userAnswer={userAnswer}
-            />
-         ),
-         completion: () => {
-            return (
-               <CompletionExercise
-                  content={
-                     typeof exercises[currentIndex].attributes.content === "string"
-                        ? JSON.parse(exercises[currentIndex].attributes.content)
-                        : exercises[currentIndex].attributes.content
-                  }
-                  setUserAnswer={setUserAnswer}
-                  userAnswer={userAnswer}
-                  isAnswerCorrect={isAnswerCorrect}
-               />
-            );
-         },
-      };
-
-      return exerciseTypes[exercises[currentIndex].attributes.type]();
+      navigation.goBack();
    };
 
    // Return the relevant data and functions as an object
