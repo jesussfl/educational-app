@@ -28,6 +28,7 @@ const useUserStats = () => {
    };
 
    return {
+      userLives: user?.lives,
       decreaseLives,
    };
 };

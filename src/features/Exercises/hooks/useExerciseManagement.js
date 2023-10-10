@@ -22,7 +22,7 @@ export default useExerciseManagement = () => {
    const route = useRoute();
    const { playSound } = useExerciseSound();
    const params = route.params;
-   const { decreaseLives } = useUserStats();
+   const { userLives, decreaseLives } = useUserStats();
    const { data, isLoading, error } = useQuery([`exercises${params.lessonId}`], () =>
       query(queryExercisesByLessonId, { id: params.lessonId, start: 1, limit: 100 })
    );
@@ -69,7 +69,10 @@ export default useExerciseManagement = () => {
          navigation.navigate("Congrats");
          return;
       }
-
+      if (userLives <= 0) {
+         navigation.goBack(); // Replace "GameOver" with your actual screen name for when the user has 0 lives.
+         return;
+      }
       const currentExercise = exercises[currentIndex];
 
       return currentExercise.attributes.type === "simpleSelection" ? (

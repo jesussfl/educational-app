@@ -7,9 +7,11 @@ import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import useBottomSheet from "@utils/hooks/useBottomSheet";
 import { PlayCircle, Book1 } from "iconsax-react-native";
 import { Colors } from "@utils/Theme";
+import useUserStats from "../../../hooks/useUserStats";
 const WorldScreen = ({ navigation }) => {
    const { bottomSheetModalRef, snapPoints, handlePresentModalPress, handleSheetChanges } = useBottomSheet();
    const [lessonId, setLessonId] = useState(null);
+   const { userLives } = useUserStats();
    const renderBackdrop = useCallback(
       (props) => <BottomSheetBackdrop {...props} opacity={0.3} disappearsOnIndex={-1} appearsOnIndex={1} />,
       []
@@ -34,6 +36,7 @@ const WorldScreen = ({ navigation }) => {
                   rightIcon={<PlayCircle size={28} color={"#fff"} variant="Bold" />}
                   onPress={async () => {
                      await bottomSheetModalRef.current?.close();
+                     if (userLives === 0) return;
                      navigation.navigate("Lessons", { screen: "Exercise", params: { lessonId } });
                   }}
                />
