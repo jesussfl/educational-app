@@ -49,12 +49,14 @@
       "react-native-reanimated": "~3.3.0",
       "react-native-refreshable-scroll-view": "^0.1.1",
       "react-native-remix-icon": "^0.4.0",
+      "react-native-render-html": "^6.3.4",
       "react-native-safe-area-context": "4.6.3",
       "react-native-screens": "~3.22.0",
       "react-native-sound": "^0.11.2",
       "react-native-svg": "13.9.0",
       "react-native-svg-transformer": "^1.1.0",
-      "react-native-web": "~0.19.6"
+      "react-native-web": "~0.19.6",
+      "react-native-webview": "13.2.2"
    },
    "devDependencies": {
       "@babel/core": "^7.20.0"
