@@ -33,9 +33,16 @@ const WorldSections = ({ handlePresentModalPress, setLessonId }) => {
     }
   }, []);
 
-  return isLoading ? (
-    <Spinner visible={isLoading} />
-  ) : (
+  if (isLoading) {
+    return <Spinner visible={isLoading} />;
+  }
+
+  // Ordena las secciones por su propiedad "order"
+  const sortedSections = worldData.sectionsByWorld.sections
+    .slice()
+    .sort((a, b) => a.attributes.order - b.attributes.order);
+
+  return (
     <ScrollView
       ref={scrollViewRef}
       style={styles.pageContainer}
@@ -47,8 +54,9 @@ const WorldSections = ({ handlePresentModalPress, setLessonId }) => {
       }
     >
       <View style={{ flexDirection: "column-reverse", paddingBottom: 48 }}>
-        {worldData.sectionsByWorld.sections.map((section, index) => {
+        {sortedSections.map((section, index) => {
           const randomColor = sectionColors[index % sectionColors.length];
+
           return (
             <View key={section.id} style={styles.sectionContainer}>
               <Lessons
