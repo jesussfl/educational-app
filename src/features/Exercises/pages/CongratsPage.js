@@ -5,8 +5,34 @@ import { Button } from "@components";
 import { useNavigation } from "@react-navigation/native";
 import { Colors } from "@utils/Theme";
 import ProgressBar from "../components/ProgressBar";
-const CongratsPage = () => {
+import { useCustomMutation } from "@utils/useCustomMutation";
+import { createLessonCompletedMutation } from "@utils/graphql/mutations/lessonsCompleted.mutations";
+import { useAuthContext } from "../../Auth/contexts/auth.context";
+const CongratsPage = ({ route }) => {
+  const { lessonId } = route.params;
+
+  const { mutate } = useCustomMutation(
+    "lessonsCompleted",
+    createLessonCompletedMutation
+  );
+  const { user } = useAuthContext();
   const navigation = useNavigation();
+  console.log(lessonId, user.id);
+  const saveProgress = () => {
+    mutate(
+      {
+        data: {
+          user: user.id,
+          lesson: lessonId,
+        },
+      },
+      {
+        onSuccess: () => {
+          navigation.replace("Main", { screen: "Lessons" });
+        },
+      }
+    );
+  };
   return (
     <>
       <StatusBar style="dark" translucent={true} />
@@ -32,7 +58,7 @@ const CongratsPage = () => {
             text="Continuar"
             variant="secondary"
             style={{ flex: 1 }}
-            onPress={() => navigation.replace("Main", { screen: "Lessons" })}
+            onPress={saveProgress}
           />
         </View>
       </View>

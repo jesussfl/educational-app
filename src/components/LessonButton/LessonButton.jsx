@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, TouchableWithoutFeedback } from "react-native";
 import React from "react";
 import { SemanticColors, Colors } from "@utils/Theme";
 import Icon from "react-native-remix-icon";
-const LessonButton = ({ isLocked = false, onPress, isCompleted = false, isUnlocked = false, left, onLayout, scale }) => {
+const LessonButton = ({ isLocked = false, onPress, isCompleted = false,  left, onLayout, scale }) => {
    return (
       <TouchableWithoutFeedback onPress={onPress} onLayout={onLayout}>
          <View style={[styles.wrapper, { left: left, transform: [{ scaleX: scale }, { scaleY: scale }] }]}>
@@ -22,7 +22,7 @@ const LessonButton = ({ isLocked = false, onPress, isCompleted = false, isUnlock
                   style={{ position: "absolute", top: 50, left: 50, transform: [{ translateX: -16 }, { translateY: -16 }], zIndex: 100 }}
                />
             )}
-            {isUnlocked && (
+            {!isCompleted && !isLocked && (
                <Icon
                   name="play-circle-fill"
                   size={42}
@@ -35,14 +35,14 @@ const LessonButton = ({ isLocked = false, onPress, isCompleted = false, isUnlock
                   styles.rhombus,
                   isLocked && styles.rhombusLocked,
                   isCompleted && styles.rhombusCompleted,
-                  isUnlocked && styles.rhombusUnlocked,
+                  !isCompleted && !isLocked &&  styles.rhombusUnlocked,
                ]}></View>
             <View
                style={[
                   styles.rectangle,
                   isLocked && styles.rectangleLocked,
                   isCompleted && styles.rectangleCompleted,
-                  isUnlocked && styles.rectangleUnlocked,
+                  !isCompleted && !isLocked && styles.rectangleUnlocked,
                ]}></View>
 
             <View
@@ -50,7 +50,7 @@ const LessonButton = ({ isLocked = false, onPress, isCompleted = false, isUnlock
                   styles.rhombusBefore,
                   isLocked && styles.rhombusBeforeLocked,
                   isCompleted && styles.rhombusBeforeCompleted,
-                  isUnlocked && styles.rhombusBeforeUnlocked,
+                  !isCompleted && !isLocked && styles.rhombusBeforeUnlocked,
                ]}></View>
          </View>
       </TouchableWithoutFeedback>

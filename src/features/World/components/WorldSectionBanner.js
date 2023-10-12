@@ -4,10 +4,23 @@ import { Flag, Book1 } from "iconsax-react-native";
 import { Colors } from "@utils/Theme";
 import { Button } from "@components";
 import { useNavigation } from "@react-navigation/native";
-const WorldSectionBanner = ({ description, backgroundColor, id, order }) => {
+import Icon from "react-native-remix-icon";
+
+const WorldSectionBanner = ({
+  description,
+  backgroundColor,
+  id,
+  order,
+  isDisabled = false,
+}) => {
   const navigation = useNavigation();
   return (
-    <View style={[styles.sectionBanner, { backgroundColor: backgroundColor }]}>
+    <View
+      style={[
+        styles.sectionBanner,
+        { backgroundColor: isDisabled ? Colors.gray_100 : backgroundColor },
+      ]}
+    >
       <View style={{ flexDirection: "row", gap: 12, alignItems: "center" }}>
         <View
           style={{
@@ -21,7 +34,11 @@ const WorldSectionBanner = ({ description, backgroundColor, id, order }) => {
             borderRadius: 8,
           }}
         >
-          <Flag variant="Bold" size={36} color={backgroundColor} />
+          {isDisabled ? (
+            <Icon name="lock-fill" size="36" color={Colors.gray_300} />
+          ) : (
+            <Flag variant="Bold" size={36} color={backgroundColor} />
+          )}
         </View>
         <View style={styles.textsContainer}>
           <Text style={styles.sectionBannerText}>{`Sección ${order}`}</Text>
@@ -43,8 +60,17 @@ const WorldSectionBanner = ({ description, backgroundColor, id, order }) => {
         text="Leer Teoria"
         variant="secondary"
         size="small"
-        rightIcon={<Book1 size={20} color={Colors.gray_500} variant="Bold" />}
+        rightIcon={
+          isDisabled ? (
+            <Icon name="lock-fill" size={20} color={Colors.gray_300} />
+          ) : (
+            <Book1 size={20} color={Colors.gray_500} variant="Bold" />
+          )
+        }
         onPress={() => {
+          if (isDisabled) {
+            return;
+          }
           navigation.navigate("Lessons", {
             screen: "TheoryScreen",
             params: { id },
