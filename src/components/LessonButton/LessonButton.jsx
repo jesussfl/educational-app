@@ -52,7 +52,18 @@ const LessonButton = ({ isLocked = false, onPress, isCompleted = false,  left, o
                   isCompleted && styles.rhombusBeforeCompleted,
                   !isCompleted && !isLocked && styles.rhombusBeforeUnlocked,
                ]}></View>
+{ !isCompleted && !isLocked ? (
+   <View
+   style={[
+      styles.rhombusBefore,
+      !isCompleted && !isLocked && styles.rhombusBeforeUnlocked2,
+   ]}></View>
+) : (
+   null
+)}
          </View>
+         
+
       </TouchableWithoutFeedback>
    );
 };
@@ -117,5 +128,12 @@ const styles = StyleSheet.create({
    rhombusBeforeUnlocked: {
       backgroundColor: Colors.primary_700,
       borderColor: Colors.primary_700,
+   },
+   rhombusBeforeUnlocked2: {
+      transform:[{scaleX: 1.2}, {scaleY: 1.2}, {rotateX: "45deg"}, {rotateZ: "45deg"}],
+      backgroundColor: 'rgba(151, 71, 255, 0.35)',
+      borderWidth:0,
+      top:-19,
+      zIndex: -3,
    },
 });

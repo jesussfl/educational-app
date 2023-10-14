@@ -4,6 +4,7 @@ import { useQueries, useQueryClient } from "@tanstack/react-query"; // Import us
 import { querySectionsByWorldId } from "@utils/graphql/queries/section.queries";
 import { queryLessonsCompletedByUser } from "@utils/graphql/queries/lessonsCompleted.queries";
 import { querySectionsCompletedByUser } from "@utils/graphql/queries/sectionsCompleted.queries";
+import { queryWorldsCompletedByUser } from "@utils/graphql/queries/worldsCompleted.queries";
 import { useAuthContext } from "../../Auth/contexts/auth.context";
 import { useNavigation } from "@react-navigation/native";
 
@@ -41,6 +42,16 @@ const useWorldData = () => {
             limit: 10,
           }),
       },
+      // Worlds completed
+      {
+        queryKey: ["worlds_completed"],
+        queryFn: () =>
+          query(queryWorldsCompletedByUser, {
+            id: user.id,
+            start: 1,
+            limit: 10,
+          }),
+      },
     ],
   });
 
@@ -54,6 +65,7 @@ const useWorldData = () => {
   const worldData = data.data;
   const lessonsCompleted = data?.lessonsCompletedByUser?.lessonsCompleted;
   const sectionsCompleted = data?.sectionsCompletedByUser?.sectionsCompleted;
+  const worldsCompleted = data?.worldsCompletedByUser?.worldsCompleted;
   const worldName = isLoading
     ? "Cargando..."
     : worldData.sectionsByWorld.world.name;
@@ -70,6 +82,7 @@ const useWorldData = () => {
     await queryClient.invalidateQueries(["sections", user.currentWorld]);
     await queryClient.invalidateQueries(["lessons_completed"]);
     await queryClient.invalidateQueries(["sections_completed"]);
+    await queryClient.invalidateQueries(["worlds_completed"]);
     await queryClient.invalidateQueries(["user"]);
     refreshUserData();
   };
@@ -79,6 +92,7 @@ const useWorldData = () => {
     worldData,
     lessonsCompleted,
     sectionsCompleted,
+    worldsCompleted,
     refreshData,
   };
 };

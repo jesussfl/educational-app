@@ -1,19 +1,33 @@
 import { StyleSheet, Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Select from "../../../components/Select/Select";
 import { Colors } from "@utils/Theme";
+import * as Animatable from "react-native-animatable";
+
 const SimpleSelectionExercise = ({
   content,
   setUserAnswer,
   isAnswerCorrect,
   userAnswer,
 }) => {
-  console.log("content ", content);
+  useEffect(() => {
+    // Start the animation when the component mounts.
+    slidenIn();
+  }, []);
+  const slidenIn = () => {
+    // You can customize the animation duration and other properties as needed.
+    this.view.slideInRight(300);
+  };
   return (
     <KeyboardAwareScrollView>
-      <View style={styles.container}>
+      <Animatable.View
+        style={styles.container}
+        animation="slideInLeft"
+        duration={1000} // Adjust the duration as needed
+        ref={(ref) => (this.view = ref)}
+      >
         <Text
           style={{
             color: Colors.gray_600,
@@ -50,7 +64,7 @@ const SimpleSelectionExercise = ({
             }
           })}
         </View>
-      </View>
+      </Animatable.View>
     </KeyboardAwareScrollView>
   );
 };

@@ -7,6 +7,7 @@ import useWorldData from "../hooks/useWorldData";
 import WorldSectionBanner from "./WorldSectionBanner";
 
 const sectionColors = [Colors.primary_500, "#12B76A", "#9A4CFF", "#F1733D"];
+import { Svg, Line } from "react-native-svg";
 
 const WorldSections = ({ handlePresentModalPress, setLessonId }) => {
   const {
@@ -26,7 +27,6 @@ const WorldSections = ({ handlePresentModalPress, setLessonId }) => {
       setRefreshing(false);
     }, 2000);
   };
-
   useEffect(() => {
     // Additional logic here
   }, [worldData, lessonsCompleted]);

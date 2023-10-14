@@ -94,6 +94,7 @@ export default useExerciseManagement = () => {
         setUserAnswer={setUserAnswer}
         isAnswerCorrect={isAnswerCorrect}
         userAnswer={userAnswer}
+        key={currentIndex}
       />
     ) : (
       <CompletionExercise
@@ -101,6 +102,7 @@ export default useExerciseManagement = () => {
         setUserAnswer={setUserAnswer}
         userAnswer={userAnswer}
         isAnswerCorrect={isAnswerCorrect}
+        key={currentIndex}
       />
     );
   };

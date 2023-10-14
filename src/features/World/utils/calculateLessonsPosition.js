@@ -1,4 +1,4 @@
-const positions = [0, -80, 0, 80];
+const positions = [0, 0, 0, 0];
 
 export const calculateLeftPosition = (index) => {
   const positionIndex = index % positions.length;
