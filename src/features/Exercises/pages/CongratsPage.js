@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@components";
 import { useNavigation } from "@react-navigation/native";
 import { Colors } from "@utils/Theme";
@@ -17,10 +17,14 @@ const CongratsPage = ({ route }) => {
   );
   const { user } = useAuthContext();
   const navigation = useNavigation();
-  console.log(lessonId, user.id);
+  useEffect(() => {
+    saveProgress();
+  }, []);
   const saveProgress = () => {
     mutate(
       {
+        user: user.id,
+        lesson: lessonId,
         data: {
           user: user.id,
           lesson: lessonId,
@@ -28,7 +32,7 @@ const CongratsPage = ({ route }) => {
       },
       {
         onSuccess: () => {
-          navigation.replace("Main", { screen: "Lessons" });
+          console.log("successssssssss");
         },
       }
     );
@@ -58,7 +62,7 @@ const CongratsPage = ({ route }) => {
             text="Continuar"
             variant="secondary"
             style={{ flex: 1 }}
-            onPress={saveProgress}
+            onPress={() => navigation.replace("Main", { screen: "Lessons" })}
           />
         </View>
       </View>
