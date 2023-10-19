@@ -9,7 +9,7 @@ import { useCustomMutation } from "@utils/useCustomMutation";
 import { createLessonCompletedMutation } from "@utils/graphql/mutations/lessonsCompleted.mutations";
 import { useAuthContext } from "../../Auth/contexts/auth.context";
 const CongratsPage = ({ route }) => {
-  const { lessonId, elapsedTime } = route.params;
+  const { lessonId, elapsedTime, errorCount, errorExercises } = route.params;
 
   const { mutate } = useCustomMutation("lessonsCompleted", createLessonCompletedMutation);
   const { user } = useAuthContext();
@@ -24,6 +24,9 @@ const CongratsPage = ({ route }) => {
       data: {
         user: user.id,
         lesson: lessonId,
+        timeSpent: elapsedTime,
+        mistakes: errorCount,
+        errorExercises: errorExercises,
       },
     });
   };

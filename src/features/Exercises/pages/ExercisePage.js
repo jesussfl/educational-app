@@ -1,13 +1,7 @@
 import { StyleSheet, View, Text } from "react-native";
 import React from "react";
 import { StatusBar } from "expo-status-bar";
-import {
-  CloseCircle,
-  ArrowRight,
-  TickCircle,
-  InfoCircle,
-  HeartSlash,
-} from "iconsax-react-native";
+import { CloseCircle, ArrowRight, TickCircle, InfoCircle, HeartSlash } from "iconsax-react-native";
 import { Colors } from "../../../utils/Theme";
 import Spinner from "react-native-loading-spinner-overlay";
 import ProgressBar from "../components/ProgressBar";
@@ -16,40 +10,28 @@ import useExerciseManagement from "../hooks/useExerciseManagement";
 import UserStats from "../../World/components/UserStats";
 import Modal from "../components/Modal";
 const ExercisePage = () => {
-  const { status, handler, answer } = useExerciseManagement();
+  const { status, handler, answer, countdown, isCountdownActive, initialCountdownValue } = useExerciseManagement();
   const [modalVisible, setModalVisible] = React.useState(false);
   if (status.isLoading) {
     return <Spinner visible={status.isLoading} />;
   }
-
+  console.log(countdown);
   return (
     <>
       <StatusBar style="auto" translucent={true} />
       <View style={styles.pageContainer}>
         <View style={styles.topBar}>
-          <CloseCircle
-            size={32}
-            color={Colors.gray_300}
-            onPress={() => setModalVisible(true)}
-          />
-          {status.isEmpty ? null : (
-            <ProgressBar percentage={`${handler.percentage}%`} />
-          )}
+          <CloseCircle size={32} color={Colors.gray_300} onPress={() => setModalVisible(true)} />
+          {status.isEmpty ? null : <ProgressBar percentage={`${handler.percentage}%`} />}
           <UserStats statusToShow={"lives"} />
         </View>
         {status.isEmpty ? <Text>Vacio</Text> : handler.render()}
 
         {answer.isCorrect != null ? (
           <View style={styles.answeredContainer}>
-            <View
-              style={{ flexDirection: "row", gap: 8, alignItems: "center" }}
-            >
+            <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
               {answer.isCorrect ? (
-                <TickCircle
-                  size={28}
-                  color={Colors.success_500}
-                  variant="Bold"
-                />
+                <TickCircle size={28} color={Colors.success_500} variant="Bold" />
               ) : (
                 <HeartSlash size={28} color={Colors.error_500} variant="Bold" />
               )}
@@ -66,26 +48,25 @@ const ExercisePage = () => {
             <Button
               text="Continuar"
               variant={answer.isCorrect ? "success" : "wrong"}
-              rightIcon={
-                answer.isCorrect ? (
-                  <ArrowRight size={24} color={"#fff"} variant="Bold" />
-                ) : (
-                  <InfoCircle size={24} color={"#fff"} variant="Bold" />
-                )
-              }
+              rightIcon={answer.isCorrect ? <ArrowRight size={24} color={"#fff"} variant="Bold" /> : <InfoCircle size={24} color={"#fff"} variant="Bold" />}
               onPress={handler.next}
             />
           </View>
         ) : (
-          <View style={styles.buttonContainer}>
-            <Button text="Pista" variant="secondary" style={{ flex: 0.5 }} />
-            <Button
-              text="Comprobar"
-              variant="primary"
-              rightIcon={<ArrowRight size={24} color={"#fff"} variant="Bold" />}
-              style={{ flex: 1 }}
-              onPress={answer.check}
-            />
+          <View>
+            {isCountdownActive ? (
+              <View style={{ height: 10, width: `${(countdown * 100) / initialCountdownValue}%`, backgroundColor: Colors.primary_600 }}></View>
+            ) : null}
+            <View style={styles.buttonContainer}>
+              <Button text="Pista" variant="secondary" style={{ flex: 0.5 }} />
+              <Button
+                text="Comprobar"
+                variant="primary"
+                rightIcon={<ArrowRight size={24} color={"#fff"} variant="Bold" />}
+                style={{ flex: 1 }}
+                onPress={answer.check}
+              />
+            </View>
           </View>
         )}
       </View>
