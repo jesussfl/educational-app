@@ -66,9 +66,7 @@ const useWorldData = () => {
   const lessonsCompleted = data?.lessonsCompletedByUser?.lessonsCompleted;
   const sectionsCompleted = data?.sectionsCompletedByUser?.sectionsCompleted;
   const worldsCompleted = data?.worldsCompletedByUser?.worldsCompleted;
-  const worldName = isLoading
-    ? "Cargando..."
-    : worldData.sectionsByWorld.world.name;
+  const worldName = isLoading ? "Cargando..." : worldData.sectionsByWorld.world.name;
 
   useEffect(() => {
     navigation.setOptions({
@@ -77,7 +75,6 @@ const useWorldData = () => {
   }, [worldName]);
 
   const refreshData = async () => {
-    console.log("Refreshing data..."); // Add a console log
     // Refetch the data for sections and lessons completed
     await queryClient.invalidateQueries(["sections", user.currentWorld]);
     await queryClient.invalidateQueries(["lessons_completed"]);
@@ -86,13 +83,19 @@ const useWorldData = () => {
     await queryClient.invalidateQueries(["user"]);
     refreshUserData();
   };
-
+  const completedLessonIds = isLoading
+    ? []
+    : lessonsCompleted.map((completedLesson) => completedLesson.attributes.lesson.data.id);
+  const sections = isLoading
+    ? []
+    : worldData.sectionsByWorld.sections.slice().sort((a, b) => a.attributes.order - b.attributes.order);
   return {
     isLoading,
-    worldData,
     lessonsCompleted,
+    sections,
     sectionsCompleted,
     worldsCompleted,
+    completedLessonIds,
     refreshData,
   };
 };

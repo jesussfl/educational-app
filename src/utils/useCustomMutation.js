@@ -11,19 +11,16 @@ export const useCustomMutation = (queryKey, queryFunction, defaultValues) => {
   const [mutationData, setMutationData] = useState();
   const queryClient = useQueryClient();
 
-  const mutate = useMutation(
-    async (payload) => await query(queryFunction, { ...payload }),
-    {
-      onSuccess: (data) => {
-        queryClient.invalidateQueries(queryKey);
-        setMutationData(data);
-        console.log("success");
-      },
-      onError: () => {
-        console.log("error");
-      },
-    }
-  );
+  const mutate = useMutation(async (payload) => await query(queryFunction, { ...payload }), {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(queryKey);
+      setMutationData(data);
+      // console.log("success");
+    },
+    onError: () => {
+      console.log("error");
+    },
+  });
 
   return {
     control,

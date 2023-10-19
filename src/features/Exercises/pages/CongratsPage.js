@@ -9,53 +9,36 @@ import { useCustomMutation } from "@utils/useCustomMutation";
 import { createLessonCompletedMutation } from "@utils/graphql/mutations/lessonsCompleted.mutations";
 import { useAuthContext } from "../../Auth/contexts/auth.context";
 const CongratsPage = ({ route }) => {
-  const { lessonId } = route.params;
+  const { lessonId, elapsedTime } = route.params;
 
-  const { mutate } = useCustomMutation(
-    "lessonsCompleted",
-    createLessonCompletedMutation
-  );
+  const { mutate } = useCustomMutation("lessonsCompleted", createLessonCompletedMutation);
   const { user } = useAuthContext();
   const navigation = useNavigation();
   useEffect(() => {
     saveProgress();
   }, []);
   const saveProgress = () => {
-    mutate(
-      {
+    mutate({
+      user: user.id,
+      lesson: lessonId,
+      data: {
         user: user.id,
         lesson: lessonId,
-        data: {
-          user: user.id,
-          lesson: lessonId,
-        },
       },
-      {
-        onSuccess: () => {
-          console.log("successssssssss");
-        },
-      }
-    );
+    });
   };
   return (
     <>
       <StatusBar style="dark" translucent={true} />
       <View style={styles.pageContainer}>
-        <Image
-          style={styles.image}
-          source={require("../../../../assets/papelillos.png")}
-        ></Image>
+        <Image style={styles.image} source={require("../../../../assets/papelillos.png")}></Image>
         <View style={styles.textsContainer}>
           <Text style={styles.congratsText}>¡Completaste la lección!</Text>
-          <Text
-            style={[
-              styles.congratsText,
-              { fontSize: 18, fontFamily: "Sora-Medium" },
-            ]}
-          >
-            ¡Lo hiciste muy bien!
-          </Text>
+          <Text style={[styles.congratsText, { fontSize: 18, fontFamily: "Sora-Medium" }]}>¡Lo hiciste muy bien!</Text>
           {/* <ProgressBar percentage={"100"} /> */}
+          <View>
+            <Text style={[styles.congratsText, { fontSize: 18, fontFamily: "Sora-Medium" }]}>{elapsedTime}</Text>
+          </View>
         </View>
         <View style={styles.buttonContainer}>
           <Button

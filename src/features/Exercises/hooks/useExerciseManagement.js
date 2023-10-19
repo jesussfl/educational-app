@@ -17,38 +17,55 @@ export default useExerciseManagement = () => {
 
   const [userAnswer, setUserAnswer] = useState(null);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState(null);
-
+  const [startTime, setStartTime] = useState(null);
+  let endTime;
+  const [elapsedTime, setElapsedTime] = useState(0);
   const navigation = useNavigation();
   const route = useRoute();
   const { playSound } = useExerciseSound();
   const params = route.params;
   const { userLives, decreaseLives } = useUserStats();
-  const { data, isLoading, error } = useQuery(
-    [`exercises${params.lessonId}`],
-    () =>
-      query(queryExercisesByLessonId, {
-        id: params.lessonId,
-        start: 1,
-        limit: 100,
-      })
+  const { data, isLoading, error } = useQuery([`exercises${params.lessonId}`], () =>
+    query(queryExercisesByLessonId, {
+      id: params.lessonId,
+      start: 1,
+      limit: 100,
+    })
   );
 
-  const exercises = isLoading
-    ? []
-    : data?.exercisesByLesson.exercises.sort((a, b) => a.order - b.order);
+  const exercises = isLoading ? [] : data?.exercisesByLesson.exercises.sort((a, b) => a.order - b.order);
   let percentage = ((currentIndex + 1) * 100) / exercises.length;
 
   useEffect(() => {
-    if (
-      exercises[currentIndex] &&
-      exercises[currentIndex].attributes.type === "completion"
-    ) {
+    if (exercises[currentIndex] && exercises[currentIndex].attributes.type === "completion") {
       setUserAnswer([]);
     } else {
       setUserAnswer(null);
     }
     setIsAnswerCorrect(null);
-  }, [currentIndex, isLoading]);
+    if (userLives <= 0) {
+      navigation.goBack(); // Replace "GameOver" with your actual screen name for when the user has 0 lives.
+      return;
+    }
+    if (currentIndex > exercises.length - 1 && !isLoading) {
+      endTime = new Date().getTime();
+      navigation.replace("Congrats", { lessonId: params.lessonId, elapsedTime: calculateTimeSpent() });
+    }
+    // Establece el startTime cuando el usuario comienza una lección.
+    if (currentIndex === 0) {
+      setStartTime(new Date().getTime());
+    }
+  }, [currentIndex, isLoading, navigation, userLives]);
+  const calculateTimeSpent = () => {
+    if (startTime && endTime) {
+      const timeDifference = (endTime - startTime) / 1000; // En segundos
+      const minutes = Math.floor(timeDifference / 60);
+      const seconds = Math.floor(timeDifference % 60);
+
+      return `${minutes}m:${seconds}s`;
+    }
+    return null;
+  };
 
   const checkAnswer = async () => {
     const currentExercise = exercises[currentIndex];
@@ -59,9 +76,7 @@ export default useExerciseManagement = () => {
 
     if (!answerChecker) {
       // Manejar el caso en que no se encuentre una función de comprobación adecuada.
-      console.error(
-        `No se encontró una función de comprobación para el tipo de ejercicio: ${exerciseType}`
-      );
+      console.error(`No se encontró una función de comprobación para el tipo de ejercicio: ${exerciseType}`);
       return;
     }
 
@@ -79,13 +94,9 @@ export default useExerciseManagement = () => {
 
   const renderExercise = () => {
     if (currentIndex > exercises.length - 1) {
-      navigation.navigate("Congrats", { lessonId: params.lessonId });
       return;
     }
-    if (userLives <= 0) {
-      navigation.goBack(); // Replace "GameOver" with your actual screen name for when the user has 0 lives.
-      return;
-    }
+
     const currentExercise = exercises[currentIndex];
 
     return currentExercise.attributes.type === "simpleSelection" ? (

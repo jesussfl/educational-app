@@ -1,8 +1,4 @@
-export function findFirstUnlockedLessonIndex(
-  lessons,
-  lessonsCompleted,
-  isFirstSection
-) {
+export function findFirstUnlockedLessonIndex(lessons, lessonsCompleted) {
   let firstUnlockedLessonIndex = -1;
 
   for (let index = 0; index < lessons.length; index++) {
