@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Colors } from "@utils/Theme";
 import CompletionText from "./CompletionText";
@@ -13,7 +13,6 @@ const CompletionExercise = ({ content, setUserAnswer, userAnswer }) => {
   const handleSelectedWords = (selectedWord) => {
     setUserAnswer([...userAnswer, selectedWord]);
   };
-
   // Remove the last selected word from the user's answer.
   const removeLastSelectedWord = () => {
     setUserAnswer(userAnswer.slice(0, userAnswer.length - 1));
@@ -27,6 +26,15 @@ const CompletionExercise = ({ content, setUserAnswer, userAnswer }) => {
 
   // Combine correct and incorrect words into a single array.
   const allWords = [...content.correctWords, ...content.incorrectWords];
+  // Use state to store the shuffled words.
+  const [randomWords, setRandomWords] = useState([]);
+
+  // Only shuffle the words if the state is empty.
+  useEffect(() => {
+    if (randomWords.length === 0) {
+      setRandomWords(allWords.sort(() => Math.random() - 0.5));
+    }
+  }, [allWords, randomWords]);
   useEffect(() => {
     // Start the animation when the component mounts.
     slidenIn();
@@ -46,19 +54,11 @@ const CompletionExercise = ({ content, setUserAnswer, userAnswer }) => {
       {/* Render the CompletionText component */}
       <View style={{ gap: 24 }}>
         <Text style={styles.titleText}>Completa los espacios vacíos</Text>
-        <CompletionText
-          result={nonEmptyParts}
-          userAnswer={userAnswer}
-          wordCounter={wordCounter}
-          removeLastSelectedWord={removeLastSelectedWord}
-        />
+        <CompletionText result={nonEmptyParts} userAnswer={userAnswer} wordCounter={wordCounter} removeLastSelectedWord={removeLastSelectedWord} />
       </View>
 
       {/* Render the WordSelection component */}
-      <WordSelection
-        combinedWords={allWords}
-        handleSelectedWords={handleSelectedWords}
-      />
+      <WordSelection combinedWords={randomWords} handleSelectedWords={handleSelectedWords} userAnswer={userAnswer} />
     </Animatable.View>
   );
 };

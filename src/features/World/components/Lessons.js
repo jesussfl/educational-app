@@ -1,18 +1,16 @@
 import React from "react";
-import { View, Image, Text, StyleSheet } from "react-native";
+import { View, Image, Text, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import { LessonButton, Button } from "@components";
 import { Colors } from "../../../utils/Theme";
 import { Key } from "iconsax-react-native";
 import { calculateLeftPosition } from "../utils/calculateLessonsPosition";
 import * as Animatable from "react-native-animatable";
 import { Svg, Line } from "react-native-svg";
-import {
-  findFirstUnlockedLessonIndex,
-  checkIfLessonCompleted,
-  checkIfLessonLocked,
-  checkIfLessonUnlocked,
-} from "../utils/renderLessons.helper";
-const Lessons = ({ lessons, lessonsCompleted, handlePresentModalPress, setLessonId, isFirstLessonCurrent }) => {
+import CompletedGift from "../../../../assets/giftCompleted.png";
+import UnlockedGift from "../../../../assets/giftUnlocked.png";
+import LockedGift from "../../../../assets/Gift.png";
+import { findFirstUnlockedLessonIndex, checkIfLessonCompleted, checkIfLessonLocked, checkIfLessonUnlocked } from "../utils/renderLessons.helper";
+const Lessons = ({ lessons, lessonsCompleted, handlePresentModalPress, setLessonId, isFirstLessonCurrent, setLessonType, setIsLessonCompleted }) => {
   const firstUnlockedLessonIndex = findFirstUnlockedLessonIndex(lessons, lessonsCompleted);
   return (
     <View style={styles.container}>
@@ -20,6 +18,23 @@ const Lessons = ({ lessons, lessonsCompleted, handlePresentModalPress, setLesson
         const isLessonCompleted = checkIfLessonCompleted(lesson, lessonsCompleted);
         const isLessonUnlocked = checkIfLessonUnlocked(index, firstUnlockedLessonIndex, isFirstLessonCurrent);
         const isLessonLocked = checkIfLessonLocked(index, firstUnlockedLessonIndex, isLessonCompleted);
+        const isLessonAGift = lesson.attributes.type === "gift";
+        if (isLessonAGift) {
+          let source;
+          if (isLessonCompleted) {
+            source = Image.resolveAssetSource(CompletedGift).uri;
+          } else if (isLessonUnlocked) {
+            source = Image.resolveAssetSource(UnlockedGift).uri;
+          } else {
+            source = Image.resolveAssetSource(LockedGift).uri;
+          }
+          return (
+            <TouchableWithoutFeedback key={lesson.id} onPress={() => setLessonType("gift")}>
+              <Image source={{ uri: source }} style={styles.giftImage} />
+            </TouchableWithoutFeedback>
+          );
+        }
+
         return (
           <View key={lesson.id}>
             {isLessonUnlocked ? (
@@ -30,6 +45,7 @@ const Lessons = ({ lessons, lessonsCompleted, handlePresentModalPress, setLesson
                 isLessonLocked={isLessonLocked}
                 isLessonCompleted={isLessonCompleted}
                 lesson={lesson}
+                setIsLessonCompleted={setIsLessonCompleted}
               />
             ) : (
               <LockedOrCompletedLesson
@@ -39,13 +55,13 @@ const Lessons = ({ lessons, lessonsCompleted, handlePresentModalPress, setLesson
                 isLessonLocked={isLessonLocked}
                 isLessonCompleted={isLessonCompleted}
                 lesson={lesson}
+                setIsLessonCompleted={setIsLessonCompleted}
               />
             )}
           </View>
         );
       })}
 
-      <Image source={require("../../../../assets/Gift.png")} style={styles.giftImage} />
       <BottomContainer />
     </View>
   );
@@ -71,7 +87,7 @@ const styles = StyleSheet.create({
 });
 export default Lessons;
 
-function UnlockedLesson({ index, handlePresentModalPress, setLessonId, lesson }) {
+function UnlockedLesson({ index, handlePresentModalPress, setLessonId, lesson, setIsLessonCompleted }) {
   return (
     <>
       <Svg width="100" height="180" style={{ marginBottom: -36, marginTop: -106 }}>
@@ -85,6 +101,7 @@ function UnlockedLesson({ index, handlePresentModalPress, setLessonId, lesson })
             onPress={() => {
               handlePresentModalPress(lesson.id);
               setLessonId(lesson.id);
+              setIsLessonCompleted(false);
             }}
             scale={0.9}
           />
@@ -94,19 +111,12 @@ function UnlockedLesson({ index, handlePresentModalPress, setLessonId, lesson })
   );
 }
 
-function LockedOrCompletedLesson({ index, handlePresentModalPress, setLessonId, isLessonLocked, isLessonCompleted, lesson }) {
+function LockedOrCompletedLesson({ index, handlePresentModalPress, setLessonId, isLessonLocked, isLessonCompleted, lesson, setIsLessonCompleted }) {
   return (
     <>
       <Svg width="100" height="160" style={{ marginBottom: -36, marginTop: -106 }}>
         <Line x1="55%" y1="0" x2="55%" y2="100%" stroke={Colors.gray_50} strokeWidth="80" />
-        <Line
-          x1="55%"
-          y1="0"
-          x2="55%"
-          y2="100%"
-          stroke={isLessonCompleted ? Colors.success_500 : Colors.gray_200}
-          strokeWidth="15"
-        />
+        <Line x1="55%" y1="0" x2="55%" y2="100%" stroke={isLessonCompleted ? Colors.success_500 : Colors.gray_200} strokeWidth="15" />
       </Svg>
       <LessonButton
         isCompleted={isLessonCompleted}
@@ -116,6 +126,7 @@ function LockedOrCompletedLesson({ index, handlePresentModalPress, setLessonId, 
           if (!isLessonLocked) {
             handlePresentModalPress(lesson.id);
             setLessonId(lesson.id);
+            setIsLessonCompleted(true);
           }
         }}
         scale={isLessonCompleted ? 0.96 : 0.9}

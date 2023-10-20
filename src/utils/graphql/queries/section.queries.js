@@ -29,6 +29,7 @@ export const querySections = gql`
               attributes {
                 description
                 order
+                type
               }
             }
           }
@@ -69,6 +70,7 @@ export const querySectionsByWorldId = gql`
               attributes {
                 description
                 order
+                type
               }
             }
           }

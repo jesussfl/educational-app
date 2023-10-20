@@ -8,7 +8,7 @@ import { Colors } from "@utils/Theme";
 
 const sectionColors = [Colors.primary_500, "#12B76A", "#9A4CFF", "#F1733D"];
 
-const WorldSections = ({ handlePresentModalPress, setLessonId }) => {
+const WorldSections = ({ handlePresentModalPress, setLessonId, setLessonType, setIsLessonCompleted }) => {
   const { isLoading, sections, lessonsCompleted, sectionsCompleted, completedLessonIds, refreshData } = useWorldData();
 
   const [refreshing, setRefreshing] = useState(false);
@@ -50,8 +50,7 @@ const WorldSections = ({ handlePresentModalPress, setLessonId }) => {
         {sections.map((section, index) => {
           const randomColor = sectionColors[index % sectionColors.length];
           const disabled = isSectionDisabled(section, index);
-          const isFirstLessonCurrent =
-            areAllPreviousSectionLessonsCompleted(index) || (index === 0 && sectionsCompleted.length === 0);
+          const isFirstLessonCurrent = areAllPreviousSectionLessonsCompleted(index) || (index === 0 && sectionsCompleted.length === 0);
           const lessons = section.attributes.lessons.data;
 
           return (
@@ -62,6 +61,8 @@ const WorldSections = ({ handlePresentModalPress, setLessonId }) => {
                 isFirstLessonCurrent={isFirstLessonCurrent}
                 handlePresentModalPress={handlePresentModalPress}
                 setLessonId={setLessonId}
+                setLessonType={setLessonType}
+                setIsLessonCompleted={setIsLessonCompleted}
               />
               <WorldSectionBanner
                 isDisabled={disabled}

@@ -16,22 +16,28 @@ const buttonSizes = {
    L: "large",
 };
 
-const Button = ({ variant, text = "Button", leftIcon, rightIcon, onPress, size = "large", style }) => {
+const Button = ({ variant, text = "Button", leftIcon, rightIcon, onPress, size = "large", disabled=false, style }) => {
    const [isPressed, setIsPressed] = useState(false);
    const handlePressIn = () => {
-      setIsPressed(true);
+      if (!disabled) {
+         setIsPressed(true);
+      }
    };
 
    const handlePressOut = () => {
-      setIsPressed(false);
+      if (!disabled) {
+         setIsPressed(false);
 
-      // if (onPress && typeof onPress === "function") {
-      // 	onPress();
-      // }
+      }
    };
 
    const getButtonStyles = () => {
-      const styles = isPressed ? buttonStyles[variant].pressed || buttonStyles[variant].default : buttonStyles[variant].default;
+      let styles;
+      if (disabled) {
+         styles = buttonStyles[variant].disabled || buttonStyles[variant].default;
+      } else {
+         styles = isPressed ? buttonStyles[variant].pressed || buttonStyles[variant].default : buttonStyles[variant].default;
+      }
       return {
          ...styles,
          ...buttonSizeStyles[size],
@@ -51,9 +57,9 @@ const Button = ({ variant, text = "Button", leftIcon, rightIcon, onPress, size =
       }
 
       const buttonTextStyles = {
-         [buttonVariants.PRIMARY]: { color: "#fff", fontSize },
+         [buttonVariants.PRIMARY]: {  color: disabled? Colors.gray_300: "#fff", fontSize },
          [buttonVariants.SECONDARY]: {
-            color: isPressed ? SemanticColors.text.primary_active : SemanticColors.text.subdued_normal,
+            color: isPressed ? SemanticColors.text.primary_active : disabled? Colors.gray_300: SemanticColors.text.subdued_normal,
             fontSize,
          },
          [buttonVariants.GHOST]: { color: isPressed ? SemanticColors.text.primary_active : SemanticColors.text.subdued_normal, fontSize },
@@ -65,7 +71,7 @@ const Button = ({ variant, text = "Button", leftIcon, rightIcon, onPress, size =
 
    return (
       <View style={[styles.container, style]}>
-         <Pressable onPress={onPress} onPressIn={handlePressIn} onPressOut={handlePressOut} style={[getButtonStyles(), styles.button]}>
+         <Pressable onPress={disabled ? () => {} : onPress} onPressIn={handlePressIn} onPressOut={handlePressOut} style={[getButtonStyles(), styles.button]}>
             <View style={styles.buttonTextContainer}>
                {leftIcon}
                <Text style={[styles.text, getTextStyles()]}>{text}</Text>
@@ -86,6 +92,7 @@ const styles = StyleSheet.create({
       flexDirection: "row",
       alignItems: "center",
       gap: 12,
+      paddingHorizontal: 8,
    },
    button: {
       borderRadius: 16,
@@ -122,6 +129,11 @@ const buttonStyles = {
          borderColor: SemanticColors.elevation.primary_active,
          borderBottomWidth: 3,
       },
+      disabled: {
+         backgroundColor: Colors.gray_100,
+         borderColor: Colors.gray_200,
+         borderBottomWidth: 3,
+      }
    },
    [buttonVariants.SECONDARY]: {
       default: {
@@ -134,6 +146,11 @@ const buttonStyles = {
          borderColor: SemanticColors.elevation.secondary_normal,
          borderBottomWidth: 3,
       },
+      disabled: {
+         backgroundColor: Colors.gray_100,
+         borderColor: Colors.gray_200,
+         borderBottomWidth: 3,
+      }
    },
    [buttonVariants.GHOST]: {
       default: {

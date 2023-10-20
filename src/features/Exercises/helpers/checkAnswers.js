@@ -1,28 +1,24 @@
 export const checkSimpleSelectionAnswer = (mainAnswer, userAnswer) => {
-   if (userAnswer === mainAnswer.correctAnswerIndex) {
-      return true;
-   }
-   return false;
+  if (userAnswer === mainAnswer.correctAnswerIndex) {
+    return true;
+  }
+  return false;
 };
 
 export const checkCompletionAnswer = (mainAnswer, userAnswer) => {
-   if (userAnswer.length !== mainAnswer.correctWords.length) {
+  if (userAnswer.length !== mainAnswer.correctWords.length) {
+    return false;
+  }
+  for (let i = 0; i < userAnswer.length; i++) {
+    if (mainAnswer.correctWords[i] !== userAnswer[i]) {
       return false;
-   }
+    }
+  }
 
-   const correctWords = mainAnswer.correctWords.slice().sort();
-   const userSelectedWords = userAnswer.slice().sort();
-
-   for (let i = 0; i < userAnswer.length; i++) {
-      if (correctWords[i] !== userSelectedWords[i]) {
-         return false;
-      }
-   }
-
-   return true;
+  return true;
 };
 
 export const exercisesChecker = {
-   simpleSelection: checkSimpleSelectionAnswer,
-   completion: checkCompletionAnswer,
+  simpleSelection: checkSimpleSelectionAnswer,
+  completion: checkCompletionAnswer,
 };

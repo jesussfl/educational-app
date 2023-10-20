@@ -8,6 +8,7 @@ export const queryLessonsBySectionId = gql`
         attributes {
           description
           order
+          type
           createdAt
           updatedAt
           publishedAt

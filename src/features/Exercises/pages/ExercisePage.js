@@ -15,7 +15,6 @@ const ExercisePage = () => {
   if (status.isLoading) {
     return <Spinner visible={status.isLoading} />;
   }
-  console.log(countdown);
   return (
     <>
       <StatusBar style="auto" translucent={true} />
@@ -62,6 +61,7 @@ const ExercisePage = () => {
               <Button
                 text="Comprobar"
                 variant="primary"
+                disabled={answer.userAnswer == null || answer.userAnswer.length === 0}
                 rightIcon={<ArrowRight size={24} color={"#fff"} variant="Bold" />}
                 style={{ flex: 1 }}
                 onPress={answer.check}
