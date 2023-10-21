@@ -17,6 +17,8 @@ module.exports = function (api) {
             "@utils": "./src/utils",
             "@assets": "./assets",
             "@hooks": "./src/hooks",
+            "@contexts": "./src/contexts",
+            "@features": "./src/features",
           },
           // extensions: [".ios.js", ".android.js", ".js", ".jsx", ".json", ".tsx", ".ts", ".native.js"],
         },

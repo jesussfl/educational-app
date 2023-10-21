@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { AuthContext } from "../../../contexts/auth.context";
+import { AuthContext } from "@contexts/auth.context";
 import { getToken } from "../../../utils/helpers/auth.helpers";
 
 /**

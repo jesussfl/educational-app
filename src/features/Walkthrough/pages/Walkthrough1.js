@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { Headings, Button } from "@components";
 import { SemanticColors } from "@utils/Theme";
 import { walkthrough1Texts } from "../utils/walkthroughTexts";
-import { useAuthContext } from "../../../contexts/auth.context";
+import { useAuthContext } from "@contexts/auth.context";
 const Walkthrough1 = ({ navigation }) => {
   const { user } = useAuthContext();
 

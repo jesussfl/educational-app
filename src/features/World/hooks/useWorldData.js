@@ -5,7 +5,7 @@ import { querySectionsByWorldId } from "@utils/graphql/queries/section.queries";
 import { queryLessonsCompletedByUser } from "@utils/graphql/queries/lessonsCompleted.queries";
 import { querySectionsCompletedByUser } from "@utils/graphql/queries/sectionsCompleted.queries";
 import { queryWorldsCompletedByUser } from "@utils/graphql/queries/worldsCompleted.queries";
-import { useAuthContext } from "../../../contexts/auth.context";
+import { useAuthContext } from "@contexts/auth.context";
 import { useNavigation } from "@react-navigation/native";
 
 const useWorldData = () => {

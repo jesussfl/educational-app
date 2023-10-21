@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { setToken } from "../../../utils/helpers/auth.helpers";
 import { useNavigation } from "@react-navigation/native";
-import { useAuthContext } from "../../../contexts/auth.context";
+import { useAuthContext } from "@contexts/auth.context";
 export const useAuthSubmit = ({ isRegister }) => {
   const { setUser } = useAuthContext();
   const navigation = useNavigation();

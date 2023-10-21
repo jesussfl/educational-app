@@ -7,7 +7,7 @@ import { Colors } from "@utils/Theme";
 import ProgressBar from "../components/ProgressBar";
 import { useCustomMutation } from "@utils/useCustomMutation";
 import { createLessonCompletedMutation } from "@utils/graphql/mutations/lessonsCompleted.mutations";
-import { useAuthContext } from "../../../contexts/auth.context";
+import { useAuthContext } from "@contexts/auth.context";
 const CongratsPage = ({ route }) => {
   const { lessonId, elapsedTime, errorCount, errorExercises } = route.params;
 

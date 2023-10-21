@@ -5,7 +5,7 @@ import { Card } from "@components";
 import { useQuery } from "@tanstack/react-query";
 import { query } from "@utils/graphql/client/GraphQLCLient";
 import { queryWorlds } from "@utils/graphql/queries/world.queries";
-import { useAuthContext } from "../../../contexts/auth.context";
+import { useAuthContext } from "@contexts/auth.context";
 import { useCustomMutation } from "@utils/useCustomMutation";
 import { updateUserMutation } from "@utils/graphql/mutations/user.mutation";
 import { useNavigation } from "@react-navigation/native";

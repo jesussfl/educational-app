@@ -1,7 +1,7 @@
 import { StyleSheet, Text } from "react-native";
 import { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { WithSplashScreen } from "./src/features/Splash/pages/Splash";
+import { WithSplashScreen } from "@features/Splash/pages/Splash";
 import { IntroductoryStackNavigator } from "./src/features/navigation/Introductory.navigator";
 import * as WebBrowser from "expo-web-browser";
 import useCustomFonts from "@hooks/customFonts";

@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Heart, DollarCircle, Flash } from "iconsax-react-native";
 import { Colors } from "@utils/Theme";
-import { useAuthContext } from "../../../contexts/auth.context";
+import { useAuthContext } from "@contexts/auth.context";
 
 const UserStats = ({ statusToShow }) => {
   const { user } = useAuthContext();
