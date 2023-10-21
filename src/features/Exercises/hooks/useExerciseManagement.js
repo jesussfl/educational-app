@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRoute, useNavigation } from "@react-navigation/native";
 
 import { query, queryExercisesByLessonId } from "@utils/graphql";
-import useUserStats from "../../../hooks/useUserStats";
+import useUserStats from "@hooks/useUserStats";
 import { calculateTimeSpent, exercisesChecker } from "../helpers";
 
 import { SimpleSelectionExercise, CompletionExercise } from "../components";

@@ -1,4 +1,4 @@
-import { useAuthContext } from "../features/Auth/contexts/auth.context";
+import { useAuthContext } from "../contexts/auth.context";
 import { updateUserMutation } from "@utils/graphql/mutations/user.mutation";
 import { useCustomMutation } from "@utils/useCustomMutation";
 

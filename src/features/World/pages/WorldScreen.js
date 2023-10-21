@@ -4,10 +4,10 @@ import WorldSections from "../components/WorldSections";
 import { StatusBar } from "expo-status-bar";
 import { Button } from "@components";
 import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
-import useBottomSheet from "@utils/hooks/useBottomSheet";
+import useBottomSheet from "@hooks/useBottomSheet";
 import { PlayCircle, Book1, HeartSlash } from "iconsax-react-native";
 import { Colors } from "@utils/Theme";
-import useUserStats from "../../../hooks/useUserStats";
+import useUserStats from "@hooks/useUserStats";
 import GiftModal from "../components/GiftModal";
 const WorldScreen = ({ navigation }) => {
   const { bottomSheetModalRef, snapPoints, handlePresentModalPress, handleSheetChanges } = useBottomSheet();

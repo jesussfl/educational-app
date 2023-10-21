@@ -8,7 +8,7 @@ import Icon from "react-native-remix-icon";
 import { UserCirlceAdd } from "iconsax-react-native";
 import { Colors } from "@utils/Theme";
 import { emailValidations } from "../../Auth/utils/inputValidations";
-import { useAuthContext } from "../../Auth/contexts/auth.context";
+import { useAuthContext } from "../../../contexts/auth.context";
 import { queryLessonsCompletedByUser } from "@utils/graphql/queries/lessonsCompleted.queries";
 
 import { useQuery } from "@tanstack/react-query";

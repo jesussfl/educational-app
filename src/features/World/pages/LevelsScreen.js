@@ -5,7 +5,7 @@ import { Card } from "@components";
 import { useQuery } from "@tanstack/react-query";
 import { query } from "@utils/graphql/client/GraphQLCLient";
 import { queryWorlds } from "@utils/graphql/queries/world.queries";
-import { useAuthContext } from "../../Auth/contexts/auth.context";
+import { useAuthContext } from "../../../contexts/auth.context";
 import { useCustomMutation } from "@utils/useCustomMutation";
 import { updateUserMutation } from "@utils/graphql/mutations/user.mutation";
 import { useNavigation } from "@react-navigation/native";
@@ -13,9 +13,7 @@ import useWorldData from "../hooks/useWorldData";
 const LevelsScreen = () => {
   const { worldsCompleted, worldData } = useWorldData();
   const navigation = useNavigation();
-  const { data, isLoading, error } = useQuery(["worlds"], () =>
-    query(queryWorlds, { start: 1, limit: 10 })
-  );
+  const { data, isLoading, error } = useQuery(["worlds"], () => query(queryWorlds, { start: 1, limit: 10 }));
 
   const { setUser, user } = useAuthContext();
   const { mutate } = useCustomMutation("user", updateUserMutation);
@@ -44,9 +42,7 @@ const LevelsScreen = () => {
         <Text>Cargando...</Text>
       ) : (
         data.crefinexWorlds.data.map((world, index) => {
-          const isWorldCompleted = worldsCompleted.some(
-            (completedWorld) => completedWorld.attributes.world.id === world.id
-          );
+          const isWorldCompleted = worldsCompleted.some((completedWorld) => completedWorld.attributes.world.id === world.id);
           if (isWorldCompleted) {
             firstUnlockedWorldIndex = index;
           }
