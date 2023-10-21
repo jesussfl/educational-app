@@ -9,14 +9,30 @@ import { UserCirlceAdd } from "iconsax-react-native";
 import { Colors } from "@utils/Theme";
 import { emailValidations } from "../../Auth/utils/inputValidations";
 import { useAuthContext } from "../../Auth/contexts/auth.context";
+import { queryLessonsCompletedByUser } from "@utils/graphql/queries/lessonsCompleted.queries";
+
+import { useQuery } from "@tanstack/react-query";
+import { query } from "@utils/graphql/client/GraphQLCLient";
 const colors = [Colors.primary_500, "#12B76A", "#9A4CFF", "#F1733D"];
 const ProfileScreen = () => {
   const { user } = useAuthContext();
   const navigation = useNavigation();
+  const { data, isLoading, error } = useQuery([`lessons_completed`, user.id], () =>
+    query(queryLessonsCompletedByUser, {
+      id: user.id,
+      start: 1,
+      limit: 100,
+    })
+  );
   const handleLogout = () => {
     removeToken();
     navigation.replace("Auth", { screen: "Login" });
   };
+
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
+  const lessonsCompleted = data?.lessonsCompletedByUser.lessonsCompleted;
   return (
     <ScrollView style={styles.container}>
       <View style={styles.avatarContainer}>
@@ -27,7 +43,10 @@ const ProfileScreen = () => {
       </View>
       <View style={{ flex: 1, width: "100%", gap: 12, marginVertical: 24 }}>
         <View style={{ flexDirection: "row", flex: 1, gap: 12 }}>
-          <View style={styles.statContainer}></View>
+          <View style={styles.statContainer}>
+            <Text style={{ fontSize: 18, fontFamily: "Sora-SemiBold" }}>Lecciones completadas</Text>
+            <Text style={{ fontSize: 18, fontFamily: "Sora-SemiBold" }}>{lessonsCompleted?.length}</Text>
+          </View>
           <View style={styles.statContainer}></View>
         </View>
         <View style={{ flexDirection: "row", flex: 1, gap: 12 }}>
@@ -55,11 +74,7 @@ const ProfileScreen = () => {
               padding: 12,
             }}
           >
-            <UserCirlceAdd
-              size={56}
-              color={Colors.primary_500}
-              variant="Bold"
-            />
+            <UserCirlceAdd size={56} color={Colors.primary_500} variant="Bold" />
             <View style={{ flex: 1, gap: 4 }}>
               <Text
                 style={{
@@ -79,8 +94,7 @@ const ProfileScreen = () => {
                   lineHeight: 22,
                 }}
               >
-                Comparte la app con tus amigos y obbten hasta 7 dias gratis de
-                Finex Pro por cada registro
+                Comparte la app con tus amigos y obbten hasta 7 dias gratis de Finex Pro por cada registro
               </Text>
             </View>
           </View>

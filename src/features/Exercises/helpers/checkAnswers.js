@@ -18,7 +18,7 @@ export const checkCompletionAnswer = (mainAnswer, userAnswer) => {
   return true;
 };
 
-export const exercisesChecker = {
+export default exercisesChecker = {
   simpleSelection: checkSimpleSelectionAnswer,
   completion: checkCompletionAnswer,
 };

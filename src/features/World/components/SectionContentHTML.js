@@ -9,6 +9,7 @@ const customStyles = {
     fontSize: 16,
     lineHeight: 27,
     color: Colors.gray_500,
+    marginBottom: -15,
   },
   ul: {
     fontFamily: "Sora-Regular",
@@ -24,7 +25,6 @@ const customStyles = {
   h1: {
     fontSize: 28,
     fontFamily: "Sora-SemiBold",
-    lineHeight: 36,
     color: Colors.gray_600,
     marginTop: 32,
   },
@@ -35,18 +35,14 @@ const customStyles = {
   },
 };
 const SectionContentHTML = ({ html }) => {
+  console.log(html);
   return (
     <RenderHTML
       contentWidth={400}
       source={{
         html: html,
       }}
-      systemFonts={[
-        "Sora-Regular",
-        "Sora-Medium",
-        "Sora-Bold",
-        "Sora-SemiBold",
-      ]}
+      systemFonts={["Sora-Regular", "Sora-Medium", "Sora-Bold", "Sora-SemiBold"]}
       baseStyle={{ fontFamily: "Sora-Bold" }}
       tagsStyles={customStyles}
       //  customStyle={customStyles}

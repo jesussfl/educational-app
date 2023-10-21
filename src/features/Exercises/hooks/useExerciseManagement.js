@@ -1,26 +1,23 @@
 // Import necessary dependencies
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { query } from "@utils/graphql/client/GraphQLCLient";
-import { queryExercisesByLessonId } from "@utils/graphql/queries/exercise.queries";
-import { useRoute } from "@react-navigation/native";
-import SimpleSelectionExercise from "../components/SimpleSelectionExercise";
-import CompletionExercise from "../components/CompletionExercise";
-import { useNavigation } from "@react-navigation/native";
+import { useRoute, useNavigation } from "@react-navigation/native";
+
+import { query, queryExercisesByLessonId } from "@utils/graphql";
 import useUserStats from "../../../hooks/useUserStats";
-import { exercisesChecker } from "../helpers/checkAnswers";
-import useExerciseSound from "./useExerciseSound";
-import { calculateTimeSpent } from "../helpers/calculateTimeSpent";
+import { calculateTimeSpent, exercisesChecker } from "../helpers";
+
+import { SimpleSelectionExercise, CompletionExercise } from "../components";
+import { useCountdownTimer, useExerciseSound } from "../hooks";
+
 // Define a custom hook for exercise management
 export default useExerciseManagement = () => {
   //Hooks
   const navigation = useNavigation();
   const route = useRoute();
-
+  const { timeRemaining, startCountdownTimer, stopCountdownTimer, isCountdownActive } = useCountdownTimer();
   const { userLives, decreaseLives } = useUserStats();
   const { playSound } = useExerciseSound();
-
-  //Fetch Data
   const { data, isLoading, error } = useQuery([`exercises${route.params.lessonId}`], () =>
     query(queryExercisesByLessonId, {
       id: route.params.lessonId,
@@ -31,21 +28,12 @@ export default useExerciseManagement = () => {
 
   //Exercise
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isEmpty, setIsEmpty] = useState(false);
-
-  //Answers
   const [userAnswer, setUserAnswer] = useState(null);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState(null);
-
-  //Errors
   const [errorCount, setErrorCount] = useState(0);
   const [errorExercises, setErrorExercises] = useState([]);
-
-  //Time
   const [startTime, setStartTime] = useState(null);
-  const [isCountdownActive, setIsCountdownActive] = useState(false);
-  const [countdown, setCountdown] = useState(0);
-  const initialCountdownValue = 10; // Establece el tiempo inicial de cuenta regresiva
+  const initialCountdownValue = 10;
 
   //Sort exercises
   const exercises = isLoading ? [] : data?.exercisesByLesson.exercises.sort((a, b) => a.order - b.order);
@@ -56,13 +44,25 @@ export default useExerciseManagement = () => {
   let currentExercise = exercises[currentIndex];
 
   useEffect(() => {
-    const isExerciseTypeCompletion = exercises[currentIndex]?.attributes?.type === "completion";
+    handleExerciseStart();
+    handleExerciseEnd();
+    handleExerciseType();
+  }, [currentIndex, isLoading]);
+
+  // Handling user lives
+  useEffect(() => {
+    handleUserLives();
+  }, [userLives, navigation]);
+
+  function handleExerciseStart() {
     const isFirstExercise = currentIndex === 0;
-    const isLastExercise = currentIndex > exercises.length - 1;
     if (isFirstExercise) {
       setStartTime(new Date().getTime());
     }
+  }
 
+  function handleExerciseEnd() {
+    const isLastExercise = currentIndex > exercises.length - 1;
     if (isLastExercise && !isLoading) {
       endTime = new Date().getTime();
       navigation.replace("Congrats", {
@@ -72,47 +72,33 @@ export default useExerciseManagement = () => {
         errorExercises,
       });
     }
+  }
 
-    if (currentExercise && isExerciseTypeCompletion) {
+  function handleExerciseType() {
+    if (currentExercise && currentExercise.attributes.type === "completion") {
       setUserAnswer([]);
     } else {
       setUserAnswer(null);
     }
-    if (currentExercise && !isExerciseTypeCompletion) {
-      startCountdown();
+    if (currentExercise && currentExercise.attributes.type !== "completion") {
+      startCountdownTimer(() => {
+        setIsAnswerCorrect(false);
+        setErrorCount(errorCount + 1);
+        decreaseLives();
+        setErrorExercises([...errorExercises, currentExercise.id]);
+      }, initialCountdownValue);
     }
     setIsAnswerCorrect(null);
-  }, [currentIndex, isLoading]);
+  }
 
-  useEffect(() => {
+  function handleUserLives() {
     if (userLives <= 0) {
       navigation.replace("Main", { screen: "Lessons" });
-      return;
     }
-  }, [userLives, navigation]);
-  const startCountdown = () => {
-    if (currentExercise.attributes.type === "simpleSelection" && !isCountdownActive) {
-      setIsCountdownActive(true);
-      setCountdown(initialCountdownValue);
-
-      const countdownInterval = setInterval(() => {
-        setCountdown((prevCountdown) => {
-          if (prevCountdown === 1) {
-            clearInterval(countdownInterval);
-            setIsCountdownActive(false);
-            setIsAnswerCorrect(false);
-            setErrorCount(errorCount + 1);
-            decreaseLives();
-            setErrorExercises([...errorExercises, currentExercise.id]);
-            return 0;
-          }
-          return prevCountdown - 1;
-        });
-      }, 1000);
-    }
-  };
-
+  }
   const checkAnswer = async () => {
+    stopCountdownTimer();
+
     const mainAnswer = parseExerciseContent(currentExercise);
 
     const exerciseType = currentExercise.attributes.type;
@@ -140,8 +126,8 @@ export default useExerciseManagement = () => {
       <SimpleSelectionExercise
         content={parseExerciseContent(currentExercise)}
         setUserAnswer={setUserAnswer}
-        isAnswerCorrect={isAnswerCorrect}
         userAnswer={userAnswer}
+        isAnswerCorrect={isAnswerCorrect}
         key={currentIndex}
       />
     ) : (
@@ -159,9 +145,6 @@ export default useExerciseManagement = () => {
     return typeof exercise.attributes.content === "string" ? JSON.parse(exercise.attributes.content) : exercise.attributes.content;
   };
   const handleNext = () => {
-    if (isCountdownActive) {
-      setIsCountdownActive(false);
-    }
     setCurrentIndex(currentIndex + 1);
   };
 
@@ -173,7 +156,6 @@ export default useExerciseManagement = () => {
   return {
     status: {
       isLoading,
-      isEmpty,
       error,
     },
     handler: {
@@ -190,7 +172,7 @@ export default useExerciseManagement = () => {
       check: checkAnswer,
       setIsAnswerCorrect,
     },
-    countdown,
+    countdown: timeRemaining,
     isCountdownActive,
     initialCountdownValue,
   };

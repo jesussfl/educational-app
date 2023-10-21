@@ -83,12 +83,8 @@ const useWorldData = () => {
     await queryClient.invalidateQueries(["user"]);
     refreshUserData();
   };
-  const completedLessonIds = isLoading
-    ? []
-    : lessonsCompleted.map((completedLesson) => completedLesson.attributes.lesson.data.id);
-  const sections = isLoading
-    ? []
-    : worldData.sectionsByWorld.sections.slice().sort((a, b) => a.attributes.order - b.attributes.order);
+  const completedLessonIds = isLoading ? [] : lessonsCompleted.map((completedLesson) => completedLesson.attributes.lesson.data.id);
+  const sections = isLoading ? [] : worldData.sectionsByWorld.sections.slice().sort((a, b) => a.attributes.order - b.attributes.order);
   return {
     isLoading,
     lessonsCompleted,
