@@ -36,3 +36,12 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 yarn.lock
+
+# .gitignore
+android/.gradle/
+android/app/build/
+
+# .gitignore
+.expo/
+# .gitignore
+%ProgramData%/
