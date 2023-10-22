@@ -36,22 +36,96 @@ const ProfileScreen = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.avatarContainer}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarInitial}>{user.username.slice(0, 1)}</Text>
+        <View
+          style={{
+            backgroundColor: "#fff",
+            padding: 4,
+            borderRadius: 100,
+            alignItems: "center",
+            justifyContent: "center",
+            borderWidth: 4,
+            borderColor: Colors.gray_50,
+          }}
+        >
+          <View style={styles.avatar}>
+            <Text style={styles.avatarInitial}>{user.username.slice(0, 1)}</Text>
+          </View>
         </View>
-        <Text style={styles.usernameText}>{user.username}</Text>
+        <View>
+          <Text style={styles.nameText}>{user.username}</Text>
+          <Text style={styles.usernameText}>{user.email}</Text>
+        </View>
       </View>
       <View style={{ flex: 1, width: "100%", gap: 12, marginVertical: 24 }}>
         <View style={{ flexDirection: "row", flex: 1, gap: 12 }}>
-          <View style={styles.statContainer}>
-            <Text style={{ fontSize: 18, fontFamily: "Sora-SemiBold" }}>Lecciones completadas</Text>
-            <Text style={{ fontSize: 18, fontFamily: "Sora-SemiBold" }}>{lessonsCompleted?.length}</Text>
+          <View style={[styles.statContainer, { backgroundColor: "#9A4CFF" }]}>
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: 18, fontFamily: "Sora-SemiBold", color: "#fff" }}>Lecciones completadas</Text>
+              <Text style={{ fontSize: 14, fontFamily: "Sora-Regular", color: "#fff" }}>A mas lecciones mejores recompenzas</Text>
+            </View>
+            <View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 4,
+                  backgroundColor: "#fff",
+                  borderRadius: 100,
+                  width: 72,
+                  height: 72,
+                }}
+              >
+                <Text style={{ fontSize: 28, fontFamily: "Sora-SemiBold", color: "#9A4CFF" }}>{lessonsCompleted?.length}</Text>
+              </View>
+            </View>
           </View>
-          <View style={styles.statContainer}></View>
         </View>
         <View style={{ flexDirection: "row", flex: 1, gap: 12 }}>
-          <View style={styles.statContainer}></View>
-          <View style={styles.statContainer}></View>
+          <View style={[styles.statContainer, { backgroundColor: "#F1733D", flexDirection: "column-reverse", gap: 12 }]}>
+            <View style={{ flex: 1, alignSelf: "stretch" }}>
+              <Text style={{ fontSize: 18, fontFamily: "Sora-SemiBold", color: "#fff" }}>Mayor racha de dias</Text>
+              <Text style={{ fontSize: 14, fontFamily: "Sora-Regular", color: "#fff" }}>Manten tus rachas</Text>
+            </View>
+            <View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 4,
+                  backgroundColor: "#fff",
+                  borderRadius: 100,
+                  width: 72,
+                  height: 72,
+                }}
+              >
+                <Text style={{ fontSize: 28, fontFamily: "Sora-SemiBold", color: "#F1733D" }}>{lessonsCompleted?.length}</Text>
+              </View>
+            </View>
+          </View>
+          <View style={[styles.statContainer, { backgroundColor: "#12B76A", flexDirection: "column-reverse", gap: 12 }]}>
+            <View style={{ flex: 1, alignSelf: "stretch" }}>
+              <Text style={{ fontSize: 18, fontFamily: "Sora-SemiBold", color: "#fff" }}>Tu racha actual</Text>
+              <Text style={{ fontSize: 14, fontFamily: "Sora-Regular", color: "#fff" }}>Manten tus rachas</Text>
+            </View>
+            <View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 4,
+                  backgroundColor: "#fff",
+                  borderRadius: 100,
+                  width: 72,
+                  height: 72,
+                }}
+              >
+                <Text style={{ fontSize: 28, fontFamily: "Sora-SemiBold", color: "#12B76A" }}>{lessonsCompleted?.length}</Text>
+              </View>
+            </View>
+          </View>
         </View>
         <View
           style={{
@@ -60,9 +134,7 @@ const ProfileScreen = () => {
             gap: 12,
             backgroundColor: "#fff",
             padding: 12,
-            borderRadius: 12,
-            borderColor: Colors.gray_50,
-            borderWidth: 2,
+            borderRadius: 24,
             marginTop: 12,
           }}
         >
@@ -120,15 +192,19 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   avatarContainer: {
-    flex: 1,
     gap: 12,
+    flexDirection: "row-reverse",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    paddingHorizontal: 24,
+    paddingVertical: 14,
+    borderRadius: 24,
   },
   avatar: {
-    width: 100,
-    height: 100,
+    width: 72,
+    height: 72,
     borderRadius: 100,
-    alignSelf: "center",
-    marginTop: 24,
     backgroundColor: "#9A4CFF",
     justifyContent: "center",
     alignItems: "center",
@@ -139,22 +215,25 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     color: "#fff",
   },
-  usernameText: {
+  nameText: {
     fontSize: 24,
     fontFamily: "Sora-SemiBold",
     textTransform: "capitalize",
-    alignSelf: "center",
-    color: Colors.gray_600,
+    color: "#9A4CFF",
+  },
+  usernameText: {
+    fontSize: 14,
+    fontFamily: "Sora-Regular",
+    textTransform: "capitalize",
+    color: Colors.gray_500,
   },
   statContainer: {
     flex: 1,
-    borderWidth: 2,
-    borderColor: Colors.gray_50,
     backgroundColor: "#fff",
-    borderRadius: 12,
+    borderRadius: 28,
     padding: 24,
-    height: 164,
+    justifyContent: "space-between",
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
   },
 });

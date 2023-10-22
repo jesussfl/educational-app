@@ -1,2 +1,4 @@
-export { default as calculateTimeSpent } from "./calculateTimeSpent";
-export { default as exercisesChecker } from "./checkAnswers";
+import { calculateTimeSpent } from "./calculateTimeSpent";
+import exercisesChecker from "./checkAnswers";
+
+export { calculateTimeSpent, exercisesChecker };

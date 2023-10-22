@@ -1,20 +1,11 @@
 // import React from "react";
-
+import { View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import {
-  Home,
-  Weight,
-  Signpost,
-  Notification,
-  UserOctagon,
-} from "iconsax-react-native";
+import { Home, Weight, Signpost, Notification, UserOctagon } from "iconsax-react-native";
 
 import { SemanticColors, Colors } from "@utils/Theme";
 import * as Screens from "../index";
-import {
-  getFocusedRouteNameFromRoute,
-  useNavigation,
-} from "@react-navigation/native";
+import { getFocusedRouteNameFromRoute, useNavigation } from "@react-navigation/native";
 import WorldStackNavigator from "../World/navigation/WorldStack.navigator";
 const BottomNavStack = createBottomTabNavigator();
 
@@ -46,24 +37,14 @@ export const BottomNavStackNavigator = () => {
         })}
         options={({ route }) => ({
           tabBarIcon: ({ focused }) => (
-            <Home
-              variant="Bold"
-              size={28}
-              color={
-                focused
-                  ? SemanticColors.bg.primary_active
-                  : SemanticColors.elevation.secondary_normal
-              }
-            />
+            <View style={{ alignItems: "center", justifyContent: "center", backgroundColor: focused ? "#FFF4D3" : "#fff", padding: 8, borderRadius: 100 }}>
+              <Home variant="Bold" size={28} color={focused ? Colors.primary_500 : SemanticColors.elevation.secondary_normal} />
+            </View>
           ),
           headerShown: false,
           tabBarStyle: ((route) => {
             const routeName = getFocusedRouteNameFromRoute(route) ?? "";
-            if (
-              routeName === "Exercise" ||
-              routeName === "Congrats" ||
-              routeName === "TheoryScreen"
-            ) {
+            if (routeName === "Exercise" || routeName === "Congrats" || routeName === "TheoryScreen") {
               return { display: "none" };
             }
 
@@ -83,15 +64,9 @@ export const BottomNavStackNavigator = () => {
         name="Reviews"
         options={{
           tabBarIcon: ({ focused }) => (
-            <Weight
-              size={28}
-              variant="Bold"
-              color={
-                focused
-                  ? SemanticColors.bg.primary_active
-                  : SemanticColors.elevation.secondary_normal
-              }
-            />
+            <View style={{ alignItems: "center", justifyContent: "center", backgroundColor: focused ? "#FFF4D3" : "#fff", padding: 8, borderRadius: 100 }}>
+              <Weight size={28} variant="Bold" color={focused ? Colors.primary_500 : SemanticColors.elevation.secondary_normal} />
+            </View>
           ),
         }}
         component={Screens.ReviewsScreen}
@@ -119,17 +94,7 @@ export const BottomNavStackNavigator = () => {
           },
           tabBarIconStyle: { transform: [{ rotate: "-45deg" }] },
           tabBarBadgeStyle: { backgroundColor: "red" },
-          tabBarIcon: ({ focused }) => (
-            <Signpost
-              size={28}
-              variant="Bold"
-              color={
-                focused
-                  ? SemanticColors.bg.primary_active
-                  : SemanticColors.elevation.secondary_normal
-              }
-            />
-          ),
+          tabBarIcon: ({ focused }) => <Signpost size={28} variant="Bold" color={focused ? Colors.primary_500 : SemanticColors.elevation.secondary_normal} />,
         }}
         component={Screens.LevelsScreen}
       />
@@ -137,15 +102,9 @@ export const BottomNavStackNavigator = () => {
         name="Notifications"
         options={{
           tabBarIcon: ({ focused }) => (
-            <Notification
-              size={28}
-              variant="Bold"
-              color={
-                focused
-                  ? SemanticColors.bg.primary_active
-                  : SemanticColors.elevation.secondary_normal
-              }
-            />
+            <View style={{ alignItems: "center", justifyContent: "center", backgroundColor: focused ? "#FFF4D3" : "#fff", padding: 8, borderRadius: 100 }}>
+              <Notification size={28} variant="Bold" color={focused ? Colors.primary_500 : SemanticColors.elevation.secondary_normal} />
+            </View>
           ),
         }}
         component={Screens.NotificationsScreen}
@@ -154,17 +113,15 @@ export const BottomNavStackNavigator = () => {
         name="Profile"
         options={{
           headerShown: true,
-          headerTitle: "Perfil",
+          headerTitle: "Perfil de usuario",
+          headerTitleStyle: {
+            color: Colors.gray_400,
+            fontFamily: "Sora-SemiBold",
+          },
           tabBarIcon: ({ focused }) => (
-            <UserOctagon
-              variant="Bold"
-              size={28}
-              color={
-                focused
-                  ? SemanticColors.bg.primary_active
-                  : SemanticColors.elevation.secondary_normal
-              }
-            />
+            <View style={{ alignItems: "center", justifyContent: "center", backgroundColor: focused ? "#FFF4D3" : "#fff", padding: 8, borderRadius: 100 }}>
+              <UserOctagon variant="Bold" size={28} color={focused ? Colors.primary_500 : SemanticColors.elevation.secondary_normal} />
+            </View>
           ),
         }}
         component={Screens.ProfileScreen}

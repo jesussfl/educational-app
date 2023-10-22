@@ -29,9 +29,11 @@ const Lessons = ({ lessons, lessonsCompleted, handlePresentModalPress, setLesson
             source = Image.resolveAssetSource(LockedGift).uri;
           }
           return (
-            <TouchableWithoutFeedback key={lesson.id} onPress={() => setLessonType("gift")}>
-              <Image source={{ uri: source }} style={styles.giftImage} />
-            </TouchableWithoutFeedback>
+            <Animatable.View key={lesson.id} animation="pulse" easing="ease-out" iterationCount="infinite">
+              <TouchableWithoutFeedback onPress={() => setLessonType("gift")}>
+                <Image source={{ uri: source }} style={styles.giftImage} />
+              </TouchableWithoutFeedback>
+            </Animatable.View>
           );
         }
 
@@ -94,6 +96,7 @@ function UnlockedLesson({ index, handlePresentModalPress, setLessonId, lesson, s
         <Line x1="55%" y1="0" x2="55%" y2="100%" stroke={Colors.gray_50} strokeWidth="80" />
         <Line x1="55%" y1="0" x2="55%" y2="100%" stroke={Colors.gray_200} strokeWidth="15" />
       </Svg>
+
       <Animatable.View animation="pulse" easing="ease-out" iterationCount="infinite">
         <View style={styles.unlockedLessonContainer}>
           <LessonButton

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { ScrollView, View, RefreshControl, StyleSheet } from "react-native";
+import { ScrollView, View, RefreshControl, StyleSheet, Image } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay";
 import useWorldData from "../hooks/useWorldData";
 import Lessons from "./Lessons";
@@ -74,6 +74,7 @@ const WorldSections = ({ handlePresentModalPress, setLessonId, setLessonType, se
             </View>
           );
         })}
+        <Image style={styles.image} source={require("../../../../assets/61844.jpg")}></Image>
       </View>
     </ScrollView>
   );
@@ -83,6 +84,16 @@ const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
   },
+  image: {
+    width: "100%",
+    height: "120%",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    zIndex: -1,
+    resizeMode: "repeat",
+    opacity: 0.4,
+  },
   sectionsContainer: {
     flexDirection: "column-reverse",
     paddingBottom: 48,
@@ -91,6 +102,7 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 24,
     marginVertical: 24,
+
     alignItems: "center",
   },
 });
