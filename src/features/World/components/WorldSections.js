@@ -10,7 +10,7 @@ const sectionColors = [Colors.primary_500, "#12B76A", "#9A4CFF", "#F1733D"];
 
 const WorldSections = ({ handlePresentModalPress, setLessonId, setLessonType, setIsLessonCompleted }) => {
   const { isLoading, sections, lessonsCompleted, sectionsCompleted, completedLessonIds, refreshData } = useWorldData();
-
+  console.log(isLoading);
   const [refreshing, setRefreshing] = useState(false);
   const scrollViewRef = useRef(null);
 

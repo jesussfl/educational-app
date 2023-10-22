@@ -17,6 +17,7 @@ const TextField = ({
    onFocus,
    ref,
    defaultValue,
+   isError = "",
 }) => {
    const [secureText, setSecureText] = useState(secureTextEntry);
    return (
@@ -27,9 +28,10 @@ const TextField = ({
             control={control}
             name={name}
             rules={rules}
+        
             render={({ field: { value, onChange, onBlur }, fieldState: { error } }) => (
                <>
-                  <View style={[styles.inputContainer, { borderColor: error ? Colors.error_500 : Colors.gray_100 }]}>
+                  <View style={[styles.inputContainer, { borderColor: error || isError  ? Colors.error_500 : Colors.gray_100 }]}>
                      <View style={styles.leftInputContainer}>
                         {leftIcon}
                         <TextInput
@@ -45,11 +47,12 @@ const TextField = ({
                      </View>
                      {secureTextEntry && <ViewPasswordButton isPasswordHided={secureText} onPress={() => setSecureText(!secureText)} />}
                   </View>
-                  {error && (
-                     <Text style={{ color: Colors.error_500, alignSelf: "stretch", fontSize: 12, fontFamily: "Sora-Regular" }}>
-                        {error.message || "Error"}
-                     </Text>
-                  )}
+                  {error || isError ? (
+   <Text style={{ color: Colors.error_500, alignSelf: "stretch", fontSize: 12, fontFamily: "Sora-Regular" }}>
+      {error?.message || isError}
+   </Text>
+) : null}
+
                </>
             )}></Controller>
       </View>

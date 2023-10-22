@@ -2,6 +2,7 @@ import { useState } from "react";
 import { setToken } from "../../../utils/helpers/auth.helpers";
 import { useNavigation } from "@react-navigation/native";
 import { useAuthContext } from "@contexts/auth.context";
+import { CommonActions } from "@react-navigation/native";
 export const useAuthSubmit = ({ isRegister }) => {
   const { setUser } = useAuthContext();
   const navigation = useNavigation();
@@ -30,19 +31,23 @@ export const useAuthSubmit = ({ isRegister }) => {
       });
       const data = await response.json();
       if (data?.error) {
+        setError(data?.error);
         throw data?.error;
       } else {
         setToken(data.jwt);
         setUser(data.user);
         setIsLoading(false);
-
-        navigation.replace("Main", { screen: "Lessons" });
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: "Main" }],
+          })
+        );
       }
     } catch (error) {
       setIsLoading(false);
 
-      setError(error);
-      console.error(error);
+      // console.error(error);
     } finally {
       setIsLoading(false);
     }
