@@ -1,4 +1,5 @@
-export const calculateTimeSpent = (startTime, endTime) => {
+export const calculateTimeSpent = (startTime) => {
+  let endTime = new Date().getTime();
   if (startTime && endTime) {
     const timeDifference = (endTime - startTime) / 1000; // En segundos
     const minutes = Math.floor(timeDifference / 60);
