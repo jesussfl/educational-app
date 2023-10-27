@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { AuthContext } from "@contexts/auth.context";
 import { getToken } from "../../../utils/helpers/auth.helpers";
+import io from "socket.io-client";
 
 /**
  * AuthProvider component provides authentication-related data and functions to its children.
  * It manages user data, loading state, and authentication token.
  *
- * @param {Object} children - The child components to which authentication context is provided.
  */
 const AuthProvider = ({ children }) => {
   // State to store user data
@@ -15,13 +15,10 @@ const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   // State to store authentication token
   const [authToken, setAuthToken] = useState(null);
+  const socket = io("http://172.16.0.2:1337");
 
-  /**
-   * Fetches the user data using the provided token.
-   *
-   * @param {string} token - The authentication token.
-   */
   const fetchLoggedInUser = async (token) => {
+    console.log("fetchLoggedInUser", token);
     setIsLoading(true);
     try {
       const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/users/me`, {
@@ -45,39 +42,30 @@ const AuthProvider = ({ children }) => {
     await fetchLoggedInUser(authToken);
   };
 
-  /**
-   * Sets the user data.
-   *
-   * @param {Object} user - The user data to set.
-   */
-  const handleUser = (user) => {
-    setUserData(user);
-  };
-
   // Load the authentication token when the component mounts
   useEffect(() => {
-    const loadToken = async () => {
-      const authToken = await getToken();
-      if (authToken) {
-        setAuthToken(authToken);
-      }
-    };
-
     loadToken();
+    socket.on("updateLiveBro", (userData) => {
+      console.log(userData, "updateandooo");
+      setUserData((prev) => {
+        return { ...prev, lives: userData.lives };
+      });
+    });
+    console.log(userData);
   }, []);
-
-  // Fetch user data when the authentication token changes
-  useEffect(() => {
+  const loadToken = async () => {
+    const authToken = await getToken();
     if (authToken) {
+      console.log(authToken, "authToken");
+      setAuthToken(authToken);
       fetchLoggedInUser(authToken);
     }
-  }, [authToken]);
-
+  };
   return (
     <AuthContext.Provider
       value={{
         user: userData,
-        setUser: handleUser,
+        setUser,
         isLoading,
         refreshUserData,
       }}

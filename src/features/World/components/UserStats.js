@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Heart, DollarCircle, Flash } from "iconsax-react-native";
+import RemixIcon from "react-native-remix-icon";
 import { Colors } from "@utils/Theme";
 import { useAuthContext } from "@contexts/auth.context";
 
@@ -15,10 +16,11 @@ const UserStats = ({ statusToShow }) => {
     icons = [
       <Heart key="heart" size={24} variant="Bold" color={Colors.error_400} />,
       <DollarCircle key="dollar" size={24} variant="Bold" color={Colors.success_500} />,
+      <RemixIcon key="fire" name="fire-fill" size={24} color={"#E17512"} />,
     ];
 
-    colors = [Colors.error_400, Colors.success_500];
-    values = [user.lives || 0, user.money || 0];
+    colors = [Colors.error_400, Colors.success_500, "#E17512"];
+    values = [user.lives || 0, user.money || 0, user.streak_days || 0];
   } else if (statusToShow === "lives") {
     // Display lives only
     icons = [<Heart key="heart" size={24} variant="Bold" color={Colors.error_400} />];
@@ -29,11 +31,11 @@ const UserStats = ({ statusToShow }) => {
     icons = [<DollarCircle key="dollar" size={24} variant="Bold" color={Colors.success_500} />];
     colors = [Colors.success_500];
     values = [user.money || 0];
-  } else {
+  } else if (statusToShow === "streak") {
     // Display default icon and color for an unknown statusToShow value
-    icons = [<Flash key="flash" size={24} variant="Bold" color={Colors.primary} />];
-    colors = [Colors.primary];
-    values = [0];
+    icons = [<RemixIcon key="fire" name="fire-fill" size={24} color={"#E17512"} />];
+    colors = ["#E17512"];
+    values = [user.streak_days || 0];
   }
 
   return (
@@ -55,13 +57,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "center",
-    gap: 16,
+    gap: 4,
   },
   status: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 4,
+    gap: 2,
     // borderColor: Colors.gray_200,
     // borderWidth: 2,
     padding: 6,

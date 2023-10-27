@@ -4,16 +4,17 @@ import React, { useEffect } from "react";
 import { Button } from "@components";
 import { useNavigation } from "@react-navigation/native";
 import { Colors } from "@utils/Theme";
-import ProgressBar from "../components/ProgressBar";
 import { useCustomMutation } from "@utils/useCustomMutation";
 import { createLessonCompletedMutation } from "@utils/graphql/mutations/lessonsCompleted.mutations";
 import { useAuthContext } from "@contexts/auth.context";
+import useUserStats from "@hooks/useUserStats";
 const CongratsPage = ({ route }) => {
-  const { lessonId, elapsedTime, errorCount, errorExercises } = route.params;
-
-  const { mutate } = useCustomMutation("lessonsCompleted", createLessonCompletedMutation);
   const { user } = useAuthContext();
   const navigation = useNavigation();
+  const { lessonId, elapsedTime, errorCount, errorExercises } = route.params;
+  const { increaseStreak, updateLastCompletedLessonDate } = useUserStats();
+  const { mutate } = useCustomMutation("lessonsCompleted", createLessonCompletedMutation);
+
   useEffect(() => {
     saveProgress();
   }, []);
@@ -29,7 +30,10 @@ const CongratsPage = ({ route }) => {
         errorExercises: errorExercises,
       },
     });
+    updateLastCompletedLessonDate();
+    increaseStreak();
   };
+
   return (
     <>
       <StatusBar style="dark" translucent={true} />
@@ -38,7 +42,6 @@ const CongratsPage = ({ route }) => {
         <View style={styles.textsContainer}>
           <Text style={styles.congratsText}>¡Completaste la lección!</Text>
           <Text style={[styles.congratsText, { fontSize: 18, fontFamily: "Sora-Medium" }]}>¡Lo hiciste muy bien!</Text>
-          {/* <ProgressBar percentage={"100"} /> */}
           <View>
             <Text style={[styles.congratsText, { fontSize: 18, fontFamily: "Sora-Medium" }]}>{elapsedTime}</Text>
           </View>
