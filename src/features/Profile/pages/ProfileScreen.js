@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View, Text, ScrollView } from "react-native";
 import { Button, TextField } from "@components";
 import { removeToken } from "@utils/helpers/auth.helpers";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, CommonActions } from "@react-navigation/native";
 import { useForm } from "react-hook-form";
 import Icon from "react-native-remix-icon";
 import { UserCirlceAdd } from "iconsax-react-native";
@@ -10,12 +10,11 @@ import { Colors } from "@utils/Theme";
 import { emailValidations } from "../../Auth/utils/inputValidations";
 import { useAuthContext } from "@contexts/auth.context";
 import { queryLessonsCompletedByUser } from "@utils/graphql/queries/lessonsCompleted.queries";
-
 import { useQuery } from "@tanstack/react-query";
 import { query } from "@utils/graphql/client/GraphQLCLient";
 const colors = [Colors.primary_500, "#12B76A", "#9A4CFF", "#F1733D"];
 const ProfileScreen = () => {
-  const { user } = useAuthContext();
+  const { user, setUser } = useAuthContext();
   const navigation = useNavigation();
   const { data, isLoading, error } = useQuery([`lessons_completed`, user.id], () =>
     query(queryLessonsCompletedByUser, {
@@ -26,7 +25,13 @@ const ProfileScreen = () => {
   );
   const handleLogout = () => {
     removeToken();
-    navigation.replace("Auth", { screen: "Login" });
+    setUser(undefined);
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: "Auth" }],
+      })
+    );
   };
 
   if (isLoading) {

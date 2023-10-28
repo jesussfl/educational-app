@@ -8,21 +8,21 @@ import AuthStackNavigator from "../Auth/navigation/AuthStack.navigator";
 const Stack = createNativeStackNavigator();
 
 const commonScreenOptions = {
-   gestureEnabled: false,
-   animationTypeForReplace: "pop",
-   animation: "slide_from_right",
-   headerStyle: {
-      backgroundColor: SemanticColors.app.bg_normal,
-   },
-   headerShadowVisible: false,
+  gestureEnabled: false,
+  animationTypeForReplace: "pop",
+  animation: "slide_from_right",
+  headerStyle: {
+    backgroundColor: SemanticColors.app.bg_normal,
+  },
+  headerShadowVisible: false,
 };
 
 export const IntroductoryStackNavigator = () => {
-   return (
-      <Stack.Navigator screenOptions={commonScreenOptions}>
-         <Stack.Screen name="Walkthrough" component={WalkthroughStackNavigator} options={{ headerShown: false }} />
-         <Stack.Screen name="Auth" component={AuthStackNavigator} options={{ headerShown: false }} />
-         <Stack.Screen name="Main" component={BottomNavStackNavigator} options={{ headerShown: false }} />
-      </Stack.Navigator>
-   );
+  return (
+    <Stack.Navigator screenOptions={commonScreenOptions}>
+      <Stack.Screen name="Auth" component={AuthStackNavigator} options={{ headerShown: false }} />
+      <Stack.Screen name="Walkthrough" component={WalkthroughStackNavigator} options={{ headerShown: false }} />
+      <Stack.Screen name="Main" component={BottomNavStackNavigator} options={{ headerShown: false }} />
+    </Stack.Navigator>
+  );
 };

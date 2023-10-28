@@ -14,7 +14,6 @@ const LoginForm = () => {
   const navigation = useNavigation();
   const { isLoading, authSubmit, error } = useAuthSubmit({ isRegister: false });
   const { control, handleSubmit } = useForm();
-  console.log(error);
   return (
     <View style={styles.container}>
       <Spinner visible={isLoading} />
