@@ -12,6 +12,7 @@ import GiftModal from "../components/GiftModal";
 import { useAuthContext } from "@contexts/auth.context";
 import { useCountdownTimer } from "@features/Exercises/hooks";
 const regenerationInterval = 14400000;
+import Spinner from "react-native-loading-spinner-overlay";
 
 const WorldScreen = ({ navigation }) => {
   const { bottomSheetModalRef, snapPoints, handlePresentModalPress, handleSheetChanges } = useBottomSheet();
@@ -19,28 +20,28 @@ const WorldScreen = ({ navigation }) => {
   const [lessonType, setLessonType] = useState(null);
   const [isLessonCompleted, setIsLessonCompleted] = useState(false);
   const { userLives } = useUserStats();
-  const { user, setUser } = useAuthContext();
+  const { user, isLoading } = useAuthContext();
   const { timeRemaining, startCountdownTimer, stopCountdownTimer } = useCountdownTimer();
-
-  // Iniciar el temporizador cuando sea necesario
   useEffect(() => {
-    if (user.lost_life_date) {
-      const lostLifeDate = new Date(user.lost_life_date);
+    if (user && user.next_life_regeneration) {
+      const nextLifeRegenerationTime = new Date(user.next_life_regeneration);
       const now = new Date();
 
-      if (lostLifeDate.getTime() + regenerationInterval < now && user.lives === 6) {
-        // Las vidas ya se han regenerado, no es necesario el temporizador
+      if (nextLifeRegenerationTime < now && user.lives === 6) {
         return;
       }
 
-      const timeDifference = lostLifeDate.getTime() + regenerationInterval - now.getTime();
+      const timeDifference = nextLifeRegenerationTime.getTime() - now.getTime();
       if (timeDifference > 0) {
         startCountdownTimer(() => console.log("Vidas regeneradas"), timeDifference / 1000);
       }
     }
-  }, [user.lost_life_date, user.lives, startCountdownTimer]);
+  }, [user, startCountdownTimer]);
 
   const renderBackdrop = useCallback((props) => <BottomSheetBackdrop {...props} opacity={0.3} disappearsOnIndex={-1} appearsOnIndex={1} />, []);
+  if (isLoading) {
+    return <Spinner visible={isLoading} />;
+  }
   return (
     <>
       <StatusBar style="dark" />

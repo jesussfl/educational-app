@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useAuthContext } from "@contexts/auth.context";
 import { CommonActions } from "@react-navigation/native";
 export const useAuthSubmit = ({ isRegister }) => {
-  const { setUser } = useAuthContext();
+  const { setUser, setAuthToken } = useAuthContext();
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -36,6 +36,7 @@ export const useAuthSubmit = ({ isRegister }) => {
       } else {
         setToken(data.jwt);
         setUser(data.user);
+        setAuthToken(data.jwt);
         setIsLoading(false);
         navigation.dispatch(
           CommonActions.reset({

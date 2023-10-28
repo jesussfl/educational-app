@@ -9,6 +9,8 @@ import { useAuthContext } from "@contexts/auth.context";
 import { useCustomMutation } from "@utils/useCustomMutation";
 import { updateUserMutation } from "@utils/graphql/mutations/user.mutation";
 import { useNavigation } from "@react-navigation/native";
+import Spinner from "react-native-loading-spinner-overlay";
+
 import useWorldData from "../hooks/useWorldData";
 const LevelsScreen = () => {
   const { worldsCompleted, worldData } = useWorldData();
@@ -39,7 +41,7 @@ const LevelsScreen = () => {
   return (
     <ScrollView style={{ padding: 24, gap: 24 }}>
       {isLoading ? (
-        <Text>Cargando...</Text>
+        <Spinner visible={isLoading} />
       ) : (
         data.crefinexWorlds.data.map((world, index) => {
           const isWorldCompleted = worldsCompleted.some((completedWorld) => completedWorld.attributes.world.id === world.id);

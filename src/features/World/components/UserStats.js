@@ -7,7 +7,9 @@ import { useAuthContext } from "@contexts/auth.context";
 
 const UserStats = ({ statusToShow }) => {
   const { user } = useAuthContext();
-
+  if (!user) {
+    return <Text>Cargando...</Text>;
+  }
   // Define the icons and colors based on the statusToShow prop
   let icons, colors, values;
 

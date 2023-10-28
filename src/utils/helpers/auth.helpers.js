@@ -4,7 +4,6 @@ const AUTH_TOKEN = process.env.EXPO_PUBLIC_AUTH_TOKEN;
 export const getToken = async () => {
   try {
     const token = await AsyncStorage.getItem(AUTH_TOKEN);
-    console.log("tokenizacion", token);
     return token;
   } catch (e) {
     console.log(e);

@@ -1,11 +1,22 @@
+import { useEffect } from "react";
 import { useAuthContext } from "@contexts/auth.context";
 import { updateUserMutation } from "@utils/graphql/mutations/user.mutation";
 import { useCustomMutation } from "@utils/useCustomMutation";
+import io from "socket.io-client";
 
+const MAX_LIVES = 6;
+const NEXT_REGENERATION_INTERVAL = 4 * 60 * 60 * 1000;
 const useUserStats = () => {
   const { user, setUser } = useAuthContext();
   const { mutate } = useCustomMutation("user", updateUserMutation);
-
+  useEffect(() => {
+    const socket = io("http://172.16.0.2:1337");
+    socket.on("updateLives", (data) => {
+      updateUser({
+        ...data,
+      });
+    });
+  }, []);
   const restartStreak = () => {
     if (user) {
       mutate(
@@ -92,24 +103,36 @@ const useUserStats = () => {
       date1Clone.getDate() === date2Clone.getDate() && date1Clone.getMonth() === date2Clone.getMonth() && date1Clone.getFullYear() === date2Clone.getFullYear()
     );
   }
+  const setNextDateRegeneration = () => {
+    if (user.lives === MAX_LIVES) {
+      const next_life_regeneration = new Date(new Date().getTime() + NEXT_REGENERATION_INTERVAL);
 
-  const decreaseLives = () => {
-    if (user && user.lives > 0) {
-      mutate(
-        {
-          id: user.id,
-          data: {
-            lives: user.lives - 1,
-          },
+      mutate({
+        id: user.id,
+        data: {
+          next_life_regeneration,
         },
-        {
-          onSuccess: () => {
-            console.log("success");
-          },
-        }
-      );
-      setUser((prev) => {
-        return { ...prev, lives: user.lives - 1 };
+      });
+
+      updateUser({
+        next_life_regeneration,
+      });
+    }
+  };
+  const decreaseLives = () => {
+    setNextDateRegeneration();
+    if (user.lives > 0) {
+      const lives = user.lives - 1;
+
+      mutate({
+        id: user.id,
+        data: {
+          lives,
+        },
+      });
+
+      updateUser({
+        lives,
       });
     }
   };
@@ -132,6 +155,12 @@ const useUserStats = () => {
         return { ...prev, lives: user.lives + quantity };
       });
     }
+  };
+
+  const updateUser = (data) => {
+    setUser((prev) => {
+      return { ...prev, ...data };
+    });
   };
   return {
     userLives: user?.lives,

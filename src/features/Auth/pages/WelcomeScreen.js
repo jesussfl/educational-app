@@ -7,16 +7,17 @@ import { Headings, Button } from "@components";
 
 //Remix Icons
 import Icon from "react-native-remix-icon";
-import { useAuthContext } from "@contexts/auth.context";
 import { StatusBar } from "expo-status-bar";
+import { getToken } from "@utils/helpers/auth.helpers";
 const WelcomeScreen = ({ navigation }) => {
-  const { token } = useAuthContext();
-
   useEffect(() => {
-    if (token) {
-      navigation.replace("Main", { screen: "Lessons" });
-    }
-  }, [token]);
+    const fetchToken = async () => {
+      if (await getToken()) {
+        navigation.replace("Main", { screen: "Lessons" });
+      }
+    };
+    fetchToken();
+  }, []);
 
   return (
     <>
@@ -37,7 +38,7 @@ const WelcomeScreen = ({ navigation }) => {
           />
         </View>
         <View style={{ gap: 16 }}>
-          <Button onPress={() => navigation.navigate("Auth", { screen: "Login" })} variant={"primary"} text="Iniciar Sesión" size="medium" />
+          <Button onPress={() => navigation.navigate("Login")} variant={"primary"} text="Iniciar Sesión" size="medium" />
           <Button variant={"secondary"} text="Crearme una cuenta" onPress={() => navigation.navigate("Signup")} />
         </View>
       </View>

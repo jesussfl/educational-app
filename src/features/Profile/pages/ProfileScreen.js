@@ -14,7 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import { query } from "@utils/graphql/client/GraphQLCLient";
 const colors = [Colors.primary_500, "#12B76A", "#9A4CFF", "#F1733D"];
 const ProfileScreen = () => {
-  const { user, setUser } = useAuthContext();
+  const { user, setUser, setAuthToken } = useAuthContext();
   const navigation = useNavigation();
   const { data, isLoading, error } = useQuery([`lessons_completed`, user.id], () =>
     query(queryLessonsCompletedByUser, {
@@ -23,15 +23,16 @@ const ProfileScreen = () => {
       limit: 100,
     })
   );
-  const handleLogout = () => {
-    removeToken();
-    setUser(undefined);
+  const handleLogout = async () => {
+    await removeToken();
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
         routes: [{ name: "Auth" }],
       })
     );
+    setUser(undefined);
+    setAuthToken(undefined);
   };
 
   if (isLoading) {

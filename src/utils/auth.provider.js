@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { AuthContext } from "@contexts/auth.context";
 import { getToken } from "@utils/helpers/auth.helpers";
-import io from "socket.io-client";
 
 /**
  * AuthProvider component provides authentication-related data and functions to its children.
@@ -12,13 +11,25 @@ const AuthProvider = ({ children }) => {
   // State to store user data
   const [userData, setUserData] = useState();
   // State to track loading state
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   // State to store authentication token
   const [authToken, setAuthToken] = useState(undefined);
-  const socket = io("http://172.16.0.2:1337");
+
+  useEffect(() => {
+    // Load the authentication token when the component mounts
+    const loadToken = async () => {
+      setIsLoading(true);
+      const authToken = await getToken();
+      if (authToken) {
+        setAuthToken(authToken);
+        await fetchLoggedInUser(authToken);
+      }
+      setIsLoading(false);
+    };
+    loadToken();
+  }, []);
 
   const fetchLoggedInUser = async (token) => {
-    console.log("fetchLoggedInUser", token);
     setIsLoading(true);
     try {
       const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/users/me`, {
@@ -42,21 +53,6 @@ const AuthProvider = ({ children }) => {
     await fetchLoggedInUser(authToken);
   };
 
-  // Load the authentication token when the component mounts
-  useEffect(() => {
-    loadToken();
-    socket.on("hello", (data) => {
-      console.log(data);
-    });
-  }, []);
-  const loadToken = async () => {
-    const authToken = await getToken();
-    if (authToken) {
-      console.log(authToken, "authToken");
-      setAuthToken(authToken);
-      fetchLoggedInUser(authToken);
-    }
-  };
   return (
     <AuthContext.Provider
       value={{
@@ -65,6 +61,7 @@ const AuthProvider = ({ children }) => {
         isLoading,
         refreshUserData,
         authToken,
+        setAuthToken,
       }}
     >
       {children}
