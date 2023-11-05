@@ -19,6 +19,8 @@ module.exports = function (api) {
             "@hooks": "./src/hooks",
             "@contexts": "./src/contexts",
             "@features": "./src/features",
+            "@stores": "./src/stores",
+            "@": "./src",
           },
           // extensions: [".ios.js", ".android.js", ".js", ".jsx", ".json", ".tsx", ".ts", ".native.js"],
         },

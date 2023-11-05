@@ -20,9 +20,13 @@ const commonScreenOptions = {
 export const IntroductoryStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={commonScreenOptions}>
-      <Stack.Screen name="Auth" component={AuthStackNavigator} options={{ headerShown: false }} />
-      <Stack.Screen name="Walkthrough" component={WalkthroughStackNavigator} options={{ headerShown: false }} />
-      <Stack.Screen name="Main" component={BottomNavStackNavigator} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="Walkthrough"
+        component={WalkthroughStackNavigator}
+        options={{ headerShown: false, headerTitle: "", animationTypeForReplace: "pop" }}
+      />
+      <Stack.Screen name="Auth" component={AuthStackNavigator} options={{ headerShown: false, headerTitle: "", animationTypeForReplace: "pop" }} />
+      <Stack.Screen name="Main" component={BottomNavStackNavigator} options={{ headerShown: false, headerTitle: "", animationTypeForReplace: "pop" }} />
     </Stack.Navigator>
   );
 };

@@ -156,6 +156,34 @@ const useUserStats = () => {
       });
     }
   };
+  const increaseMoney = (quantity) => {
+    const money = user.money + quantity;
+    if (user) {
+      mutate({
+        id: user.id,
+        data: {
+          money,
+        },
+      });
+      updateUser({
+        money,
+      });
+    }
+  };
+  const decreaseMoney = (quantity) => {
+    const money = user.money - quantity;
+    if (user) {
+      mutate({
+        id: user.id,
+        data: {
+          money,
+        },
+      });
+      updateUser({
+        money,
+      });
+    }
+  };
 
   const updateUser = (data) => {
     setUser((prev) => {
@@ -168,6 +196,8 @@ const useUserStats = () => {
     increaseLives,
     restartStreak,
     increaseStreak,
+    increaseMoney,
+    decreaseMoney,
     updateLastCompletedLessonDate,
   };
 };

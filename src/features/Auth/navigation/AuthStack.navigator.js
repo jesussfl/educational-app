@@ -34,7 +34,7 @@ const RecoverPasswordStackNavigator = () => {
 const AuthStackNavigator = () => {
   return (
     <AuthStack.Navigator screenOptions={{ headerStyle: { backgroundColor: SemanticColors.app.bg_normal } }}>
-      <AuthStack.Screen name="Welcome" component={WelcomeScreen} options={{ headerShown: false }} />
+      <AuthStack.Screen name="Welcome" component={WelcomeScreen} options={{ headerShown: false, headerTitle: "", animationTypeForReplace: "pop" }} />
       <AuthStack.Screen name="Login" component={LoginScreen} options={{ headerShown: false, headerTitle: "", animationTypeForReplace: "pop" }} />
       <AuthStack.Screen name="Signup" component={SignupScreen} options={{ headerShown: false, headerTitle: "", animationTypeForReplace: "pop" }} />
       <AuthStack.Screen name="RecoverPassword" component={RecoverPasswordStackNavigator} options={{ headerShown: false }} />

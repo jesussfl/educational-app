@@ -1,8 +1,35 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@components";
 import { Colors } from "@utils/Theme";
-const GiftModal = ({ cancel, close }) => {
+import useUserStats from "@hooks/useUserStats";
+import { useCustomMutation } from "@utils/useCustomMutation";
+import { createLessonCompletedMutation } from "@utils/graphql/mutations/lessonsCompleted.mutations";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useAuthContext } from "@contexts/auth.context";
+
+const GiftModal = ({ cancel, close, lessonId }) => {
+  const { increaseMoney } = useUserStats();
+  const navigation = useNavigation();
+  const { user } = useAuthContext();
+  const { mutate } = useCustomMutation("lessonsCompleted", createLessonCompletedMutation);
+  useEffect(() => {
+    saveProgress();
+  }, []);
+  const saveProgress = () => {
+    increaseMoney(10);
+    mutate({
+      user: user.id,
+      lesson: lessonId,
+      data: {
+        user: user.id,
+        lesson: lessonId,
+        timeSpent: null,
+        mistakes: 0,
+        errorExercises: null,
+      },
+    });
+  };
   return (
     <View
       style={{

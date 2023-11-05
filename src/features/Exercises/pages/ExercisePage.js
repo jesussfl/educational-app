@@ -2,7 +2,7 @@ import { StyleSheet, View, Text } from "react-native";
 import React from "react";
 import { StatusBar } from "expo-status-bar";
 import { CloseCircle, ArrowRight, TickCircle, InfoCircle, HeartSlash } from "iconsax-react-native";
-import { Colors } from "../../../utils/Theme";
+import { Colors } from "@utils/Theme";
 import Spinner from "react-native-loading-spinner-overlay";
 import ProgressBar from "../components/ProgressBar";
 import { Button } from "@components";
@@ -22,7 +22,6 @@ const ExercisePage = () => {
         <View style={styles.topBar}>
           <CloseCircle size={32} color={Colors.gray_300} onPress={() => setModalVisible(true)} />
           {status.isEmpty ? null : <ProgressBar percentage={`${handler.percentage}%`} />}
-          <UserStats statusToShow={"lives"} />
         </View>
         {status.isEmpty ? <Text>Vacio</Text> : handler.render()}
 
@@ -57,7 +56,8 @@ const ExercisePage = () => {
               <View style={{ height: 10, width: `${(countdown * 100) / initialCountdownValue}%`, backgroundColor: Colors.primary_600 }}></View>
             ) : null}
             <View style={styles.buttonContainer}>
-              <Button text="Pista" variant="secondary" style={{ flex: 0.5 }} />
+              <UserStats statusToShow={"lives"} style={{ transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }] }} />
+
               <Button
                 text="Comprobar"
                 variant="primary"

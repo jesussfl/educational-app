@@ -59,7 +59,8 @@
       "react-native-web": "~0.19.6",
       "react-native-webview": "13.2.2",
       "socket.io": "^4.7.2",
-      "socket.io-client": "^4.7.2"
+      "socket.io-client": "^4.7.2",
+      "zustand": "^4.4.6"
    },
    "devDependencies": {
       "@babel/core": "^7.20.0"

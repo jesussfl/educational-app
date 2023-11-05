@@ -8,7 +8,7 @@ import { Colors } from "@utils/Theme";
 
 const sectionColors = [Colors.primary_500, "#12B76A", "#9A4CFF", "#F1733D"];
 
-const WorldSections = ({ handlePresentModalPress, setLessonId, setLessonType, setIsLessonCompleted }) => {
+const WorldSections = () => {
   const { isLoading, sections, lessonsCompleted, sectionsCompleted, completedLessonIds, refreshData } = useWorldData();
   const [refreshing, setRefreshing] = useState(false);
   const scrollViewRef = useRef(null);
@@ -54,15 +54,7 @@ const WorldSections = ({ handlePresentModalPress, setLessonId, setLessonType, se
 
           return (
             <View key={section.id} style={styles.sectionContainer}>
-              <Lessons
-                lessons={lessons}
-                lessonsCompleted={lessonsCompleted}
-                isFirstLessonCurrent={isFirstLessonCurrent}
-                handlePresentModalPress={handlePresentModalPress}
-                setLessonId={setLessonId}
-                setLessonType={setLessonType}
-                setIsLessonCompleted={setIsLessonCompleted}
-              />
+              <Lessons lessons={lessons} lessonsCompleted={lessonsCompleted} isFirstLessonCurrent={isFirstLessonCurrent} />
               <WorldSectionBanner
                 isDisabled={disabled}
                 backgroundColor={randomColor}

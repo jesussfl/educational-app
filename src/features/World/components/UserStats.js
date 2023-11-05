@@ -5,7 +5,7 @@ import RemixIcon from "react-native-remix-icon";
 import { Colors } from "@utils/Theme";
 import { useAuthContext } from "@contexts/auth.context";
 
-const UserStats = ({ statusToShow }) => {
+const UserStats = ({ statusToShow, style = {} }) => {
   const { user } = useAuthContext();
   if (!user) {
     return <Text>Cargando...</Text>;
@@ -41,7 +41,7 @@ const UserStats = ({ statusToShow }) => {
   }
 
   return (
-    <View style={styles.statusContainer}>
+    <View style={[styles.statusContainer, style]}>
       {icons.map((icon, index) => (
         <View style={styles.status} key={index}>
           {icon}

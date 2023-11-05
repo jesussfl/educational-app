@@ -12,7 +12,7 @@ const CongratsPage = ({ route }) => {
   const { user } = useAuthContext();
   const navigation = useNavigation();
   const { lessonId, elapsedTime, errorCount, errorExercises } = route.params;
-  const { increaseStreak, updateLastCompletedLessonDate } = useUserStats();
+  const { increaseStreak, updateLastCompletedLessonDate, decreaseMoney } = useUserStats();
   const { mutate } = useCustomMutation("lessonsCompleted", createLessonCompletedMutation);
 
   useEffect(() => {
@@ -32,6 +32,7 @@ const CongratsPage = ({ route }) => {
     });
     updateLastCompletedLessonDate();
     increaseStreak();
+    decreaseMoney(10);
   };
 
   return (

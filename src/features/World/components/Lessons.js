@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Image, Text, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import { LessonButton, Button } from "@components";
-import { Colors } from "../../../utils/Theme";
+import { Colors } from "@utils/Theme";
 import { Key } from "iconsax-react-native";
 import { calculateLeftPosition } from "../utils/calculateLessonsPosition";
 import * as Animatable from "react-native-animatable";
@@ -9,9 +9,12 @@ import { Svg, Line } from "react-native-svg";
 import CompletedGift from "../../../../assets/giftCompleted.png";
 import UnlockedGift from "../../../../assets/giftUnlocked.png";
 import LockedGift from "../../../../assets/Gift.png";
+import { useLessonModal } from "@stores/lesson-modal";
 import { findFirstUnlockedLessonIndex, checkIfLessonCompleted, checkIfLessonLocked, checkIfLessonUnlocked } from "../utils/renderLessons.helper";
-const Lessons = ({ lessons, lessonsCompleted, handlePresentModalPress, setLessonId, isFirstLessonCurrent, setLessonType, setIsLessonCompleted }) => {
+const Lessons = ({ lessons, lessonsCompleted, isFirstLessonCurrent }) => {
   const firstUnlockedLessonIndex = findFirstUnlockedLessonIndex(lessons, lessonsCompleted);
+  const { addLessonId, addLessonStatus, onOpen } = useLessonModal((state) => state);
+
   return (
     <View style={styles.container}>
       {lessons.map((lesson, index) => {
@@ -19,6 +22,7 @@ const Lessons = ({ lessons, lessonsCompleted, handlePresentModalPress, setLesson
         const isLessonUnlocked = checkIfLessonUnlocked(index, firstUnlockedLessonIndex, isFirstLessonCurrent);
         const isLessonLocked = checkIfLessonLocked(index, firstUnlockedLessonIndex, isLessonCompleted);
         const isLessonAGift = lesson.attributes.type === "gift";
+        const isExam = lesson.attributes.type === "exam";
         if (isLessonAGift) {
           let source;
           if (isLessonCompleted) {
@@ -29,42 +33,51 @@ const Lessons = ({ lessons, lessonsCompleted, handlePresentModalPress, setLesson
             source = Image.resolveAssetSource(LockedGift).uri;
           }
           return (
-            <Animatable.View key={lesson.id} animation="pulse" easing="ease-out" iterationCount="infinite">
-              <TouchableWithoutFeedback onPress={() => setLessonType("gift")}>
-                <Image source={{ uri: source }} style={styles.giftImage} />
-              </TouchableWithoutFeedback>
-            </Animatable.View>
+            <View style={{ alignItems: "center" }} key={lesson.id}>
+              <Svg width="100" height="180" style={{ marginBottom: -36, marginTop: -106 }}>
+                <Line x1="50%" y1="0" x2="50%" y2="100%" stroke={Colors.gray_50} strokeWidth="80" />
+                <Line x1="50%" y1="0" x2="50%" y2="100%" stroke={Colors.gray_200} strokeWidth="15" />
+              </Svg>
+              <Animatable.View animation={isLessonCompleted ? null : "pulse"} easing="ease-out" iterationCount="infinite">
+                <TouchableWithoutFeedback
+                  onPress={() => {
+                    if (isLessonCompleted) {
+                      return;
+                    }
+
+                    addLessonType("gift");
+                    addLessonId(lesson.id);
+                    addLessonStatus("completed");
+                  }}
+                >
+                  <Image source={{ uri: source }} style={styles.giftImage} />
+                </TouchableWithoutFeedback>
+              </Animatable.View>
+            </View>
           );
         }
-
+        if (isExam) {
+          return (
+            <BottomContainer
+              onPress={() => {
+                addLessonType("exam");
+                addLessonId(lesson.id);
+                onOpen();
+              }}
+              key={lesson.id}
+            />
+          );
+        }
         return (
           <View key={lesson.id}>
             {isLessonUnlocked ? (
-              <UnlockedLesson
-                index={index}
-                handlePresentModalPress={handlePresentModalPress}
-                setLessonId={setLessonId}
-                isLessonLocked={isLessonLocked}
-                isLessonCompleted={isLessonCompleted}
-                lesson={lesson}
-                setIsLessonCompleted={setIsLessonCompleted}
-              />
+              <UnlockedLesson index={index} isLessonLocked={isLessonLocked} isLessonCompleted={isLessonCompleted} lesson={lesson} />
             ) : (
-              <LockedOrCompletedLesson
-                index={index}
-                handlePresentModalPress={handlePresentModalPress}
-                setLessonId={setLessonId}
-                isLessonLocked={isLessonLocked}
-                isLessonCompleted={isLessonCompleted}
-                lesson={lesson}
-                setIsLessonCompleted={setIsLessonCompleted}
-              />
+              <LockedOrCompletedLesson index={index} isLessonLocked={isLessonLocked} isLessonCompleted={isLessonCompleted} lesson={lesson} />
             )}
           </View>
         );
       })}
-
-      <BottomContainer />
     </View>
   );
 };
@@ -89,7 +102,9 @@ const styles = StyleSheet.create({
 });
 export default Lessons;
 
-function UnlockedLesson({ index, handlePresentModalPress, setLessonId, lesson, setIsLessonCompleted }) {
+function UnlockedLesson({ index, lesson }) {
+  const { addLessonId, onOpen } = useLessonModal((state) => state);
+
   return (
     <>
       <Svg width="100" height="180" style={{ marginBottom: -36, marginTop: -106 }}>
@@ -102,9 +117,8 @@ function UnlockedLesson({ index, handlePresentModalPress, setLessonId, lesson, s
           <LessonButton
             left={calculateLeftPosition(index)}
             onPress={() => {
-              handlePresentModalPress(lesson.id);
-              setLessonId(lesson.id);
-              setIsLessonCompleted(false);
+              addLessonId(lesson.id);
+              onOpen();
             }}
             scale={0.9}
           />
@@ -114,7 +128,9 @@ function UnlockedLesson({ index, handlePresentModalPress, setLessonId, lesson, s
   );
 }
 
-function LockedOrCompletedLesson({ index, handlePresentModalPress, setLessonId, isLessonLocked, isLessonCompleted, lesson, setIsLessonCompleted }) {
+function LockedOrCompletedLesson({ index, isLessonLocked, isLessonCompleted, lesson }) {
+  const { addLessonId, addLessonStatus, onOpen } = useLessonModal((state) => state);
+
   return (
     <>
       <Svg width="100" height="160" style={{ marginBottom: -36, marginTop: -106 }}>
@@ -127,9 +143,9 @@ function LockedOrCompletedLesson({ index, handlePresentModalPress, setLessonId, 
         left={calculateLeftPosition(index)}
         onPress={() => {
           if (!isLessonLocked) {
-            handlePresentModalPress(lesson.id);
-            setLessonId(lesson.id);
-            setIsLessonCompleted(true);
+            addLessonId(lesson.id);
+            addLessonStatus("completed");
+            onOpen();
           }
         }}
         scale={isLessonCompleted ? 0.96 : 0.9}
@@ -138,11 +154,11 @@ function LockedOrCompletedLesson({ index, handlePresentModalPress, setLessonId, 
   );
 }
 
-function BottomContainer() {
+function BottomContainer({ onPress }) {
   return (
     <View style={styles.bottomContainer}>
       <Image source={require("../../../../assets/Door.png")} style={styles.image} />
-      <Button text="Siguiente Sección" variant="secondary" rightIcon={<Key size={20} variant="Bold" color={Colors.gray_300} />} />
+      <Button text="Siguiente Sección" variant="secondary" rightIcon={<Key size={20} variant="Bold" color={Colors.gray_300} />} onPress={onPress} />
     </View>
   );
 }

@@ -8,17 +8,7 @@ import { Headings, Button } from "@components";
 //Remix Icons
 import Icon from "react-native-remix-icon";
 import { StatusBar } from "expo-status-bar";
-import { getToken } from "@utils/helpers/auth.helpers";
 const WelcomeScreen = ({ navigation }) => {
-  useEffect(() => {
-    const fetchToken = async () => {
-      if (await getToken()) {
-        navigation.replace("Main", { screen: "Lessons" });
-      }
-    };
-    fetchToken();
-  }, []);
-
   return (
     <>
       <StatusBar style="dark" translucent={true} />
