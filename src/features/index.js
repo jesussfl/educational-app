@@ -11,4 +11,4 @@ export { default as Walkthrough3 } from "./Walkthrough/pages/Walkthrough3";
 export { default as ProfileScreen } from "./Profile/pages/ProfileScreen";
 export { default as NotificationsScreen } from "./Notifications/NotificationsScreen";
 export { default as ReviewsScreen } from "./Reviews/pages/Reviews";
-export { default as LevelsScreen } from "./World/pages/LevelsScreen";
+export { default as LevelsScreen } from "./World/pages/levels-screen";

@@ -5,6 +5,7 @@ import { Home, Weight, Signpost, Notification, UserOctagon } from "iconsax-react
 
 import { SemanticColors, Colors } from "@utils/Theme";
 import * as Screens from "../index";
+import StoreScreen from "@features/Store/pages/store-screen";
 import { getFocusedRouteNameFromRoute, useNavigation } from "@react-navigation/native";
 import WorldStackNavigator from "../World/navigation/WorldStack.navigator";
 const BottomNavStack = createBottomTabNavigator();
@@ -61,15 +62,22 @@ export const BottomNavStackNavigator = () => {
       />
 
       <BottomNavStack.Screen
-        name="Reviews"
+        name="Store"
         options={{
+          headerShown: true,
+          headerTitle: "Tienda",
+          headerTitleStyle: {
+            color: Colors.gray_400,
+            fontFamily: "Sora-SemiBold",
+            fontSize: 18,
+          },
           tabBarIcon: ({ focused }) => (
             <View style={{ alignItems: "center", justifyContent: "center", backgroundColor: focused ? "#FFF4D3" : "#fff", padding: 8, borderRadius: 100 }}>
               <Weight size={28} variant="Bold" color={focused ? Colors.primary_500 : SemanticColors.elevation.secondary_normal} />
             </View>
           ),
         }}
-        component={Screens.ReviewsScreen}
+        component={StoreScreen}
       />
 
       <BottomNavStack.Screen
@@ -112,7 +120,7 @@ export const BottomNavStackNavigator = () => {
       <BottomNavStack.Screen
         name="Profile"
         options={{
-          headerShown: true,
+          headerShown: false,
           headerTitle: "Perfil de usuario",
           headerTitleStyle: {
             color: Colors.gray_400,

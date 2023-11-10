@@ -1,6 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import WorldScreen from "../pages/WorldScreen";
+import WorldScreen from "../pages/lessons-screen";
 
 import ExerciseScreen from "../../Exercises/pages/ExercisePage";
 const WorldStack = createStackNavigator();
@@ -8,7 +8,7 @@ import { Colors } from "@utils/Theme";
 
 import UserStats from "../components/UserStats";
 import CongratsPage from "../../Exercises/pages/CongratsPage";
-import TheoryScreen from "../pages/TheoryScreen";
+import TheoryScreen from "../pages/theory-screen";
 const WorldStackNavigator = () => {
   return (
     <WorldStack.Navigator initialRouteName="World">
