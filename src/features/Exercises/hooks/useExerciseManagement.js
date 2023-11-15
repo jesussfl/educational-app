@@ -1,5 +1,5 @@
 // Import necessary dependencies
-import { useEffect, useReducer } from "react";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRoute, useNavigation } from "@react-navigation/native";
 
@@ -8,20 +8,31 @@ import useUserStats from "@hooks/useUserStats";
 import { calculateTimeSpent, exercisesChecker } from "../helpers";
 
 import { SimpleSelectionExercise, CompletionExercise } from "../components";
+import TheoryExercise from "../components/theory-exercise";
 import { useCountdownTimer, useExerciseSound } from "../hooks";
-import { initialState, exerciseReducer, exerciseTypes } from "../redux/reducers/exerciseReducer";
-
+import { useExercises } from "@stores/exercises";
 const initialCountdownValue = 10;
+const EXERCISE_TYPES = {
+  simpleSelection: (content, key) => {
+    return <SimpleSelectionExercise content={content} key={key} />;
+  },
+  completion: (content, key) => {
+    return <CompletionExercise content={content} key={key} />;
+  },
+  theory: (content, key) => {
+    return <TheoryExercise content={content} key={key} />;
+  },
+};
 
 export default useExerciseManagement = () => {
-  const [state, dispatch] = useReducer(exerciseReducer, initialState);
+  const state = useExercises((state) => state);
   const route = useRoute();
   const navigation = useNavigation();
   const { playSound } = useExerciseSound();
   const { userLives, decreaseLives } = useUserStats();
   const { timeRemaining, startCountdownTimer, stopCountdownTimer, isCountdownActive } = useCountdownTimer();
 
-  const { data, isLoading, error } = useQuery([`exercises${route.params.lessonId}`], () =>
+  const { data, isLoading, error } = useQuery([`exercises-${route.params.lessonId}`], () =>
     query(queryExercisesByLessonId, {
       id: route.params.lessonId,
       start: 1,
@@ -43,42 +54,45 @@ export default useExerciseManagement = () => {
 
   function handleExerciseStart() {
     const isFirstExercise = state.currentExerciseIndex === 0;
+
     if (isFirstExercise) {
-      dispatch({ type: exerciseTypes.SET_START_TIME });
-      dispatch({ type: exerciseTypes.SET_EXERCISES, payload: exercises });
-      dispatch({ type: exerciseTypes.SET_CURRENT_EXERCISE, payload: data?.exercisesByLesson.exercises[0] });
+      state.setStartTime();
     }
   }
   function handleExerciseEnd() {
     const isLastExercise = state.currentExerciseIndex > exercises.length - 1;
+
     if (isLastExercise && !isLoading) {
-      dispatch({ type: exerciseTypes.SET_END_TIME });
       navigation.replace("Congrats", {
         lessonId: route.params.lessonId,
         elapsedTime: calculateTimeSpent(state.startTime),
         errorCount: state.mistakes.length,
         errorExercises: state.mistakes,
       });
+
+      state.reset();
     }
   }
 
   function handleExerciseType() {
+    state.setCurrentExerciseType(currentExercise?.attributes.type);
     if (currentExercise && currentExercise.attributes.type === "completion") {
-      dispatch({ type: exerciseTypes.SET_USER_ANSWER, payload: [] });
+      state.setUserAnswer([]);
     } else {
-      dispatch({ type: exerciseTypes.SET_USER_ANSWER, payload: null });
+      state.setUserAnswer(null);
     }
-    if (currentExercise && currentExercise.attributes.type !== "completion") {
+    if (currentExercise && currentExercise.attributes.type === "simpleSelection") {
       startCountdownTimer(() => {
         punishUser();
       }, initialCountdownValue);
     }
-    dispatch({ type: exerciseTypes.SET_IS_ANSWER_CORRECT, payload: null });
+    state.setIsAnswerCorrect(null);
   }
 
   function handleUserLives() {
     if (userLives <= 0) {
       navigation.replace("Main", { screen: "Lessons" });
+      state.reset();
     }
   }
   const checkAnswer = async () => {
@@ -93,14 +107,15 @@ export default useExerciseManagement = () => {
 
     if (isCorrect) {
       await playSound();
-      dispatch({ type: exerciseTypes.SET_IS_ANSWER_CORRECT, payload: true });
+      state.setIsAnswerCorrect(true);
     } else {
       punishUser();
     }
   };
   const punishUser = () => {
-    dispatch({ type: exerciseTypes.SET_IS_ANSWER_CORRECT, payload: false });
-    dispatch({ type: exerciseTypes.SET_MISTAKES, payload: currentExercise.id });
+    state.setIsAnswerCorrect(false);
+    state.setMistakes(currentExercise.id);
+
     decreaseLives();
   };
   const renderExercise = () => {
@@ -108,23 +123,9 @@ export default useExerciseManagement = () => {
       return;
     }
 
-    return currentExercise.attributes.type === "simpleSelection" ? (
-      <SimpleSelectionExercise
-        content={parseExerciseContent(currentExercise)}
-        setUserAnswer={(value) => dispatch({ type: exerciseTypes.SET_USER_ANSWER, payload: value })}
-        userAnswer={state.userAnswer}
-        isAnswerCorrect={state.isAnswerCorrect}
-        key={state.currentExerciseIndex}
-      />
-    ) : (
-      <CompletionExercise
-        content={parseExerciseContent(currentExercise)}
-        setUserAnswer={(value) => dispatch({ type: exerciseTypes.SET_USER_ANSWER, payload: value })}
-        userAnswer={state.userAnswer}
-        isAnswerCorrect={state.isAnswerCorrect}
-        key={state.currentExerciseIndex}
-      />
-    );
+    const exerciseType = currentExercise.attributes.type;
+
+    return EXERCISE_TYPES[exerciseType](parseExerciseContent(currentExercise), currentExercise.id);
   };
 
   const parseExerciseContent = (exercise) => {
@@ -137,20 +138,19 @@ export default useExerciseManagement = () => {
       error,
     },
     handler: {
-      next: () => dispatch({ type: exerciseTypes.NEXT_EXERCISE }),
-      close: () => navigation.goBack(),
+      close: () => {
+        navigation.goBack();
+        state.reset();
+      },
+      next: () => {
+        state.nextExercise();
+      },
       render: renderExercise,
-      currentExercise: state.currentExerciseIndex,
+
       percentage: ((state.currentExerciseIndex + 1) * 100) / exercises.length,
     },
-    answer: {
-      userAnswer: state.userAnswer,
-      isCorrect: state.isAnswerCorrect,
-      setUserAnswer: (value) => dispatch({ type: exerciseTypes.SET_USER_ANSWER, payload: value }),
-      check: checkAnswer,
-      setIsAnswerCorrect: (value) => dispatch({ type: exerciseTypes.SET_IS_ANSWER_CORRECT, payload: value }),
-    },
-    countdown: timeRemaining,
+    checkAnswer,
+    timeRemaining,
     isCountdownActive,
     initialCountdownValue,
   };

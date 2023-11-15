@@ -4,8 +4,10 @@ import { Colors } from "@utils/Theme";
 import CompletionText from "./CompletionText";
 import WordSelection from "./WordSelection";
 import * as Animatable from "react-native-animatable";
+import { useExercises } from "@stores/exercises";
 // The Completion component accepts props 'content', 'setUserAnswer', and 'userAnswer'.
-const CompletionExercise = ({ content, setUserAnswer, userAnswer }) => {
+const CompletionExercise = ({ content }) => {
+  const { setUserAnswer, userAnswer } = useExercises((state) => state);
   // Initialize a word counter.
   let wordCounter = 0;
 

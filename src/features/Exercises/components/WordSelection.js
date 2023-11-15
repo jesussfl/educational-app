@@ -1,7 +1,9 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Button } from "@components";
-const WordSelection = ({ combinedWords, handleSelectedWords, userAnswer }) => {
+import { useExercises } from "@stores/exercises";
+const WordSelection = ({ combinedWords, handleSelectedWords }) => {
+  const { userAnswer } = useExercises((state) => state);
   return (
     <View style={styles.wordsContainer}>
       {combinedWords.map((word, index) => (

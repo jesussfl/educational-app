@@ -1,4 +1,4 @@
-import CompletionExercise from "./CompletionExercise";
-import SimpleSelectionExercise from "./SimpleSelectionExercise";
+import CompletionExercise from "./completion-exercise";
+import SimpleSelectionExercise from "./simple-selection-exercise";
 
 export { CompletionExercise, SimpleSelectionExercise };

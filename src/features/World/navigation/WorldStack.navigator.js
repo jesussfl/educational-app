@@ -2,7 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import WorldScreen from "../pages/lessons-screen";
 
-import ExerciseScreen from "../../Exercises/pages/ExercisePage";
+import ExerciseScreen from "../../Exercises/pages/exercise-screen";
 const WorldStack = createStackNavigator();
 import { Colors } from "@utils/Theme";
 
