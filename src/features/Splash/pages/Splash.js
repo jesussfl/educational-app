@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Animated, StyleSheet } from "react-native";
 import { SemanticColors } from "@utils/Theme";
-
+import { useAuthContext } from "@contexts/auth.context";
 export function WithSplashScreen({ children, isAppReady }) {
   return (
     <>
@@ -19,6 +19,7 @@ const FADE_OUT = "Fade out";
 const HIDDEN = "Hidden";
 
 export function Splash({ isAppReady }) {
+  const { user, isLoading } = useAuthContext();
   const containerOpacity = useRef(new Animated.Value(1)).current;
   const imageOpacity = useRef(new Animated.Value(0)).current;
 
@@ -38,7 +39,7 @@ export function Splash({ isAppReady }) {
 
   useEffect(() => {
     if (state === WAIT_FOR_APP_TO_BE_READY) {
-      if (isAppReady) {
+      if (isAppReady && !isLoading) {
         setState(FADE_OUT);
       }
     }

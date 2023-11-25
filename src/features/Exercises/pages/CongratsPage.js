@@ -6,19 +6,32 @@ import { useNavigation } from "@react-navigation/native";
 import { Colors } from "@utils/Theme";
 import { useCustomMutation } from "@utils/useCustomMutation";
 import { createLessonCompletedMutation } from "@utils/graphql/mutations/lessonsCompleted.mutations";
+import { createWorldCompletedMutation } from "@utils/graphql/mutations/worldsCompleted.mutation";
 import { useAuthContext } from "@contexts/auth.context";
 import useUserStats from "@hooks/useUserStats";
+import { useLessonModal } from "@stores/lesson-modal";
+
 const CongratsPage = ({ route }) => {
   const { user } = useAuthContext();
   const navigation = useNavigation();
   const { lessonId, elapsedTime, errorCount, errorExercises } = route.params;
+  const { isLastLesson } = useLessonModal((state) => state);
+
   const { increaseStreak, updateLastCompletedLessonDate, decreaseMoney } = useUserStats();
   const { mutate } = useCustomMutation("lessonsCompleted", createLessonCompletedMutation);
-
+  const { mutate: mutateWorld } = useCustomMutation("worldsCompleted", createWorldCompletedMutation);
   useEffect(() => {
     saveProgress();
   }, []);
   const saveProgress = () => {
+    if (isLastLesson) {
+      mutateWorld({
+        data: {
+          user: user.id,
+          world: user.current_world,
+        },
+      });
+    }
     mutate({
       user: user.id,
       lesson: lessonId,

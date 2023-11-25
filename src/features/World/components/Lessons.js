@@ -11,9 +11,9 @@ import UnlockedGift from "../../../../assets/giftUnlocked.png";
 import LockedGift from "../../../../assets/Gift.png";
 import { useLessonModal } from "@stores/lesson-modal";
 import { findFirstUnlockedLessonIndex, checkIfLessonCompleted, checkIfLessonLocked, checkIfLessonUnlocked } from "../utils/renderLessons.helper";
-const Lessons = ({ lessons, lessonsCompleted, isFirstLessonCurrent }) => {
+const Lessons = ({ lessons, lessonsCompleted, isFirstLessonCurrent, isLastSection }) => {
   const firstUnlockedLessonIndex = findFirstUnlockedLessonIndex(lessons, lessonsCompleted);
-  const { addLessonId, addLessonStatus, onOpen } = useLessonModal((state) => state);
+  const { addLessonId, addLessonStatus, onOpen, addIsLastLesson, addLessonType } = useLessonModal((state) => state);
 
   return (
     <View style={styles.container}>
@@ -23,6 +23,7 @@ const Lessons = ({ lessons, lessonsCompleted, isFirstLessonCurrent }) => {
         const isLessonLocked = checkIfLessonLocked(index, firstUnlockedLessonIndex, isLessonCompleted);
         const isLessonAGift = lesson.attributes.type === "gift";
         const isExam = lesson.attributes.type === "exam";
+        const isLastLesson = index === lessons.length - 1 && isLastSection;
         if (isLessonAGift) {
           let source;
           if (isLessonCompleted) {
@@ -62,6 +63,11 @@ const Lessons = ({ lessons, lessonsCompleted, isFirstLessonCurrent }) => {
               onPress={() => {
                 addLessonType("exam");
                 addLessonId(lesson.id);
+                if (isLastLesson) {
+                  addIsLastLesson(true);
+                  console.log("last lesson");
+                }
+
                 onOpen();
               }}
               key={lesson.id}

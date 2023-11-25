@@ -26,11 +26,13 @@ const AuthProvider = ({ children }) => {
       }
       setIsLoading(false);
     };
-    loadToken();
+
+    if (authToken === undefined) {
+      loadToken();
+    }
   }, []);
 
   const fetchLoggedInUser = async (token) => {
-    setIsLoading(true);
     try {
       const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/users/me`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -41,8 +43,6 @@ const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error(error);
       console.error("Error While Getting Logged In User Details");
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -64,7 +64,7 @@ const AuthProvider = ({ children }) => {
         setAuthToken,
       }}
     >
-      {children}
+      {isLoading ? null : children}
     </AuthContext.Provider>
   );
 };

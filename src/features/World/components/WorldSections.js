@@ -1,41 +1,28 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import { ScrollView, View, RefreshControl, StyleSheet, Image } from "react-native";
-import Spinner from "react-native-loading-spinner-overlay";
-import useWorldData from "../hooks/useWorldData";
-import Lessons from "./Lessons";
-import WorldSectionBanner from "./WorldSectionBanner";
 import { Colors } from "@utils/Theme";
-
+import WorldSectionBanner from "./WorldSectionBanner";
+import Spinner from "react-native-loading-spinner-overlay";
+import Lessons from "./Lessons";
+import { useAuthContext } from "@contexts/auth.context";
+import { query } from "@utils/graphql/client/GraphQLCLient";
+import { useQueries } from "@tanstack/react-query";
+import { querySectionsByWorldId } from "@utils/graphql/queries/section.queries";
+import { queryLessonsCompletedByUser } from "@utils/graphql/queries/lessonsCompleted.queries";
 const sectionColors = [Colors.primary_500, "#12B76A", "#9A4CFF", "#F1733D"];
 
-const WorldSections = () => {
-  const { isLoading, sections, lessonsCompleted, sectionsCompleted, completedLessonIds, refreshData } = useWorldData();
-  const [refreshing, setRefreshing] = useState(false);
+const WorldSections = ({ sections, lessonsCompleted }) => {
   const scrollViewRef = useRef(null);
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    refreshData();
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
+  const lessonsCompletedIds = lessonsCompleted.map((lesson) => lesson.attributes.lesson.data.id);
+
+  const checkLastSectionCompleted = (index) => {
+    if (index === 0) {
+      return true;
+    }
+    const lessons = sections[index - 1].attributes.lessons.data;
+    return lessons.every((lesson) => lessonsCompletedIds.includes(lesson.id));
   };
-
-  if (isLoading) {
-    return <Spinner visible={isLoading} />;
-  }
-
-  const isSectionDisabled = (section, index) => {
-    const firstCompletedSectionId = sectionsCompleted[0]?.attributes?.section?.data?.id;
-    return section.id !== firstCompletedSectionId && sectionsCompleted.length === 0 && index !== 0;
-  };
-
-  const areAllPreviousSectionLessonsCompleted = (index) => {
-    if (index === 0) return true; // La primera sección siempre está habilitada
-    const previousSectionLessons = sections[index - 1].attributes.lessons.data;
-    return previousSectionLessons.every((lesson) => completedLessonIds.includes(lesson.id));
-  };
-
   return (
     <ScrollView
       ref={scrollViewRef}
@@ -43,20 +30,18 @@ const WorldSections = () => {
       onContentSizeChange={() => {
         scrollViewRef.current?.scrollToEnd({ animated: false });
       }}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     >
       <View style={styles.sectionsContainer}>
         {sections.map((section, index) => {
           const randomColor = sectionColors[index % sectionColors.length];
-          const disabled = isSectionDisabled(section, index);
-          const isFirstLessonCurrent = areAllPreviousSectionLessonsCompleted(index) || (index === 0 && sectionsCompleted.length === 0);
           const lessons = section.attributes.lessons.data;
-
+          const isFirstLessonCurrent = checkLastSectionCompleted(index) || index === 0;
+          const isLastSection = index === sections.length - 1;
           return (
             <View key={section.id} style={styles.sectionContainer}>
-              <Lessons lessons={lessons} lessonsCompleted={lessonsCompleted} isFirstLessonCurrent={isFirstLessonCurrent} />
+              <Lessons lessons={lessons} lessonsCompleted={lessonsCompleted} isFirstLessonCurrent={isFirstLessonCurrent} isLastSection={isLastSection} />
               <WorldSectionBanner
-                isDisabled={disabled}
+                isDisabled={!checkLastSectionCompleted(index)}
                 backgroundColor={randomColor}
                 description={section.attributes.description}
                 order={section.attributes.order}

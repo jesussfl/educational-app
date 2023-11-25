@@ -6,6 +6,7 @@ const initialState = {
   lessonId: null,
   lessonType: null,
   lessonStatus: null,
+  isLastLesson: false,
 };
 
 export const useLessonModal = create((set) => {
@@ -14,6 +15,9 @@ export const useLessonModal = create((set) => {
 
     onOpen: () => set({ isOpen: true }),
     onClose: () => set({ isOpen: false }),
+
+    addIsLastLesson: (isLastLesson) => set({ isLastLesson }),
+    removeIsLastLesson: () => set({ isLastLesson: false }),
 
     addLessonId: (lessonId) => set({ lessonId }),
     removeLessonId: () => set({ lessonId: null }),
