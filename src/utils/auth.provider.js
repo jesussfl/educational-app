@@ -38,7 +38,6 @@ const AuthProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
-
       setUserData(data);
     } catch (error) {
       console.error(error);

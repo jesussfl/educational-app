@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 const LessonBottomsheet = () => {
   const navigation = useNavigation();
   const { bottomSheetModalRef, snapPoints, handlePresentModalPress } = useBottomSheet();
-  const { isOpen, lessonId, lessonType, lessonStatus, reset } = useLessonModal((state) => state);
+  const { isOpen, lessonId, lessonType, lessonStatus, reset, onClose } = useLessonModal((state) => state);
   const { user } = useAuthContext();
 
   useEffect(() => {
@@ -42,11 +42,7 @@ const LessonBottomsheet = () => {
       enableOverDrag={true}
       enableDismissOnClose={true}
       enablePanDownToClose={true}
-      onClose={() => {
-        if (isOpen) {
-          reset();
-        }
-      }}
+      onClose={onClose}
       backdropComponent={renderBackdrop}
     >
       <View style={styles.mainContainer}>

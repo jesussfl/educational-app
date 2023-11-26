@@ -7,7 +7,8 @@ import { Colors } from "../../utils/Theme";
 import Icon from "react-native-remix-icon";
 import { PlayCircle } from "iconsax-react-native";
 
-const Card = ({ name, description, imgSource, mainAction, isCompleted, isLocked, worldsCompleted, lessons }) => {
+
+const Card = ({ name, description, imgSource, mainAction, isCompleted, isLocked, worldsCompleted }) => {
    return (
       <View
          style={{

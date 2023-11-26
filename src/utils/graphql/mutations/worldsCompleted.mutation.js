@@ -5,6 +5,13 @@ export const createWorldCompletedMutation = gql`
     createCrefinexWorldCompleted(data: $data) {
       data {
         id
+        attributes {
+          world {
+            data {
+              id
+            }
+          }
+        }
       }
     }
   }

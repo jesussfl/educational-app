@@ -8,7 +8,7 @@ import { useLessonModal } from "@stores/lesson-modal";
 import GiftModal from "../components/GiftModal";
 import Spinner from "react-native-loading-spinner-overlay";
 import CountdownBar from "../components/Countdown-bar";
-import WorldSections from "../components/WorldSections";
+import WorldSections from "../components/world-sections";
 import LessonBottomsheet from "../components/Lesson-bottomsheet";
 
 import { query } from "@utils/graphql/client/GraphQLCLient";
