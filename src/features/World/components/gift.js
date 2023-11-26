@@ -9,12 +9,12 @@ import { Colors } from "@utils/Theme";
 import CompletedGift from "../../../../assets/giftCompleted.png";
 import UnlockedGift from "../../../../assets/giftUnlocked.png";
 import LockedGift from "../../../../assets/Gift.png";
-function Gift({ isLessonCompleted, id }) {
+function Gift({ isLessonCompleted, isLocked, id }) {
   const { addLessonId, addLessonStatus, onOpen, addIsLastLesson, addLessonType } = useLessonModal((state) => state);
   let source;
   if (isLessonCompleted) {
     source = Image.resolveAssetSource(CompletedGift).uri;
-  } else if (!isLessonCompleted) {
+  } else if (!isLessonCompleted && !isLocked) {
     source = Image.resolveAssetSource(UnlockedGift).uri;
   } else {
     source = Image.resolveAssetSource(LockedGift).uri;
@@ -33,7 +33,7 @@ function Gift({ isLessonCompleted, id }) {
             addLessonType("gift");
             addLessonId(id);
             addLessonStatus("completed");
-            addIsLastLesson(isLast);
+            addIsLastLesson(false);
           }}
         >
           <Image source={{ uri: source }} style={styles.giftImage} />

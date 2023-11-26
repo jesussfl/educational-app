@@ -40,10 +40,10 @@ const SectionLessons = ({ lessons, completedLessons, firstLessonActive, isLastSe
         const isLast = index === lessons.length - 1 && isLastSection;
 
         if (isLessonAGift) {
-          return <Gift key={lesson.id} isLessonCompleted={isLessonCompleted} id={lesson.id} />;
+          return <Gift key={lesson.id} isLessonCompleted={isLessonCompleted} isLocked={isLessonLocked} id={lesson.id} />;
         }
         if (isExam) {
-          return <Exam key={lesson.id} isLast={isLast} id={lesson.id} />;
+          return <Exam key={lesson.id} isLast={isLast} id={lesson.id} isCompleted={isLessonCompleted} />;
         }
         return (
           <Lesson
