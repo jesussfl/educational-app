@@ -12,6 +12,7 @@ import CardReferrals from "../components/CardReferrals";
 import CardStreak from "../components/CardStreak";
 const colors = [Colors.primary_500, "#12B76A", "#9A4CFF", "#F1733D"];
 const ProfileScreen = () => {
+  console.log("ProfileScreen");
   const { setUser, setAuthToken } = useAuthContext();
   const navigation = useNavigation();
 
