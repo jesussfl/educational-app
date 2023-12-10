@@ -1,7 +1,7 @@
 import React from "react";
+import { View, Text } from "react-native";
 
 import { StatusBar } from "expo-status-bar";
-
 import { useAuthContext } from "@contexts/auth.context";
 import { useLessonModal } from "@stores/lesson-modal";
 
@@ -17,8 +17,15 @@ import { querySectionsByWorldId } from "@utils/graphql/queries/section.queries";
 import { queryLessonsCompletedByUser } from "@utils/graphql/queries/lessonsCompleted.queries";
 const WorldScreen = () => {
   const { lessonId, lessonType, reset } = useLessonModal((state) => state);
-  const { user } = useAuthContext();
+  const { user, error } = useAuthContext();
 
+  if (error) {
+    return (
+      <View>
+        <Text>{error.message}</Text>
+      </View>
+    );
+  }
   const results = useQueries({
     queries: [
       {

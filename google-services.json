@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "639466477825",
+    "project_id": "crefinex-c3a9d",
+    "storage_bucket": "crefinex-c3a9d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:639466477825:android:d061b28aa18ae4a4f5a300",
+        "android_client_info": {
+          "package_name": "dev.jeflr.educationalApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "639466477825-aeg5jj4vq0k9dc207nklp1h33lgm46uf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDc_-oBWvVgKWZ1XsmIFSBg-f7XpZehFMQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "639466477825-4sivbpmtr30pd4f61ckd4g6gphjb10g5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
