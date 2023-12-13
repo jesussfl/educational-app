@@ -8,6 +8,7 @@ import useCustomFonts from "@hooks/customFonts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import AuthProvider from "./src/utils/auth.provider";
+
 const queryClient = new QueryClient();
 WebBrowser.maybeCompleteAuthSession();
 

@@ -23,11 +23,12 @@
          "supportsTablet": true
       },
       "android": {
+         "package": "dev.jeflr.educationalApp",
+         "googleServicesFile": "./google-services.json",
          "adaptiveIcon": {
             "foregroundImage": "./assets/finex-logo.png",
             "backgroundColor": "#ffffff"
-         },
-         "package": "dev.jeflr.educationalApp"
+         }
       },
       "web": {
          "favicon": "./assets/favicon.png"

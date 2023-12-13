@@ -3,7 +3,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const AUTH_TOKEN = process.env.EXPO_PUBLIC_AUTH_TOKEN;
 export const getToken = async () => {
   try {
-    const token = await AsyncStorage.getItem(AUTH_TOKEN);
+    const token = await AsyncStorage.getItem(AUTH_TOKEN, (error, result) => {
+      if (error) {
+        console.log(error);
+      }
+      return result;
+    });
     return token;
   } catch (e) {
     console.log(e);

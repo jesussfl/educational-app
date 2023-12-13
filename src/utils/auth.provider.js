@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { AuthContext } from "@contexts/auth.context";
 import { getToken } from "@utils/helpers/auth.helpers";
-
 /**
  * AuthProvider component provides authentication-related data and functions to its children.
  * It manages user data, loading state, and authentication token.
@@ -14,7 +13,7 @@ const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   // State to store authentication token
   const [authToken, setAuthToken] = useState(undefined);
-
+  const [error, setError] = useState(undefined);
   useEffect(() => {
     // Load the authentication token when the component mounts
     const loadToken = async () => {
@@ -40,8 +39,9 @@ const AuthProvider = ({ children }) => {
       const data = await response.json();
       setUserData(data);
     } catch (error) {
-      console.error(error);
-      console.error("Error While Getting Logged In User Details");
+      console.error("Error While Getting Logged In User Details", error);
+
+      setError(error);
     }
   };
 
@@ -61,6 +61,7 @@ const AuthProvider = ({ children }) => {
         refreshUserData,
         authToken,
         setAuthToken,
+        error,
       }}
     >
       {isLoading ? null : children}

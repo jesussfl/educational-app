@@ -9,6 +9,7 @@ export const useAuthSubmit = ({ isRegister }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const fetchURL = `${process.env.EXPO_PUBLIC_API_URL}/api/auth/local${isRegister ? "/register" : ""}`;
+  console.log(fetchURL);
   const authSubmit = async (values) => {
     try {
       setIsLoading(true);
