@@ -6,7 +6,6 @@ import Gift from "./gift";
 import Exam from "./exam";
 
 const SectionLessons = ({ lessons, completedLessons, firstLessonActive, isLastSection }) => {
-  console.log(firstLessonActive);
   const checkIfLessonCompleted = (lesson) => {
     if (!completedLessons || firstLessonActive) {
       return false;

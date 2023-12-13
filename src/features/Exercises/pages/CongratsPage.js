@@ -25,10 +25,8 @@ const CongratsPage = ({ route }) => {
   }, []);
   const saveProgress = () => {
     //Aveces se guarda y aveces no, solucionar
-    console.log(isLastLesson);
 
     if (isLastLesson) {
-      console.log("guardado");
       mutateWorld({
         data: {
           user: user.id,

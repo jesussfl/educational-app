@@ -6,7 +6,7 @@
       "preview": {
          "env": {
             "EXPO_PUBLIC_API_URL": "https://crefinex-admin-panel-production.up.railway.app",
-            "EXPO_PUBLIC_STRAPI_API_KEY": "Bearer 976f641b63fbe854f39eb415a39a940b278a8189ba7718b2b22cbffeadfe6949868e17f0f86c04d3ccf587f7c6faa687f5c155c46f80f6d200cdc39b688dfad943eb877ce8ab6275f3209e746746abe5e17eb14e3ee8adf67ea2015ac42971188171690219da63a151af6465f0077764b3cc91a3ab0d135d77c048bff1787cdb",
+            "EXPO_PUBLIC_STRAPI_API_KEY": "Bearer 22c9314340b773e1862ef82465d6a8dba2ab050715844ff8a8465ed1911debe6d17b21f010efa4112cabf9689201de79efee8b57e76f46804662642e0b7e93692f4969cccb4adf791577d520591a88cc8eb21bf6a5ac12c249a43d07e5350222bc610045f611dbe17865a409e4bc9070f6ce422511b7b49105e21542ed9470ad",
             "EXPO_PUBLIC_AUTH_TOKEN": "authToken"
          },
          "android": {

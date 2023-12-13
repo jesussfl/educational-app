@@ -5,6 +5,8 @@ export const AuthContext = createContext({
   token: undefined,
   isLoading: false,
   error: undefined,
+  expoPushToken: undefined,
+  setExpoPushToken: () => {},
   setUser: () => {},
   setAuthToken: () => {},
 });

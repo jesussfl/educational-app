@@ -35,7 +35,6 @@ const customStyles = {
   },
 };
 const SectionContentHTML = ({ html }) => {
-  console.log(html);
   return (
     <RenderHTML
       contentWidth={400}

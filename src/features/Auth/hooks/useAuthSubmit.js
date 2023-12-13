@@ -3,13 +3,18 @@ import { setToken } from "../../../utils/helpers/auth.helpers";
 import { useNavigation } from "@react-navigation/native";
 import { useAuthContext } from "@contexts/auth.context";
 import { CommonActions } from "@react-navigation/native";
+import { useCustomMutation } from "@utils/useCustomMutation";
+import { updateUserMutation } from "@utils/graphql/mutations/user.mutation";
+
 export const useAuthSubmit = ({ isRegister }) => {
-  const { setUser, setAuthToken } = useAuthContext();
+  const { setUser, setAuthToken, expoPushToken } = useAuthContext();
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const { mutate } = useCustomMutation("user", updateUserMutation);
+
   const fetchURL = `${process.env.EXPO_PUBLIC_API_URL}/api/auth/local${isRegister ? "/register" : ""}`;
-  console.log(fetchURL);
+  console.log(expoPushToken);
   const authSubmit = async (values) => {
     try {
       setIsLoading(true);
@@ -38,6 +43,17 @@ export const useAuthSubmit = ({ isRegister }) => {
         setToken(data.jwt);
         setUser(data.user);
         setAuthToken(data.jwt);
+
+        mutate({
+          id: data.user.id,
+          data: {
+            expoPushToken: expoPushToken,
+          },
+        });
+        setUser((prev) => {
+          return { ...prev, expoPushToken: expoPushToken };
+        });
+
         setIsLoading(false);
         navigation.dispatch(
           CommonActions.reset({
@@ -48,8 +64,6 @@ export const useAuthSubmit = ({ isRegister }) => {
       }
     } catch (error) {
       setIsLoading(false);
-
-      // console.error(error);
     } finally {
       setIsLoading(false);
     }
