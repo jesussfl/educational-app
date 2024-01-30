@@ -4,7 +4,7 @@ import React, { useRef } from "react";
 import SignupForm from "../components/SignupForm";
 import { Headings } from "@components";
 import { StatusBar } from "expo-status-bar";
-import { SemanticColors, Colors } from "@utils/Theme";
+import { Colors } from "@utils/Theme";
 import { ArrowLeft } from "iconsax-react-native";
 
 const SignupScreen = ({ navigation }) => {

@@ -1,29 +1,89 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { Colors } from "@utils/Theme";
-import { useForm } from "react-hook-form";
-import { emailValidations, loginPasswordValidations, passwordValidations } from "../utils/inputValidations";
-
+import React, { useState, useTransition } from "react";
 //components
+import { StyleSheet, View, Text } from "react-native";
+import { Colors } from "@utils/Theme";
+import { TextField, Button, Headings } from "@components";
 import Icon from "react-native-remix-icon";
-import { TextField, Button } from "@components";
-import { useAuthSubmit } from "../hooks/useAuthSubmit";
 import Spinner from "react-native-loading-spinner-overlay";
+
+//Hooks
+import { useNavigation } from "@react-navigation/native";
+import { useMutation } from "@tanstack/react-query";
+import { useAuthContext } from "@contexts/auth.context";
+import { useForm } from "react-hook-form";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
+//Utils
+import { query } from "@utils/graphql";
+import { loginUserMutation } from "@utils/graphql/mutations/user.mutation";
+import { setToken } from "@utils/helpers/auth.helpers";
+import { handleEmailValidation } from "@utils/helpers/validateEmail";
 const LoginForm = () => {
   const navigation = useNavigation();
-  const { isLoading, authSubmit, error } = useAuthSubmit({ isRegister: false });
-  const { control, handleSubmit } = useForm();
+  const { setUser } = useAuthContext();
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState("");
+  const { mutate: login } = useMutation((data) => query(loginUserMutation, { ...data }));
+  const form = useForm({
+    mode: "onSubmit",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = async (values) => {
+    const input = {
+      identifier: values.email,
+      password: values.password,
+    };
+    startTransition(() => {
+      login(
+        { input },
+        {
+          onSuccess: (data) => {
+            setUser(data.login.user);
+            setToken(data.login.jwt);
+            console.log("Login Successful");
+            navigation.navigate("Main");
+          },
+          onError: (error) => {
+            console.log(error.message);
+            if (error.message.includes("Invalid identifier or password")) {
+              setError("Email o contraseña incorrecta");
+            }
+          },
+        }
+      );
+    });
+  };
+
   return (
-    <View style={styles.container}>
-      <Spinner visible={isLoading} />
+    <KeyboardAwareScrollView style={{ padding: 24 }}>
+      <Spinner visible={isPending} />
       <View>
-        <TextField {...emailValidations} control={control} leftIcon={<Icon name="mail-fill" size="20" color={Colors.gray_300} />} />
+        <Headings title="Inicia Sesión" description="Completa la información para acceder a tu cuenta" />
+
+        {error && <Text style={styles.alertText}>{error}</Text>}
         <TextField
-          {...loginPasswordValidations}
-          control={control}
+          name={"email"}
+          label="Email"
+          type="email"
+          placeholder={"Introduzca su correo"}
+          rules={{ required: "Este campo es obligatorio", validate: handleEmailValidation }}
+          control={form.control}
+          leftIcon={<Icon name="mail-fill" size="20" color={Colors.gray_300} />}
+        />
+        <TextField
+          name={"password"}
+          label="Contraseña"
+          type="password"
+          placeholder={"***********"}
+          rules={{
+            required: "Introduzca su contraseña",
+          }}
+          control={form.control}
           leftIcon={<Icon name="lock-fill" size="20" color={Colors.gray_300} />}
-          isError={error?.status === 400 ? "La contraseña es incorrecta" : ""}
         />
         <Button
           variant={"ghost"}
@@ -34,15 +94,14 @@ const LoginForm = () => {
         />
       </View>
       <View style={{ gap: 16 }}>
-        <Button variant={"primary"} text="Iniciar Sesión" size="medium" onPress={handleSubmit(authSubmit)} />
+        <Button variant={"primary"} disabled={isPending} text="Iniciar Sesión" size="medium" onPress={form.handleSubmit(onSubmit)} />
         <Button variant={"secondary"} text="No tengo una cuenta" size="medium" onPress={() => navigation.replace("Auth", { screen: "Signup" })} />
       </View>
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "space-between", alignSelf: "stretch" },
   alertText: { color: "red", textAlign: "center", marginBottom: 16 },
 });
 

@@ -18,7 +18,6 @@ import { queryLessonsCompletedByUser } from "@utils/graphql/queries/lessonsCompl
 const WorldScreen = () => {
   const { lessonId, lessonType, reset } = useLessonModal((state) => state);
   const { user, error } = useAuthContext();
-
   if (error) {
     return (
       <View>

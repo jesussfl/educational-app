@@ -4,16 +4,30 @@ import { Headings, Button } from "@components";
 import { SemanticColors } from "@utils/Theme";
 import { walkthrough1Texts } from "../utils/walkthroughTexts";
 import { getToken } from "@utils/helpers/auth.helpers";
+import { useAuthContext } from "@contexts/auth.context";
 
 const Walkthrough1 = ({ navigation }) => {
+  const { setUser } = useAuthContext();
   useEffect(() => {
     const fetchToken = async () => {
-      if (await getToken()) {
-        navigation.replace("Main", { screen: "Lessons" });
+      const token = await getToken();
+      if (token) {
+        try {
+          const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/users/me`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const data = await response.json();
+          setUser(data);
+          navigation.replace("Main", { screen: "Lessons" });
+        } catch (error) {
+          console.error("Error While Getting Logged In User Details", error);
+        }
       }
     };
+
     fetchToken();
   }, []);
+
   return (
     <View style={styles.pageContainer}>
       <View style={styles.image}></View>

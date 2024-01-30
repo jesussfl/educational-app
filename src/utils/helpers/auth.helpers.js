@@ -4,6 +4,7 @@ const AUTH_TOKEN = process.env.EXPO_PUBLIC_AUTH_TOKEN;
 export const getToken = async () => {
   try {
     const token = await AsyncStorage.getItem(AUTH_TOKEN, (error, result) => {
+      console.log(token);
       if (error) {
         console.log(error);
       }
