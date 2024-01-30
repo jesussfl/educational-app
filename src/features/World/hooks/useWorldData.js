@@ -1,17 +1,13 @@
-import { useEffect } from "react";
-import { query } from "@utils/graphql/client/GraphQLCLient";
-import { useQueries, useQueryClient } from "@tanstack/react-query"; // Import useQueryClient
-import { querySectionsByWorldId } from "@utils/graphql/queries/section.queries";
+import { useAuthContext } from "@contexts/auth.context";
+import { useQueries } from "@tanstack/react-query";
+import { query } from "@utils/graphql";
 import { queryLessonsCompletedByUser } from "@utils/graphql/queries/lessonsCompleted.queries";
+import { querySectionsByWorldId } from "@utils/graphql/queries/section.queries";
 import { querySectionsCompletedByUser } from "@utils/graphql/queries/sectionsCompleted.queries";
 import { queryWorldsCompletedByUser } from "@utils/graphql/queries/worldsCompleted.queries";
-import { useAuthContext } from "@contexts/auth.context";
-import { useNavigation } from "@react-navigation/native";
 
-const useWorldData = () => {
-  const navigation = useNavigation();
+export const useWorldData = () => {
   const { user, refreshUserData } = useAuthContext();
-  const queryClient = useQueryClient(); // Get the query client
 
   const results = useQueries({
     queries: [
@@ -21,7 +17,7 @@ const useWorldData = () => {
           query(querySectionsByWorldId, {
             id: user.currentWorld,
             start: 1,
-            limit: 10,
+            limit: 100,
           }),
       },
       {
@@ -30,7 +26,7 @@ const useWorldData = () => {
           query(queryLessonsCompletedByUser, {
             id: user.id,
             start: 1,
-            limit: 10,
+            limit: 1000,
           }),
       },
       {
@@ -39,7 +35,7 @@ const useWorldData = () => {
           query(querySectionsCompletedByUser, {
             id: user.id,
             start: 1,
-            limit: 10,
+            limit: 100,
           }),
       },
       // Worlds completed
@@ -49,51 +45,19 @@ const useWorldData = () => {
           query(queryWorldsCompletedByUser, {
             id: user.id,
             start: 1,
-            limit: 10,
+            limit: 100,
           }),
       },
     ],
   });
 
   const isLoading = results.some((result) => result.isLoading);
-  const data = results.reduce((acc, result) => {
-    return {
-      ...acc,
-      ...result.data,
-    };
-  });
-  const worldData = data.data;
-  const lessonsCompleted = data?.lessonsCompletedByUser?.lessonsCompleted;
-  const sectionsCompleted = data?.sectionsCompletedByUser?.sectionsCompleted;
-  const worldsCompleted = data?.worldsCompletedByUser?.worldsCompleted;
-  const worldName = isLoading ? "Cargando..." : worldData.sectionsByWorld.world.name;
+  const error = results.some((result) => result.error);
+  const sections = results[0].data?.sectionsByWorld.sections;
+  const world = results[0].data?.sectionsByWorld.world;
+  const completedLessons = results[1].data?.lessonsCompletedByUser?.lessonsCompleted;
+  const completedSections = results[2].data?.sectionsCompletedByUser?.sectionsCompleted;
+  const completedWorlds = results[3].data?.worldsCompletedByUser?.worldsCompleted;
 
-  useEffect(() => {
-    navigation.setOptions({
-      title: worldName,
-    });
-  }, [worldName]);
-
-  const refreshData = async () => {
-    // Refetch the data for sections and lessons completed
-    await queryClient.invalidateQueries(["sections", user.currentWorld]);
-    await queryClient.invalidateQueries(["lessons_completed"]);
-    await queryClient.invalidateQueries(["sections_completed"]);
-    await queryClient.invalidateQueries(["worlds_completed"]);
-    await queryClient.invalidateQueries(["user"]);
-    refreshUserData();
-  };
-  const completedLessonIds = isLoading ? [] : lessonsCompleted.map((completedLesson) => completedLesson.attributes.lesson.data.id);
-  const sections = isLoading ? [] : worldData.sectionsByWorld.sections.slice().sort((a, b) => a.attributes.order - b.attributes.order);
-  return {
-    isLoading,
-    lessonsCompleted,
-    sections,
-    sectionsCompleted,
-    worldsCompleted,
-    completedLessonIds,
-    refreshData,
-  };
+  return { isLoading, error, sections, world, completedLessons, completedSections, completedWorlds };
 };
-
-export default useWorldData;

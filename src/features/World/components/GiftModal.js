@@ -7,8 +7,11 @@ import { useCustomMutation } from "@utils/useCustomMutation";
 import { createLessonCompletedMutation } from "@utils/graphql/mutations/lessonsCompleted.mutations";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useAuthContext } from "@contexts/auth.context";
+import { useLessonModal } from "@stores/lesson-modal";
 
-const GiftModal = ({ cancel, close, lessonId }) => {
+const GiftModal = () => {
+  const { lessonId, reset } = useLessonModal((state) => state);
+
   const { increaseMoney } = useUserStats();
   const navigation = useNavigation();
   const { user } = useAuthContext();
@@ -65,7 +68,7 @@ const GiftModal = ({ cancel, close, lessonId }) => {
             gap: 16,
           }}
         >
-          <Button text="Tomar" variant="primary" onPress={close} style={{ flex: 1 }} />
+          <Button text="Tomar" variant="primary" onPress={reset} style={{ flex: 1 }} />
         </View>
       </View>
     </View>

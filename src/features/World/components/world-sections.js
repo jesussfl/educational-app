@@ -7,21 +7,21 @@ import SectionLessons from "./section-lessons";
 
 const sectionColors = [Colors.primary_500, "#12B76A", "#9A4CFF", "#F1733D"];
 
-const WorldSections = ({ sections, lessonsCompleted }) => {
+const WorldSections = ({ sections, completedLessons }) => {
   const scrollViewRef = useRef(null);
 
-  const lessonsCompletedIds = lessonsCompleted.map((lesson) => lesson.attributes.lesson.data.id);
+  const completedLessonsIds = completedLessons.map((lesson) => lesson.attributes.lesson.data.id);
 
-  const checkAllLessonsOfSectionAreLocked = (section) => {
+  const checkIfSectionIsLocked = (section) => {
     const lessons = section.attributes.lessons.data;
-    return lessons.every((lesson) => !lessonsCompletedIds.includes(lesson.id));
+    return lessons.every((lesson) => !completedLessonsIds.includes(lesson.id));
   };
-  const checkLastSectionCompleted = (index) => {
+  const checkIfPrevSectionCompleted = (index) => {
     if (index === 0) {
       return true;
     }
     const lessons = sections[index - 1].attributes.lessons.data;
-    return lessons.every((lesson) => lessonsCompletedIds.includes(lesson.id));
+    return lessons.every((lesson) => completedLessonsIds.includes(lesson.id));
   };
   return (
     <ScrollView
@@ -33,20 +33,25 @@ const WorldSections = ({ sections, lessonsCompleted }) => {
     >
       <View style={styles.sectionsContainer}>
         {sections.map((section, index) => {
-          const randomColor = sectionColors[index % sectionColors.length];
-          const lessons = section.attributes.lessons.data;
+          const color = sectionColors[index % sectionColors.length];
+          const sectionLessons = section.attributes.lessons.data;
 
-          const isSectionLocked = checkAllLessonsOfSectionAreLocked(section);
-          const isPrevSectionCompleted = checkLastSectionCompleted(index);
+          const isSectionLocked = checkIfSectionIsLocked(section);
+          const isPrevSectionCompleted = checkIfPrevSectionCompleted(index);
           const firstLessonActive = isPrevSectionCompleted && isSectionLocked;
 
           const isLastSection = index === sections.length - 1;
           return (
             <View key={section.id} style={styles.sectionContainer}>
-              <SectionLessons lessons={lessons} completedLessons={lessonsCompleted} firstLessonActive={firstLessonActive} isLastSection={isLastSection} />
+              <SectionLessons
+                lessons={sectionLessons}
+                completedLessons={completedLessons}
+                firstLessonActive={firstLessonActive}
+                isLastSection={isLastSection}
+              />
               <WorldSectionBanner
-                isDisabled={!checkLastSectionCompleted(index)}
-                backgroundColor={randomColor}
+                isDisabled={!isPrevSectionCompleted}
+                backgroundColor={color}
                 description={section.attributes.description}
                 order={section.attributes.order}
                 id={section.id}
@@ -54,7 +59,7 @@ const WorldSections = ({ sections, lessonsCompleted }) => {
             </View>
           );
         })}
-        <Image style={styles.image} source={require("../../../../assets/61844.jpg")}></Image>
+        <Image style={styles.image} source={require("../../../../assets/61844.jpg")} />
       </View>
     </ScrollView>
   );
