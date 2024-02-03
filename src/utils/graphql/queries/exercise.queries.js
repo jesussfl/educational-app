@@ -11,7 +11,6 @@ export const queryExercisesByLessonId = gql`
           content
           createdAt
           updatedAt
-          publishedAt
         }
       }
       pagination {

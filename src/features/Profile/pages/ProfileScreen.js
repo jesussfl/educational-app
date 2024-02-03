@@ -13,7 +13,7 @@ import CardStreak from "../components/CardStreak";
 const colors = [Colors.primary_500, "#12B76A", "#9A4CFF", "#F1733D"];
 
 const ProfileScreen = () => {
-  const { setUser, setAuthToken } = useAuthContext();
+  const { setUser, setAuthToken, user } = useAuthContext();
   const navigation = useNavigation();
 
   const handleLogout = async () => {
@@ -30,7 +30,7 @@ const ProfileScreen = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={{ gap: 32 }}>
-        <Avatar />
+        <Avatar email={user.email} username={user.username} />
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 24 }}>
           <Text style={{ fontSize: 18, fontFamily: "Sora-SemiBold", color: "#9A4CFF" }}>Plan Premium</Text>
           <Text style={{ fontSize: 16, fontFamily: "Sora-SemiBold" }}>Vencimiento: </Text>

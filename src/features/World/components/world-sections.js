@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { ScrollView, View, StyleSheet, Image } from "react-native";
+import { ScrollView, View, StyleSheet, Image, Text } from "react-native";
 import { Colors } from "@utils/Theme";
 import WorldSectionBanner from "./WorldSectionBanner";
 
@@ -8,6 +8,7 @@ import SectionLessons from "./section-lessons";
 const sectionColors = [Colors.primary_500, "#12B76A", "#9A4CFF", "#F1733D"];
 
 const WorldSections = ({ sections, completedLessons }) => {
+  const isSectionsEmpty = sections.length === 0;
   const scrollViewRef = useRef(null);
 
   const completedLessonsIds = completedLessons.map((lesson) => lesson.attributes.lesson.data.id);
@@ -23,6 +24,15 @@ const WorldSections = ({ sections, completedLessons }) => {
     const lessons = sections[index - 1].attributes.lessons.data;
     return lessons.every((lesson) => completedLessonsIds.includes(lesson.id));
   };
+
+  if (isSectionsEmpty) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>Este mundo está vacío</Text>
+      </View>
+    );
+  }
+
   return (
     <ScrollView
       ref={scrollViewRef}
@@ -68,6 +78,17 @@ const WorldSections = ({ sections, completedLessons }) => {
 const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  emptyText: {
+    textAlign: "center",
+    fontFamily: "Sora-SemiBold",
+    fontSize: 24,
+    color: Colors.gray_600,
+    lineHeight: 32,
   },
   image: {
     width: "100%",

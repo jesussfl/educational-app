@@ -21,13 +21,15 @@ const CompletionExercise = ({ content }) => {
   };
 
   // Split the completion text using a regular expression to separate words with and without braces.
-  const textParts = content.completionText.split(" ");
+  const textParts = content.completionSentence.split(" ");
 
   // Filter out empty elements from the resulting array.
   const nonEmptyParts = textParts.filter((part) => part.trim() !== "");
 
   // Combine correct and incorrect words into a single array.
-  const allWords = [...content.correctWords, ...content.incorrectWords];
+  const allWords = content.words.map((word) => {
+    return word.name;
+  });
   // Use state to store the shuffled words.
   const [randomWords, setRandomWords] = useState([]);
 

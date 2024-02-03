@@ -11,7 +11,6 @@ export const queryLessonsBySectionId = gql`
           type
           createdAt
           updatedAt
-          publishedAt
           exercises {
             data {
               id

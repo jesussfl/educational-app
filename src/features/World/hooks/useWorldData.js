@@ -4,6 +4,7 @@ import { query } from "@utils/graphql";
 import { queryLessonsCompletedByUser } from "@utils/graphql/queries/lessonsCompleted.queries";
 import { querySectionsByWorldId } from "@utils/graphql/queries/section.queries";
 import { querySectionsCompletedByUser } from "@utils/graphql/queries/sectionsCompleted.queries";
+import { queryWorlds } from "@utils/graphql/queries/world.queries";
 import { queryWorldsCompletedByUser } from "@utils/graphql/queries/worldsCompleted.queries";
 
 export const useWorldData = () => {
@@ -48,6 +49,10 @@ export const useWorldData = () => {
             limit: 100,
           }),
       },
+      {
+        queryKey: ["worlds"],
+        queryFn: () => query(queryWorlds, { start: 1, limit: 10 }),
+      },
     ],
   });
 
@@ -58,6 +63,7 @@ export const useWorldData = () => {
   const completedLessons = results[1].data?.lessonsCompletedByUser?.lessonsCompleted;
   const completedSections = results[2].data?.sectionsCompletedByUser?.sectionsCompleted;
   const completedWorlds = results[3].data?.worldsCompletedByUser?.worldsCompleted;
+  const worlds = results[4].data?.crefinexWorlds.data;
 
-  return { isLoading, error, sections, world, completedLessons, completedSections, completedWorlds };
+  return { isLoading, error, sections, world, completedLessons, completedSections, completedWorlds, worlds };
 };

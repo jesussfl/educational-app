@@ -103,10 +103,6 @@ const SignupForm = ({ currentRef }) => {
           rules={{
             required: "La contraseña es requerida",
             minLength: { value: 6, message: "La contraseña debe tener al menos 6 caracteres" },
-            pattern: {
-              value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/,
-              message: "La contraseña debe tener al menos 6 caracteres, 1 mayúscula, 1 minúscula y 1 número",
-            },
           }}
           secureTextEntry
           onFocus={(event) => scrollToInput(event.target)}

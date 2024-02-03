@@ -22,7 +22,6 @@ export const querySections = gql`
           order
           createdAt
           updatedAt
-          publishedAt
           lessons {
             data {
               id
@@ -63,7 +62,6 @@ export const querySectionsByWorldId = gql`
           order
           createdAt
           updatedAt
-          publishedAt
           lessons {
             data {
               id

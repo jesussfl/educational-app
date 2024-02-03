@@ -11,38 +11,19 @@ import { useCustomMutation } from "@utils/useCustomMutation";
 import { updateUserMutation } from "@utils/graphql/mutations/user.mutation";
 import { useNavigation } from "@react-navigation/native";
 import Spinner from "react-native-loading-spinner-overlay";
+import { useWorldData } from "../hooks/useWorldData";
 
 const LevelsScreen = () => {
   const { setUser, user } = useAuthContext();
   const { mutate } = useCustomMutation("user", updateUserMutation);
   const navigation = useNavigation();
-  const results = useQueries({
-    queries: [
-      {
-        queryKey: ["worlds"],
-        queryFn: () => query(queryWorlds, { start: 1, limit: 10 }),
-      },
-      {
-        queryKey: ["worlds_completed"],
-        queryFn: () =>
-          query(queryWorldsCompletedByUser, {
-            id: user.id,
-            start: 1,
-            limit: 10,
-          }),
-      },
-    ],
-  });
 
-  const isLoading = results.some((result) => result.isLoading);
-
+  const { isLoading, worlds, completedWorlds } = useWorldData();
   if (isLoading) {
     return <Spinner visible={isLoading} />;
   }
 
-  const { crefinexWorlds } = results[0].data;
-  const { worldsCompleted } = results[1].data.worldsCompletedByUser;
-  const worldsCompletedIds = worldsCompleted.length > 0 && worldsCompleted.map((world) => world.attributes.world.data.id);
+  const completedWorldsIds = completedWorlds.length > 0 && completedWorlds.map((world) => world.attributes.world.data.id);
   const updateCurrentWorld = (worldId) => {
     mutate(
       {
@@ -62,25 +43,26 @@ const LevelsScreen = () => {
     });
   };
   const checkLastWorldCompleted = (index) => {
-    const worlds = crefinexWorlds.data.slice(0, index);
-    return worlds.every((world) => worldsCompletedIds.length > 0 && worldsCompletedIds.includes(world.id));
+    const worldsData = worlds.slice(0, index);
+    return worldsData.every((world) => completedWorldsIds.length > 0 && completedWorldsIds.includes(world.id));
   };
+
   return (
     <ScrollView style={{ padding: 24, gap: 24 }}>
-      {crefinexWorlds.data.map((world, index) => {
-        const isWorldCompleted = worldsCompletedIds.length > 0 && worldsCompletedIds.includes(world.id);
+      {worlds.map((world, index) => {
+        const isWorldCompleted = completedWorldsIds.length > 0 && completedWorldsIds.includes(world.id);
         const isPrevWorldCompleted = checkLastWorldCompleted(index);
-
+        console.log(world.attributes.image);
         return (
           <Card
             key={world.id}
             name={world.attributes.name}
             description={world.attributes.description}
-            imgSource={`${process.env.EXPO_PUBLIC_API_URL}${world.attributes.image.data.attributes.formats.thumbnail.url}`}
+            imgSource={`${process.env.EXPO_PUBLIC_API_URL}${world.attributes.image?.data?.attributes?.url}`}
             mainAction={() => updateCurrentWorld(world.id)}
             isCompleted={isWorldCompleted}
             isLocked={isPrevWorldCompleted ? false : !isWorldCompleted}
-            worldsCompleted={worldsCompleted.length}
+            worldsCompleted={completedWorlds.length}
           />
         );
       })}

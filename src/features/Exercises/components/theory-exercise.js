@@ -4,13 +4,13 @@ import React from "react";
 import { useExercises } from "@stores/exercises";
 import SectionContentHTML from "@features/World/components/SectionContentHTML";
 const TheoryExercise = ({ content }) => {
-  const theory = content.content.replace(/http:\/\/localhost:1337/g, process.env.EXPO_PUBLIC_API_URL) || "";
+  const theory = content.theory.replace(/http:\/\/localhost:1337/g, process.env.EXPO_PUBLIC_API_URL) || "";
 
   return (
     <View>
       <ScrollView style={styles.PageContainer}>
         <View style={styles.header}>
-          <Text style={styles.title}>{content.contentTitle}</Text>
+          <Text style={styles.title}>{content.title}</Text>
           <View style={styles.detailsContainer}>
             <Text style={styles.details}>Lee detenidamente</Text>
           </View>
