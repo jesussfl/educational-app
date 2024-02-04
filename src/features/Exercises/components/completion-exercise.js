@@ -12,7 +12,6 @@ const CompletionExercise = ({ content }) => {
   const { setUserAnswer, userAnswer } = useExercises((state) => state);
   // Initialize a word counter.
   let wordCounter = 0;
-  console.log("holaaa");
   // Handle the selection of words by updating the user's answer.
   const handleSelectedWords = React.useCallback(
     (selectedWord) => {

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 const initialState = {
+  exercises: [],
   currentExerciseIndex: 0,
   currentExerciseType: null,
   currentExercise: null,
@@ -15,6 +16,8 @@ export const useExercises = create((set) => ({
   ...initialState,
   nextExercise: () => {
     set((state) => ({
+      isAnswerCorrect: null,
+      userAnswer: [],
       currentExerciseIndex: state.currentExerciseIndex + 1,
     }));
   },
@@ -27,6 +30,9 @@ export const useExercises = create((set) => ({
   setMistakes: (value) => {
     set({ mistakes: value });
   },
+  setExercises: (value) => {
+    set({ exercises: value });
+  },
   setStartTime: () => {
     set({ startTime: new Date().getTime() });
   },
@@ -38,6 +44,11 @@ export const useExercises = create((set) => ({
   },
   setCurrentExerciseType: (value) => {
     set({ currentExerciseType: value });
+  },
+  addNewExercise: (value) => {
+    set((state) => ({
+      exercises: [...state.exercises, value],
+    }));
   },
   reset: () => {
     set(initialState);

@@ -6,9 +6,13 @@ import { Button } from "@components";
 import { StatusBar } from "expo-status-bar";
 import { Colors } from "@utils/Theme";
 import { useExercises } from "@stores/exercises";
-const BottomActions = ({ isCountdownActive, checkAnswer, timeRemaining, initialCountdownValue, handler }) => {
-  const { isAnswerCorrect, nextExercise, userAnswer, currentExerciseType } = useExercises();
-  if (currentExerciseType === "theory") {
+import { useNavigation } from "@react-navigation/native";
+import { calculateTimeSpent } from "../helpers";
+const BottomActions = ({ checkAnswer, isLastExercise, exerciseType, lessonId }) => {
+  const { isAnswerCorrect, nextExercise, userAnswer, startTime, mistakes, reset } = useExercises();
+  const navigation = useNavigation();
+
+  if (exerciseType === "theory") {
     return (
       <>
         <View style={styles.buttonContainer}>
@@ -17,7 +21,7 @@ const BottomActions = ({ isCountdownActive, checkAnswer, timeRemaining, initialC
             variant="primary"
             rightIcon={<ArrowRight size={24} color={"#fff"} variant="Bold" />}
             style={{ flex: 1 }}
-            onPress={handler.next}
+            onPress={nextExercise}
           />
         </View>
       </>
@@ -47,14 +51,26 @@ const BottomActions = ({ isCountdownActive, checkAnswer, timeRemaining, initialC
             text="Continuar"
             variant={isAnswerCorrect ? "success" : "wrong"}
             rightIcon={isAnswerCorrect ? <ArrowRight size={24} color={"#fff"} variant="Bold" /> : <InfoCircle size={24} color={"#fff"} variant="Bold" />}
-            onPress={nextExercise}
+            onPress={
+              !isLastExercise
+                ? nextExercise
+                : () => {
+                    navigation.navigate("Congrats", {
+                      lessonId,
+                      elapsedTime: calculateTimeSpent(startTime),
+                      errorCount: mistakes.length,
+                      errorExercises: mistakes,
+                    });
+                    reset();
+                  }
+            }
           />
         </View>
       ) : (
         <View>
-          {isCountdownActive ? (
+          {/* {isCountdownActive ? (
             <View style={{ height: 10, width: `${(timeRemaining * 100) / initialCountdownValue}%`, backgroundColor: Colors.primary_600 }}></View>
-          ) : null}
+          ) : null} */}
           <View style={styles.buttonContainer}>
             <UserStats statusToShow={"lives"} style={{ transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }] }} />
 
