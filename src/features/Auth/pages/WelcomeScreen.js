@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { View, StyleSheet, Image } from "react-native";
 
 //Components
-import { SemanticColors, Colors } from "@utils/Theme";
+import { Colors } from "@utils/Theme";
 import { Headings, Button } from "@components";
 
 //Remix Icons

@@ -9,7 +9,6 @@ import { queryWorldsCompletedByUser } from "@utils/graphql/queries/worldsComplet
 
 export const useWorldData = () => {
   const { user, refreshUserData } = useAuthContext();
-
   const results = useQueries({
     queries: [
       {

@@ -1,9 +1,11 @@
-import { StyleSheet, View } from "react-native";
 import React from "react";
-import LoginForm from "../components/LoginForm";
-import { SemanticColors, Colors } from "@utils/Theme";
+
+import { StyleSheet, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { ArrowLeft } from "iconsax-react-native";
+import LoginForm from "../components/LoginForm";
+
+import { SemanticColors, Colors } from "@utils/Theme";
 const LoginScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>

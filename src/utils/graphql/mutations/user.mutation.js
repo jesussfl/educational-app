@@ -17,6 +17,20 @@ export const updateUserMutation = gql`
     updateUsersPermissionsUser(id: $id, data: $data) {
       data {
         id
+        attributes {
+          username
+          email
+          blocked
+          currentWorld
+          money
+          lives
+          streak_start_date
+          streak_days
+          last_completed_lesson_date
+          registration_date
+          next_life_regeneration
+          expoPushToken
+        }
       }
     }
   }

@@ -17,8 +17,6 @@ export const isValidEmail = (email) =>
  * @return {boolean | string} - Returns true if the email is valid, otherwise returns an error message.
  */
 export const handleEmailValidation = (email) => {
-  console.log("ValidateEmail was called with", email);
-
   const isValid = isValidEmail(email);
 
   /*This code snippet checks if the validity of an email has changed. 

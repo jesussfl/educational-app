@@ -1,7 +1,7 @@
-import React, { useState, useTransition } from "react";
+import React, { useState } from "react";
 
 // Components
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, ToastAndroid } from "react-native";
 import { Colors } from "@utils/Theme";
 import { TextField } from "@components";
 import { Button } from "@components";
@@ -9,8 +9,8 @@ import Icon from "react-native-remix-icon";
 import Spinner from "react-native-loading-spinner-overlay";
 
 // Hooks
-import { useNavigation } from "@react-navigation/native";
-import { useMutation } from "@tanstack/react-query";
+import { useNavigation, CommonActions } from "@react-navigation/native";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAuthContext } from "@contexts/auth.context";
 import { useForm } from "react-hook-form";
 
@@ -19,44 +19,74 @@ import { handleEmailValidation } from "@utils/helpers/validateEmail";
 import { registerUserMutation } from "@utils/graphql/mutations/user.mutation";
 import { setToken } from "@utils/helpers/auth.helpers";
 import { query } from "@utils/graphql";
+import { queryWorlds } from "@utils/graphql/queries/world.queries";
 const SignupForm = ({ currentRef }) => {
-  const [isPending, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const form = useForm();
   const navigation = useNavigation();
 
   const { setUser } = useAuthContext();
-  const { mutate: register } = useMutation((data) => query(registerUserMutation, { ...data }));
+  const { data: worlds } = useQuery(["worlds"], () => query(queryWorlds, { start: 1, limit: 1 }));
+  const { mutate: register } = useMutation((data) => query(registerUserMutation, data));
+  const currentWorld = worlds?.crefinexWorlds?.data[0].id;
+
   const onSubmit = async (values) => {
+    setError(null);
+    setIsLoading(true);
+
+    if (!currentWorld) {
+      setError("Parece que hubo un problema de conexión, intentalo de nuevo");
+      setIsLoading(false);
+      return;
+    }
+
     const input = {
       username: values.username,
       email: values.email,
       password: values.password,
+      currentWorld: parseInt(currentWorld),
     };
-    startTransition(() => {
-      register(
-        { input },
-        {
-          onSuccess: (data) => {
-            setUser(data.register.user);
-            setToken(data.register.jwt);
-            console.log("Register Successful");
-            navigation.navigate("Main");
-          },
-          onError: (error) => {
-            if (error.message.includes("Email or Username are already taken")) {
-              form.setError("email", {
-                type: "manual",
-                message: "El email o usuario ya existe",
-              });
-              setError("El email o usuario ya existe");
-            }
-            console.log(error.message);
-          },
-        }
-      );
-    });
+
+    register(
+      { input },
+      {
+        onSuccess: (data) => {
+          setToken(data.register.jwt);
+          setUser(data.register.user);
+          ToastAndroid.show("Registro exitoso", ToastAndroid.SHORT);
+          form.reset();
+          setIsLoading(false);
+
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: "Main" }],
+            })
+          );
+        },
+        onError: (error) => {
+          setIsLoading(false);
+          if (error.message.includes("Email or Username are already taken")) {
+            form.setError("email", {
+              type: "manual",
+              message: "El email o usuario ya existe",
+            });
+            setError("El email o usuario ya existe");
+          }
+
+          if (error.message.includes("Aborted")) {
+            setError("Parece que hubo un problema de red");
+            ToastAndroid.show("Parece que hubo un problema de red", ToastAndroid.LONG);
+            return;
+          }
+
+          setError(error.message);
+          console.log(error.message);
+        },
+      }
+    );
   };
   const scrollToInput = (reactNode) => {
     if (currentRef) {
@@ -65,7 +95,7 @@ const SignupForm = ({ currentRef }) => {
   };
   return (
     <View>
-      <Spinner visible={isPending} />
+      <Spinner visible={isLoading} />
 
       <View>
         {error && <Text style={styles.alertText}>{error}</Text>}
@@ -111,15 +141,21 @@ const SignupForm = ({ currentRef }) => {
         />
       </View>
       <View style={styles.bottomActions}>
-        <Button variant={"primary"} text="Crear mi cuenta" size="medium" onPress={form.handleSubmit(onSubmit)} />
-        <Button variant={"secondary"} text="Ya tengo una cuenta" size="medium" onPress={() => navigation.replace("Auth", { screen: "Login" })} />
+        <Button variant={"primary"} disabled={isLoading} text="Crear mi cuenta" size="medium" onPress={form.handleSubmit(onSubmit)} />
+        <Button
+          variant={"secondary"}
+          disabled={isLoading}
+          text="Ya tengo una cuenta"
+          size="medium"
+          onPress={() => navigation.replace("Auth", { screen: "Login" })}
+        />
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  alertText: { color: "red", textAlign: "center", marginBottom: 16 },
+  alertText: { color: Colors.error_400, textAlign: "center", marginBottom: 16, fontFamily: "Sora-SemiBold" },
   bottomActions: { gap: 16, marginTop: 28 },
 });
 
