@@ -22,6 +22,8 @@ const UserStats = ({ statusToShow, style = {} }) => {
     ];
 
     colors = [Colors.error_400, Colors.success_500, "#E17512"];
+    // colors = [Colors.success_500, "#E17512"];
+    // values = [user.money || 0, user.streak_days || 0];
     values = [user.lives || 0, user.money || 0, user.streak_days || 0];
   } else if (statusToShow === "lives") {
     // Display lives only

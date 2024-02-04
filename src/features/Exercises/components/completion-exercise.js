@@ -6,25 +6,43 @@ import WordSelection from "./WordSelection";
 import * as Animatable from "react-native-animatable";
 import { useExercises } from "@stores/exercises";
 // The Completion component accepts props 'content', 'setUserAnswer', and 'userAnswer'.
+const MemoizedWordSelection = React.memo(WordSelection);
+const MemoizedCompletionText = React.memo(CompletionText);
 const CompletionExercise = ({ content }) => {
   const { setUserAnswer, userAnswer } = useExercises((state) => state);
   // Initialize a word counter.
   let wordCounter = 0;
-
+  console.log("holaaa");
   // Handle the selection of words by updating the user's answer.
-  const handleSelectedWords = (selectedWord) => {
-    setUserAnswer([...userAnswer, selectedWord]);
-  };
-  // Remove the last selected word from the user's answer.
-  const removeLastSelectedWord = () => {
+  const handleSelectedWords = React.useCallback(
+    (selectedWord) => {
+      setUserAnswer([...userAnswer, selectedWord]);
+    },
+    [setUserAnswer, userAnswer]
+  );
+
+  const removeLastSelectedWord = React.useCallback(() => {
     setUserAnswer(userAnswer.slice(0, userAnswer.length - 1));
-  };
+  }, [setUserAnswer, userAnswer]);
 
   // Split the completion text using a regular expression to separate words with and without braces.
-  const textParts = content.completionSentence.split(" ");
 
-  // Filter out empty elements from the resulting array.
-  const nonEmptyParts = textParts.filter((part) => part.trim() !== "");
+  // Split the completion text using a regular expression to separate words with and without braces.
+  const textParts = content.completionSentence.split(/\s*({[^}]*})\s*/).filter(Boolean);
+
+  // Function to split words within a sentence
+  const splitWords = (sentence) => sentence.split(/\s+/);
+
+  // Use flatMap to split words within each part of the text
+  const result = textParts.flatMap((part) => {
+    if (part.startsWith("{") && part.endsWith("}")) {
+      // If the part is within braces, return it as is
+      return [part];
+    } else {
+      // If the part is outside braces, split the words
+      return splitWords(part);
+    }
+  });
 
   // Combine correct and incorrect words into a single array.
   const allWords = content.words.map((word) => {
@@ -58,11 +76,11 @@ const CompletionExercise = ({ content }) => {
       {/* Render the CompletionText component */}
       <View style={{ gap: 24 }}>
         <Text style={styles.titleText}>Completa los espacios vacíos</Text>
-        <CompletionText result={nonEmptyParts} userAnswer={userAnswer} wordCounter={wordCounter} removeLastSelectedWord={removeLastSelectedWord} />
+        <MemoizedCompletionText result={result} userAnswer={userAnswer} wordCounter={wordCounter} removeLastSelectedWord={removeLastSelectedWord} />
       </View>
 
       {/* Render the WordSelection component */}
-      <WordSelection combinedWords={randomWords} handleSelectedWords={handleSelectedWords} userAnswer={userAnswer} />
+      <MemoizedWordSelection combinedWords={randomWords} handleSelectedWords={handleSelectedWords} userAnswer={userAnswer} />
     </Animatable.View>
   );
 };

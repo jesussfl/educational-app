@@ -2,40 +2,17 @@ import { StyleSheet, Text, View } from "react-native";
 import React, { useEffect } from "react";
 import { Button } from "@components";
 import { Colors } from "@utils/Theme";
-import useUserStats from "@hooks/useUserStats";
-import { useCustomMutation } from "@utils/useCustomMutation";
-import { createLessonCompletedMutation } from "@utils/graphql/mutations/lessonsCompleted.mutations";
-import { useNavigation, useRoute } from "@react-navigation/native";
+
 import { useAuthContext } from "@contexts/auth.context";
 import { useLessonModal } from "@stores/lesson-modal";
 
-const GiftModal = () => {
-  const { lessonId, reset, lessonType } = useLessonModal((state) => state);
-
-  if (lessonType !== "gift") {
+const LivesModal = () => {
+  const { reset, lessonType } = useLessonModal((state) => state);
+  const { user } = useAuthContext();
+  if (lessonType !== "lives") {
     return null;
   }
 
-  const { increaseMoney } = useUserStats();
-  const { user } = useAuthContext();
-  const { mutate } = useCustomMutation("lessonsCompleted", createLessonCompletedMutation);
-  useEffect(() => {
-    saveProgress();
-  }, []);
-  const saveProgress = () => {
-    increaseMoney(10);
-    mutate({
-      user: user.id,
-      lesson: lessonId,
-      data: {
-        user: user.id,
-        lesson: lessonId,
-        timeSpent: null,
-        mistakes: 0,
-        errorExercises: null,
-      },
-    });
-  };
   return (
     <View
       style={{
@@ -63,8 +40,8 @@ const GiftModal = () => {
           borderColor: Colors.gray_300,
         }}
       >
-        <Text style={styles.modalTitle}>Felicidades, aqui tienes un regalo!</Text>
-        <Text style={styles.modalText}>Obtienes $10 de regalo</Text>
+        <Text style={styles.modalTitle}>Tienes {user.lives} vidas</Text>
+        {/* <Text style={styles.modalText}>Obtienes $10 de regalo</Text> */}
         <View
           style={{
             flexDirection: "row",
@@ -78,7 +55,7 @@ const GiftModal = () => {
   );
 };
 
-export default GiftModal;
+export default LivesModal;
 
 const styles = StyleSheet.create({
   modalTitle: {

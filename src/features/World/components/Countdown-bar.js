@@ -22,6 +22,10 @@ export default function CountdownBar() {
       }
     }
   }, [user, startCountdownTimer]);
+
+  if (isLoading || timeRemaining === 0) {
+    return null;
+  }
   return (
     <View style={{ height: 56, backgroundColor: "#fff", justifyContent: "center", alignItems: "center", paddingHorizontal: 24 }}>
       <Text style={{ fontSize: 14, fontFamily: "Sora-Bold", color: Colors.gray_400, textAlign: "center" }}>

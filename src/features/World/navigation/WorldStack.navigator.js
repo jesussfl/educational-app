@@ -3,12 +3,11 @@ import { createStackNavigator } from "@react-navigation/stack";
 import WorldScreen from "../pages/lessons-screen";
 
 import ExerciseScreen from "../../Exercises/pages/exercise-screen";
-const WorldStack = createStackNavigator();
-import { Colors } from "@utils/Theme";
 
-import UserStats from "../components/UserStats";
 import CongratsPage from "../../Exercises/pages/CongratsPage";
 import TheoryScreen from "../pages/theory-screen";
+import UserStats from "../components/user-stats";
+const WorldStack = createStackNavigator();
 const WorldStackNavigator = () => {
   return (
     <WorldStack.Navigator initialRouteName="World">
@@ -16,27 +15,9 @@ const WorldStackNavigator = () => {
         name="World"
         component={WorldScreen}
         options={{
+          headerTransparent: true,
           headerShown: true,
-          headerRightContainerStyle: {
-            paddingRight: 16,
-          },
-          headerTitleStyle: {
-            color: Colors.gray_500,
-            fontFamily: "Sora-SemiBold",
-            fontSize: 15,
-            alignSelf: "center",
-          },
-          headerTitleContainerStyle: {
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: Colors.gray_25,
-            marginVertical: 8,
-            paddingHorizontal: 16,
-            borderRadius: 16,
-            flex: 1,
-          },
-
-          headerRight: () => <UserStats />,
+          header: () => <UserStats />,
         }}
         initialParams={{ headerShown: true, headerTitle: "" }}
       />

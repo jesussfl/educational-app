@@ -1,29 +1,15 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Colors } from "@utils/Theme";
-import Icon from "react-native-remix-icon";
-const weekInitials = ["L", "M", "M", "J", "V", "S", "D"];
+import { useAuthContext } from "@contexts/auth.context";
 const CardStreak = () => {
+  const { user } = useAuthContext();
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>Racha diaria</Text>
-      <View style={[styles.rowContainer, { paddingHorizontal: 0 }]}>
-        {weekInitials.map((initial, index) => (
-          <Icon key={index} name="ri-fire-line" size={24} color={Colors.gray_400} />
-        ))}
-      </View>
-      <View style={styles.rowContainer}>
-        {weekInitials.map((initial, index) => (
-          <Text key={index} style={styles.initials}>
-            {initial}
-          </Text>
-        ))}
-      </View>
-      <View style={styles.divider} />
       <View style={[styles.rowContainer, { paddingHorizontal: 0, justifyContent: "space-between" }]}>
         <View>
           <Text style={[styles.title, { color: Colors.success_600 }]}>Racha Actual</Text>
-          <Text style={styles.initials}>0 dias</Text>
+          <Text style={styles.initials}>{user.streak_days} dias</Text>
         </View>
         <View>
           <Text style={[styles.title, { color: Colors.primary_600, textAlign: "right" }]}>Mayor racha</Text>

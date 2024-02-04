@@ -9,11 +9,80 @@ import useBottomSheet from "@hooks/useBottomSheet";
 import { useAuthContext } from "@contexts/auth.context";
 import { useNavigation } from "@react-navigation/native";
 
+const DEFAULT_COST = 10;
+
 const LessonBottomsheet = () => {
   const navigation = useNavigation();
-  const { bottomSheetModalRef, snapPoints, handlePresentModalPress } = useBottomSheet();
-  const { isOpen, lessonId, lessonType, lessonStatus, reset, onClose } = useLessonModal((state) => state);
+  const { bottomSheetModalRef } = useBottomSheet();
+  const { lessonId, lessonType, lessonStatus, lessonDescription } = useLessonModal((state) => state);
   const { user } = useAuthContext();
+  const goToExercises = async () => {
+    await bottomSheetModalRef.current?.close();
+    navigation.navigate("Lessons", { screen: "Exercise", params: { lessonId } });
+  };
+  const getActionState = () => {
+    if (user.lives < 1) {
+      return "NO_LIVES";
+    }
+
+    if (user.money < DEFAULT_COST) {
+      return "NO_MONEY";
+    }
+    if (lessonType === "exam" && lessonStatus === "completed") {
+      return "EXAM_COMPLETED";
+    }
+    if (lessonType === "lesson" && lessonStatus === "completed") {
+      return "LESSON_COMPLETED";
+    }
+    if (lessonType === "exam") {
+      return "EXAM";
+    }
+
+    return "LESSON";
+  };
+  const ACTIONS = {
+    EXAM: <Button variant={"primary"} text={"Comenzar Examen"} rightIcon={<PlayCircle size={24} variant="Bold" color={"#fff"} />} onPress={goToExercises} />,
+    LESSON: <Button variant={"primary"} text={"Comenzar Lección"} rightIcon={<PlayCircle size={24} variant="Bold" color={"#fff"} />} onPress={goToExercises} />,
+    EXAM_COMPLETED: (
+      <Button
+        variant={"success"}
+        text={"Repetir Examen"}
+        rightIcon={<PlayCircle size={24} variant="Bold" color={"#fff"} />}
+        size="small"
+        onPress={goToExercises}
+      />
+    ),
+    LESSON_COMPLETED: (
+      <Button
+        variant={"success"}
+        text={"Repasar Lección"}
+        rightIcon={<PlayCircle size={24} variant="Bold" color={"#fff"} />}
+        size="small"
+        onPress={goToExercises}
+      />
+    ),
+    NO_MONEY: (
+      <Button
+        variant={"secondary"}
+        text={"No tienes dinero suficiente"}
+        rightIcon={<DollarCircle size={24} variant="Bold" color={Colors.error_400} />}
+        disabled
+      />
+    ),
+    NO_LIVES: (
+      <Button variant={"secondary"} text={"No te quedan vidas"} rightIcon={<HeartSlash size={24} variant="Bold" color={Colors.error_400} />} disabled />
+    ),
+  };
+  return (
+    <CustomBottomSheet description={lessonDescription} costText={"Costo"} cost={DEFAULT_COST}>
+      {ACTIONS[getActionState()]}
+    </CustomBottomSheet>
+  );
+};
+
+const CustomBottomSheet = ({ children, description, costText, cost }) => {
+  const { bottomSheetModalRef, snapPoints, handlePresentModalPress } = useBottomSheet();
+  const { isOpen, lessonId, reset } = useLessonModal((state) => state);
 
   useEffect(() => {
     if (isOpen) {
@@ -21,19 +90,7 @@ const LessonBottomsheet = () => {
     }
   }, [isOpen]);
   const renderBackdrop = useCallback((props) => <BottomSheetBackdrop {...props} opacity={0.3} disappearsOnIndex={-1} appearsOnIndex={1} />, []);
-  const buttonText = () => {
-    if (lessonType === "exam") {
-      if (lessonStatus === "completed") {
-        return "Repetir Examen";
-      }
-      return "Comenzar Examen";
-    }
 
-    if (lessonStatus === "completed") {
-      return "Repasar";
-    }
-    return "Comenzar Lección";
-  };
   return (
     <BottomSheet
       ref={bottomSheetModalRef}
@@ -42,36 +99,20 @@ const LessonBottomsheet = () => {
       enableOverDrag={true}
       enableDismissOnClose={true}
       enablePanDownToClose={true}
-      onClose={onClose}
+      onClose={reset}
       backdropComponent={renderBackdrop}
     >
       <View style={styles.mainContainer}>
+        <Text style={styles.description}>{description}</Text>
+
         <View style={styles.header}>
-          <Text style={styles.costText}>{lessonType === "exam" ? "Este examen cuesta:" : "Esta leccción cuesta:"}</Text>
+          <Text style={styles.costText}>{costText}</Text>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
             <DollarCircle size={28} color={Colors.success_500} variant="Bold" />
-            <Text style={[styles.costText, { fontSize: 24 }]}>10</Text>
+            <Text style={[styles.costText, { fontSize: 24 }]}>{cost}</Text>
           </View>
         </View>
-        {user.lives === 0 ? (
-          <Button text="No tienes vidas" variant="wrong" size="medium" rightIcon={<HeartSlash size={28} color={"#fff"} variant="Bold" />} />
-        ) : (
-          <Button
-            text={buttonText()}
-            variant={lessonStatus === "completed" ? "success" : "primary"}
-            size="medium"
-            rightIcon={<PlayCircle size={28} color={"#fff"} variant="Bold" />}
-            onPress={async () => {
-              await bottomSheetModalRef.current?.close();
-              if (user.lives === 0) return;
-              if (user.money >= 10) {
-                navigation.navigate("Lessons", { screen: "Exercise", params: { lessonId } });
-              }
-            }}
-          />
-        )}
-
-        <Button text="Leer Contenido" variant="secondary" size="medium" rightIcon={<Book1 size={28} color={Colors.gray_500} variant="Bold" />} />
+        {children}
       </View>
     </BottomSheet>
   );
@@ -86,6 +127,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  description: {
+    fontSize: 24,
+    fontFamily: "Sora-SemiBold",
+    color: Colors.gray_500,
+    textAlign: "center",
   },
   costText: {
     fontSize: 20,

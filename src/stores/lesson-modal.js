@@ -7,6 +7,7 @@ const initialState = {
   lessonType: null,
   lessonStatus: null,
   isLastLesson: false,
+  lessonDescription: null,
 };
 
 export const useLessonModal = create((set) => {
@@ -27,6 +28,9 @@ export const useLessonModal = create((set) => {
 
     addLessonStatus: (lessonStatus) => set({ lessonStatus }),
     removeLessonStatus: () => set({ lessonStatus: null }),
+
+    addLessonDescription: (lessonDescription) => set({ lessonDescription }),
+    removeLessonDescription: () => set({ lessonDescription: null }),
 
     reset: () => {
       set(initialState);

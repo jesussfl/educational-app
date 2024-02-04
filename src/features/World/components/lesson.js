@@ -9,7 +9,7 @@ import { calculateLeftPosition } from "../utils/calculateLessonsPosition";
 import { Colors } from "@utils/Theme";
 
 export function Lesson({ index, isLessonLocked, isLessonCompleted, lesson }) {
-  const { addLessonId, addLessonStatus, onOpen, addIsLastLesson, addLessonType } = useLessonModal((state) => state);
+  const { addLessonId, addLessonStatus, onOpen, addIsLastLesson, addLessonType, addLessonDescription } = useLessonModal((state) => state);
 
   return (
     <View>
@@ -28,6 +28,7 @@ export function Lesson({ index, isLessonLocked, isLessonCompleted, lesson }) {
                 addLessonType("lesson");
                 addLessonStatus("unlocked");
                 addLessonId(lesson.id);
+                addLessonDescription(lesson.attributes.description);
                 onOpen();
               }}
               scale={0.9}
@@ -45,6 +46,7 @@ export function Lesson({ index, isLessonLocked, isLessonCompleted, lesson }) {
               addLessonType("lesson");
               addLessonId(lesson.id);
               addLessonStatus("completed");
+              addLessonDescription(lesson.attributes.description);
               onOpen();
             }
           }}
