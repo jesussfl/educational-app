@@ -19,6 +19,7 @@ Notifications.setNotificationHandler({
  *
  */
 const AuthProvider = ({ children }) => {
+  console.log("AuthProvider");
   // State to store user data
   const [userData, setUserData] = useState();
   // State to track loading state
@@ -53,9 +54,7 @@ const AuthProvider = ({ children }) => {
       setNotification(notification);
     });
 
-    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log(response);
-    });
+    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {});
 
     return () => {
       Notifications.removeNotificationSubscription(notificationListener.current);

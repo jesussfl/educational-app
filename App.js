@@ -26,6 +26,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
+        {/* <SocketContext.Provider value={socket}> */}
         <GestureHandlerRootView style={{ flex: 1 }}>
           <WithSplashScreen isAppReady={isAppReady}>
             <NavigationContainer>
@@ -33,6 +34,7 @@ export default function App() {
             </NavigationContainer>
           </WithSplashScreen>
         </GestureHandlerRootView>
+        {/* </SocketContext.Provider> */}
       </AuthProvider>
     </QueryClientProvider>
   );

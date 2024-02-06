@@ -36,12 +36,11 @@ const WorldSections = ({ sections, completedLessons }) => {
   return (
     <ScrollView
       ref={scrollViewRef}
-      style={styles.pageContainer}
       onContentSizeChange={() => {
         scrollViewRef.current?.scrollToEnd({ animated: false });
       }}
     >
-      <View style={styles.sectionsContainer}>
+      <View style={{ backgroundColor: Colors.gray_100 }}>
         {sections.map((section, index) => {
           const color = sectionColors[index % sectionColors.length];
           const sectionLessons = section.attributes.lessons.data;
@@ -76,11 +75,9 @@ const WorldSections = ({ sections, completedLessons }) => {
 };
 
 const styles = StyleSheet.create({
-  pageContainer: {
-    flex: 1,
-  },
   emptyContainer: {
     flex: 1,
+    height: "100%",
     justifyContent: "center",
   },
   emptyText: {
@@ -101,6 +98,8 @@ const styles = StyleSheet.create({
     opacity: 0.4,
   },
   sectionsContainer: {
+    flex: 1,
+    backgroundColor: "#000",
     flexDirection: "column-reverse",
     paddingBottom: 48,
   },

@@ -9,14 +9,14 @@ const NEXT_REGENERATION_INTERVAL = 4 * 60 * 60 * 1000;
 const useUserStats = () => {
   const { user, setUser } = useAuthContext();
   const { mutate } = useCustomMutation("user", updateUserMutation);
-  useEffect(() => {
-    const socket = io("http://172.16.0.2:1337");
-    socket.on("updateLives", (data) => {
-      updateUser({
-        ...data,
-      });
-    });
-  }, []);
+  // useEffect(() => {
+  //   const socket = io("http://172.16.0.2:1337");
+  //   socket.on("updateLives", (data) => {
+  //     updateUser({
+  //       ...data,
+  //     });
+  //   });
+  // }, []);
   const restartStreak = () => {
     if (user) {
       mutate(

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 //Components
 import { View, Text } from "react-native";
@@ -8,13 +8,39 @@ import Spinner from "react-native-loading-spinner-overlay";
 
 import WorldSections from "../components/world-sections";
 import LessonBottomsheet from "../components/Lesson-bottomsheet";
-
 //Hooks
-import { useWorldData } from "../hooks/useWorldData";
+import useSocketStore from "@stores/useSocketStore";
 import LivesModal from "../components/lives-modal";
+import { useSections } from "../hooks/useSections";
+import { useAuthContext } from "@contexts/auth.context";
 
 const WorldScreen = () => {
-  const { sections, completedLessons, error, isLoading } = useWorldData();
+  const {
+    user: { email },
+  } = useAuthContext();
+  const { sections, completedLessons, isLoading, error } = useSections();
+  const { socket, emit, connect } = useSocketStore((state) => state);
+
+  useEffect(() => {
+    connect();
+  }, [connect]);
+
+  useEffect(() => {
+    if (!socket) return;
+    emit("join", { socketId: socket.id, name: email });
+  }, [socket?.id, email]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on("broadcast", (message) => {
+      console.log("MESSAGE FROM SERVER", message);
+    });
+
+    return () => {
+      socket.off("broadcast");
+    };
+  }, [socket]);
 
   if (error) {
     return (
@@ -26,7 +52,7 @@ const WorldScreen = () => {
 
   return (
     <>
-      <StatusBar style="dark" />
+      <StatusBar style="dark" translucent={true} />
 
       {isLoading ? (
         <Spinner visible={isLoading} />
