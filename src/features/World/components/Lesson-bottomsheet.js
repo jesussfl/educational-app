@@ -8,6 +8,7 @@ import { useLessonModal } from "@stores/lesson-modal";
 import useBottomSheet from "@hooks/useBottomSheet";
 import { useAuthContext } from "@contexts/auth.context";
 import { useNavigation } from "@react-navigation/native";
+import useAuthStore from "@stores/useAuthStore";
 
 const DEFAULT_COST = 10;
 
@@ -15,7 +16,7 @@ const LessonBottomsheet = () => {
   const navigation = useNavigation();
   const { bottomSheetModalRef } = useBottomSheet();
   const { lessonId, lessonType, lessonStatus, lessonDescription } = useLessonModal((state) => state);
-  const { user } = useAuthContext();
+  const { user } = useAuthStore();
   const goToExercises = async () => {
     await bottomSheetModalRef.current?.close();
     navigation.navigate("Lessons", { screen: "Exercise", params: { lessonId } });

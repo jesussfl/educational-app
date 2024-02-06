@@ -11,15 +11,14 @@ import Spinner from "react-native-loading-spinner-overlay";
 // Hooks
 import { useNavigation, CommonActions } from "@react-navigation/native";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useAuthContext } from "@contexts/auth.context";
 import { useForm } from "react-hook-form";
 
 // Utils
 import { handleEmailValidation } from "@utils/helpers/validateEmail";
 import { registerUserMutation } from "@utils/graphql/mutations/user.mutation";
-import { setToken } from "@utils/helpers/auth.helpers";
 import { query } from "@utils/graphql";
 import { queryWorlds } from "@utils/graphql/queries/world.queries";
+import useAuthStore from "@stores/useAuthStore";
 const SignupForm = ({ currentRef }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -27,7 +26,7 @@ const SignupForm = ({ currentRef }) => {
   const form = useForm();
   const navigation = useNavigation();
 
-  const { setUser } = useAuthContext();
+  const { setUser, setToken } = useAuthStore();
   const { data: worlds } = useQuery(["worlds"], () => query(queryWorlds, { start: 1, limit: 1 }));
   const { mutate: register } = useMutation((data) => query(registerUserMutation, data));
   const currentWorld = worlds?.crefinexWorlds?.data[0].id;

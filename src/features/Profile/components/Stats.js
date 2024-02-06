@@ -2,10 +2,10 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Colors } from "@utils/Theme";
 import { Heart, DollarCircle } from "iconsax-react-native";
-import { useAuthContext } from "@contexts/auth.context";
+import useAuthStore from "@stores/useAuthStore";
 
 const Stats = () => {
-  const { user } = useAuthContext();
+  const { user } = useAuthStore();
   return (
     <View style={{ flexDirection: "row", gap: 12 }}>
       <View style={styles.wrapper}>

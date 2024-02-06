@@ -16,15 +16,17 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 //Utils
 import { query } from "@utils/graphql";
 import { loginUserMutation } from "@utils/graphql/mutations/user.mutation";
-import { setToken } from "@utils/helpers/auth.helpers";
+// import { setToken } from "@utils/helpers/auth.helpers";
 import { handleEmailValidation } from "@utils/helpers/validateEmail";
+import useAuthStore from "@stores/useAuthStore";
 const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const { setUser, setToken } = useAuthStore();
 
   const navigation = useNavigation();
 
-  const { setUser } = useAuthContext();
+  // const { setUser } = useAuthContext();
   const { mutate: login } = useMutation((data) => query(loginUserMutation, data));
   const form = useForm({
     mode: "onSubmit",

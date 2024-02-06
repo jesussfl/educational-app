@@ -13,11 +13,12 @@ import useSocketStore from "@stores/useSocketStore";
 import LivesModal from "../components/lives-modal";
 import { useSections } from "../hooks/useSections";
 import { useAuthContext } from "@contexts/auth.context";
+import useAuthStore from "@stores/useAuthStore";
 
 const WorldScreen = () => {
   const {
     user: { email },
-  } = useAuthContext();
+  } = useAuthStore();
   const { sections, completedLessons, isLoading, error } = useSections();
   const { socket, emit, connect } = useSocketStore((state) => state);
 

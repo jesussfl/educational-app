@@ -8,8 +8,9 @@ import { Button } from "@components";
 import { useAuthContext } from "@contexts/auth.context";
 import { useLessonModal } from "@stores/lesson-modal";
 import { useNavigation } from "@react-navigation/native";
+import useAuthStore from "@stores/useAuthStore";
 const UserStats = () => {
-  const { user } = useAuthContext();
+  const { user } = useAuthStore();
   const { addLessonType } = useLessonModal((state) => state);
   const navigation = useNavigation();
   return (

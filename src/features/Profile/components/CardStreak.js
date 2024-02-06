@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Colors } from "@utils/Theme";
-import { useAuthContext } from "@contexts/auth.context";
+import useAuthStore from "@stores/useAuthStore";
 const CardStreak = () => {
-  const { user } = useAuthContext();
+  const { user } = useAuthStore();
   return (
     <View style={styles.card}>
       <View style={[styles.rowContainer, { paddingHorizontal: 0, justifyContent: "space-between" }]}>

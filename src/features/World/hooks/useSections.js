@@ -1,4 +1,5 @@
 import { useAuthContext } from "@contexts/auth.context";
+import useAuthStore from "@stores/useAuthStore";
 import { useQueries } from "@tanstack/react-query";
 import { query } from "@utils/graphql";
 import { queryLessonsCompletedByUser } from "@utils/graphql/queries/lessonsCompleted.queries";
@@ -10,7 +11,7 @@ export const useSections = () => {
   const [completedLessons, setCompletedLessons] = useState([]);
   const [error, setError] = useState(null);
 
-  const { user } = useAuthContext();
+  const { user } = useAuthStore();
   const [sectionsData, completedLessonsData] = useQueries({
     queries: [
       {

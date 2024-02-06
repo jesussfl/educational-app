@@ -5,27 +5,26 @@ import { removeToken } from "@utils/helpers/auth.helpers";
 import { useNavigation, CommonActions } from "@react-navigation/native";
 import { Logout, Notification } from "iconsax-react-native";
 import { Colors } from "@utils/Theme";
-import { useAuthContext } from "@contexts/auth.context";
 import Avatar from "../components/Avatar";
 import Stats from "../components/Stats";
 import CardReferrals from "../components/CardReferrals";
 import CardStreak from "../components/CardStreak";
+import useAuthStore from "@stores/useAuthStore";
 const colors = [Colors.primary_500, "#12B76A", "#9A4CFF", "#F1733D"];
 
 const ProfileScreen = () => {
-  const { setUser, setAuthToken, user } = useAuthContext();
+  const { user, logout } = useAuthStore();
   const navigation = useNavigation();
 
   const handleLogout = async () => {
-    await removeToken();
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
         routes: [{ name: "Auth" }],
       })
     );
-    setUser(undefined);
-    setAuthToken(undefined);
+
+    logout();
   };
   return (
     <ScrollView style={styles.container}>

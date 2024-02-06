@@ -3,14 +3,13 @@ import { StyleSheet, View } from "react-native";
 import { Headings, Button } from "@components";
 import { SemanticColors } from "@utils/Theme";
 import { walkthrough1Texts } from "../utils/walkthroughTexts";
-import { getToken } from "@utils/helpers/auth.helpers";
-import { useAuthContext } from "@contexts/auth.context";
+
+import useAuthStore from "@stores/useAuthStore";
 
 const Walkthrough1 = ({ navigation }) => {
-  const { setUser } = useAuthContext();
+  const { setUser, token } = useAuthStore();
   useEffect(() => {
     const fetchToken = async () => {
-      const token = await getToken();
       if (token) {
         try {
           const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/users/me`, {

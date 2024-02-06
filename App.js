@@ -7,7 +7,6 @@ import * as WebBrowser from "expo-web-browser";
 import useCustomFonts from "@hooks/customFonts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import AuthProvider from "./src/utils/auth.provider";
 
 const queryClient = new QueryClient();
 WebBrowser.maybeCompleteAuthSession();
@@ -25,17 +24,13 @@ export default function App() {
   }
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        {/* <SocketContext.Provider value={socket}> */}
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <WithSplashScreen isAppReady={isAppReady}>
-            <NavigationContainer>
-              <IntroductoryStackNavigator />
-            </NavigationContainer>
-          </WithSplashScreen>
-        </GestureHandlerRootView>
-        {/* </SocketContext.Provider> */}
-      </AuthProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <WithSplashScreen isAppReady={isAppReady}>
+          <NavigationContainer>
+            <IntroductoryStackNavigator />
+          </NavigationContainer>
+        </WithSplashScreen>
+      </GestureHandlerRootView>
     </QueryClientProvider>
   );
 }
