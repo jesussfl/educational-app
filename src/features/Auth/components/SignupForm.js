@@ -67,12 +67,16 @@ const SignupForm = ({ currentRef }) => {
         },
         onError: (error) => {
           setIsLoading(false);
+
           if (error.message.includes("Email or Username are already taken")) {
             form.setError("email", {
               type: "manual",
-              message: "El email o usuario ya existe",
+            });
+            form.setError("username", {
+              type: "manual",
             });
             setError("El email o usuario ya existe");
+            return;
           }
 
           if (error.message.includes("Aborted")) {
@@ -82,7 +86,6 @@ const SignupForm = ({ currentRef }) => {
           }
 
           setError(error.message);
-          console.log(error.message);
         },
       }
     );

@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 
 export const useSections = () => {
   const [sections, setSections] = useState([]);
+  const [currentWorld, setCurrentWorld] = useState(null);
   const [completedLessons, setCompletedLessons] = useState([]);
   const [error, setError] = useState(null);
 
@@ -29,6 +30,7 @@ export const useSections = () => {
     if (sectionsData.isSuccess && completedLessonsData.isSuccess) {
       setSections(sectionsData.data.sectionsByWorld.sections);
       setCompletedLessons(completedLessonsData.data.lessonsCompletedByUser.lessonsCompleted);
+      setCurrentWorld(sectionsData.data.sectionsByWorld.world);
     }
 
     if (sectionsData.isError || completedLessonsData.isError) {
@@ -36,5 +38,5 @@ export const useSections = () => {
     }
   }, [sectionsData, completedLessonsData]);
 
-  return { sections, completedLessons, isLoading: sectionsData.isLoading || completedLessonsData.isLoading, error };
+  return { sections, currentWorld, completedLessons, isLoading: sectionsData.isLoading || completedLessonsData.isLoading, error };
 };

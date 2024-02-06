@@ -5,7 +5,7 @@ import { ArrowRight, TickCircle, InfoCircle, HeartSlash } from "iconsax-react-na
 import { Button } from "@components";
 import { StatusBar } from "expo-status-bar";
 import { Colors } from "@utils/Theme";
-import { useExercises } from "@stores/exercises";
+import { useExercises } from "@stores/useExerciseStore";
 import { useNavigation } from "@react-navigation/native";
 import { calculateTimeSpent } from "../helpers";
 const BottomActions = ({ checkAnswer, isLastExercise, exerciseType, lessonId }) => {

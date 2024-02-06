@@ -25,10 +25,10 @@ function Gift({ isLessonCompleted, isLocked, id }) {
         <Line x1="50%" y1="0" x2="50%" y2="100%" stroke={Colors.gray_50} strokeWidth="80" />
         <Line x1="50%" y1="0" x2="50%" y2="100%" stroke={Colors.gray_200} strokeWidth="15" />
       </Svg>
-      <Animatable.View animation={isLessonCompleted ? null : "pulse"} easing="ease-out" iterationCount="infinite">
+      <Animatable.View animation={isLessonCompleted || isLocked ? null : "pulse"} easing="ease-out" iterationCount="infinite">
         <TouchableWithoutFeedback
           onPress={() => {
-            if (isLessonCompleted) return;
+            if (isLessonCompleted || isLocked) return;
 
             addLessonType("gift");
             addLessonId(id);

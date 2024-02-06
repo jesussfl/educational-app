@@ -3,23 +3,27 @@ import { StyleSheet, Text, View, ScrollView } from "react-native";
 
 import { Card, WorldCard } from "@components";
 
-import { useAuthContext } from "@contexts/auth.context";
 import { useCustomMutation } from "@utils/useCustomMutation";
 import { updateUserMutation } from "@utils/graphql/mutations/user.mutation";
 import { useNavigation } from "@react-navigation/native";
 import Spinner from "react-native-loading-spinner-overlay";
 import { useWorldData } from "../hooks/useWorldData";
+import useAuthStore from "@stores/useAuthStore";
 
 const LevelsScreen = () => {
-  const { setUser, user } = useAuthContext();
-  const { mutate: updateUser } = useCustomMutation("user", updateUserMutation);
+  const { updateUser, user } = useAuthStore();
+  const { mutate } = useCustomMutation("user", updateUserMutation);
   const navigation = useNavigation();
 
   const { isLoading, worlds, completedWorlds } = useWorldData();
 
+  if (isLoading) {
+    return <Spinner visible={isLoading} />;
+  }
+
   const completedWorldsIds = completedWorlds.length > 0 && completedWorlds.map((world) => world.attributes.world.data.id);
   const updateCurrentWorld = (worldId) => {
-    updateUser(
+    mutate(
       {
         id: user.id,
         data: {
@@ -28,13 +32,11 @@ const LevelsScreen = () => {
       },
       {
         onSuccess: () => {
+          updateUser({ currentWorld: Number(worldId) });
           navigation.navigate("Main", { screen: "Lessons" });
         },
       }
     );
-    setUser((prev) => {
-      return { ...prev, currentWorld: worldId };
-    });
   };
   const checkIfPrevWorldIsCompleted = (index) => {
     if (index === 0) {

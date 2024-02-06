@@ -10,6 +10,7 @@ const initialState = {
   isAnswerCorrect: null,
   startTime: null,
   endTime: null,
+  correctAnswers: 0,
 };
 
 export const useExercises = create((set) => ({
@@ -48,6 +49,11 @@ export const useExercises = create((set) => ({
   addNewExercise: (value) => {
     set((state) => ({
       exercises: [...state.exercises, value],
+    }));
+  },
+  sumCorrectAnswer: () => {
+    set((state) => ({
+      correctAnswers: state.correctAnswers + 1,
     }));
   },
   reset: () => {

@@ -3,11 +3,12 @@ import { useAuthContext } from "@contexts/auth.context";
 import { updateUserMutation } from "@utils/graphql/mutations/user.mutation";
 import { useCustomMutation } from "@utils/useCustomMutation";
 import io from "socket.io-client";
+import useAuthStore from "@stores/useAuthStore";
 
 const MAX_LIVES = 6;
 const NEXT_REGENERATION_INTERVAL = 4 * 60 * 60 * 1000;
 const useUserStats = () => {
-  const { user, setUser } = useAuthContext();
+  const { user, setUser, updateUser } = useAuthStore();
   const { mutate } = useCustomMutation("user", updateUserMutation);
   // useEffect(() => {
   //   const socket = io("http://172.16.0.2:1337");
@@ -32,9 +33,7 @@ const useUserStats = () => {
           },
         }
       );
-      setUser((prev) => {
-        return { ...prev, streak: 0 };
-      });
+      updateUser({ streak: 0 });
     }
   };
   const updateLastCompletedLessonDate = () => {
@@ -54,9 +53,7 @@ const useUserStats = () => {
       );
     }
 
-    setUser((prev) => {
-      return { ...prev, last_completed_lesson_date: new Date() };
-    });
+    updateUser({ last_completed_lesson_date: new Date() });
   };
   const increaseStreak = () => {
     if (user) {
@@ -74,9 +71,7 @@ const useUserStats = () => {
           },
         });
 
-        setUser((prev) => {
-          return { ...prev, streak_days: 1, streak_start_date: now };
-        });
+        updateUser({ streak_days: 1, streak_start_date: now });
       } else {
         mutate({
           id: user.id,
@@ -85,8 +80,8 @@ const useUserStats = () => {
           },
         });
 
-        setUser((prev) => {
-          return { ...prev, streak_days: user.streak_days + 1 };
+        updateUser({
+          streak_days: user.streak_days + 1,
         });
       }
     }
@@ -185,11 +180,6 @@ const useUserStats = () => {
     }
   };
 
-  const updateUser = (data) => {
-    setUser((prev) => {
-      return { ...prev, ...data };
-    });
-  };
   return {
     userLives: user?.lives,
     decreaseLives,

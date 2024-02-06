@@ -1,17 +1,25 @@
-import { StyleSheet, Text, View, ScrollView, Image, SectionList } from "react-native";
+import { StyleSheet, Text, View, Image, SectionList, Pressable } from "react-native";
 import React from "react";
 import { StatusBar } from "expo-status-bar";
 import { Colors } from "@utils/Theme";
 import { DollarCircle, HeartAdd } from "iconsax-react-native";
+import useModalStore from "@stores/useModalStore";
+import StoreModal from "../components/storeModal";
+import useAuthStore from "@stores/useAuthStore";
+import { useCustomMutation } from "@utils/useCustomMutation";
+import { useMutation } from "@tanstack/react-query";
+import { updateUserMutation } from "@utils/graphql/mutations/user.mutation";
+import useStoreActions from "../hooks/useStoreActions";
 
-const DATA = [
+const STORE_ITEMS = [
   {
-    title: "Corazones",
+    title: "Vidas",
     data: [
       {
-        name: "Restaurar corazones",
-        description: "Vuelve a tener todos tus corazones para seguir aprendiendo.",
-        price: "$5.00",
+        name: "heartsFiller",
+        label: "Restaurador de Vidas",
+        description: "Vuelve a tener todas tus vidas para seguir aprendiendo.",
+        price: 35.0,
         icon: <HeartAdd size={20} color={Colors.gray_400} />,
       },
     ],
@@ -20,9 +28,10 @@ const DATA = [
     title: "Racha",
     data: [
       {
-        name: "Reparador de racha",
+        name: "streakRepair",
+        label: "Reparador de Racha",
         description: "Repara el día de racha que perdiste. Cada compra lo volverá más costoso.",
-        price: "$5.00",
+        price: 5.0,
         icon: <DollarCircle size={20} color={Colors.gray_400} />,
       },
     ],
@@ -35,35 +44,61 @@ const StoreScreen = () => {
       <StatusBar style="auto" />
       <SectionList
         style={styles.container}
-        sections={DATA}
+        sections={STORE_ITEMS}
         keyExtractor={(item, index) => item + index}
-        renderItem={({ item }) => <StoreItem name={item.name} description={item.description} price={item.price} image={item.image} icon={item.icon} />}
+        renderItem={({ item }) => <StoreItem label={item.label} description={item.description} price={item.price} image={item.image} icon={item.icon} />}
         renderSectionHeader={({ section: { title } }) => <Text style={{ fontSize: 17, fontFamily: "Sora-SemiBold", color: Colors.gray_400 }}>{title}</Text>}
       />
+      <StoreModal />
     </>
   );
 };
 
-const StoreItem = ({ name, description, price, image, icon }) => {
-  return (
-    <View style={styles.itemContainer}>
-      {icon ? (
-        <View style={{ width: 72, height: 72, backgroundColor: Colors.gray_50, borderRadius: 8 }}>{/* <Text> {icon} </Text>{" "} */}</View>
-      ) : (
-        <Image style={{ width: 72, height: 72 }} source={image} />
-      )}
+const StoreItem = ({ label, description, price, image, icon }) => {
+  const { onOpen, onClose } = useModalStore((state) => state);
+  const { user } = useAuthStore();
+  const { buyItem, buyRefillLives } = useStoreActions();
 
-      <View style={{ flex: 1, gap: 4 }}>
-        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 4 }}>
-          <Text style={styles.name}>{name}</Text>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
-            <Text style={styles.price}>{price}</Text>
-            <DollarCircle size={24} color={Colors.primary_500} variant="Bold" />
+  const hasEnoughMoney = user.money >= price;
+  const buyConfig = {
+    title: `Comprar ${label}`,
+    description: `Estás seguro que quieres comprarlo por: ${price}`,
+    cancelAction: onClose,
+    confirmActionText: "Comprar",
+    confirmAction: () => {
+      buyRefillLives(price);
+      onClose();
+    },
+  };
+
+  const noMoneyConfig = {
+    title: "No tienes suficiente dinero",
+    description: `No tienes suficiente dinero para comprar ${label}.`,
+    confirmActionText: "Volver",
+    confirmAction: onClose,
+  };
+
+  return (
+    <>
+      <Pressable onPress={() => onOpen(hasEnoughMoney ? buyConfig : noMoneyConfig)} style={styles.itemContainer}>
+        {icon ? (
+          <View style={{ width: 72, height: 72, backgroundColor: Colors.gray_50, borderRadius: 8 }}>{/* <Text> {icon} </Text>{" "} */}</View>
+        ) : (
+          <Image style={{ width: 72, height: 72 }} source={image} />
+        )}
+
+        <View style={{ flex: 1, gap: 4 }}>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 4 }}>
+            <Text style={styles.name}>{label}</Text>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+              <Text style={styles.price}>{price}</Text>
+              <DollarCircle size={24} color={Colors.primary_500} variant="Bold" />
+            </View>
           </View>
+          <Text style={styles.description}>{description}</Text>
         </View>
-        <Text style={styles.description}>{description}</Text>
-      </View>
-    </View>
+      </Pressable>
+    </>
   );
 };
 

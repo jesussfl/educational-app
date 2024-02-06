@@ -11,16 +11,17 @@ import ProgressBar from "../components/ProgressBar";
 
 // Utils
 import { Colors } from "@utils/Theme";
-import { useExercises } from "@stores/exercises";
-
+import { useExercises } from "@stores/useExerciseStore";
+import useAuthStore from "@stores/useAuthStore";
 // Hooks
 import { useAuthContext } from "@contexts/auth.context";
 import { useExerciseActions } from "../hooks/useExerciseActions";
 
 const ExercisePage = ({ navigation, route }) => {
+  console.log(route.params?.lessonId);
   const state = useExercises((state) => state);
   const { isLoading, currentExerciseData, isLastExercise, percentage, currentExerciseView, checkAnswer } = useExerciseActions();
-  const { user } = useAuthContext();
+  const { user } = useAuthStore();
   const [isAboutToLeave, setIsAboutToLeave] = useState(false);
 
   if (isLoading || !state.exercises) {

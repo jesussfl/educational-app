@@ -4,7 +4,7 @@ import { Colors } from "@utils/Theme";
 import CompletionText from "./CompletionText";
 import WordSelection from "./WordSelection";
 import * as Animatable from "react-native-animatable";
-import { useExercises } from "@stores/exercises";
+import { useExercises } from "@stores/useExerciseStore";
 // The Completion component accepts props 'content', 'setUserAnswer', and 'userAnswer'.
 const MemoizedWordSelection = React.memo(WordSelection);
 const MemoizedCompletionText = React.memo(CompletionText);

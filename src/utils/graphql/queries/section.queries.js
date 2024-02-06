@@ -37,6 +37,7 @@ export const querySections = gql`
               id
               attributes {
                 name
+                order
               }
             }
           }
@@ -77,10 +78,12 @@ export const querySectionsByWorldId = gql`
       world {
         name
         description
+        order
         image {
           data {
             attributes {
               formats
+              url
             }
           }
         }

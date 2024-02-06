@@ -2,7 +2,7 @@ import React from "react";
 import { CompletionExercise, SimpleSelectionExercise } from "../components";
 import TheoryExercise from "../components/theory-exercise";
 import { calculateTimeSpent } from "./calculateTimeSpent";
-import { useExercises } from "@stores/exercises";
+import { useExercises } from "@stores/useExerciseStore";
 const EXERCISE_TYPES = {
   simpleSelection: (content, key) => {
     return <SimpleSelectionExercise content={content} key={key} />;

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const { useExercises } = require("@stores/exercises");
+const { useExercises } = require("@stores/useExerciseStore");
 const { useQuery } = require("@tanstack/react-query");
 const { queryExercisesByLessonId, query } = require("@utils/graphql");
 

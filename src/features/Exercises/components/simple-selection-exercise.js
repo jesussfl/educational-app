@@ -5,7 +5,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import Select from "../../../components/Select/Select";
 import { Colors } from "@utils/Theme";
 import * as Animatable from "react-native-animatable";
-import { useExercises } from "@stores/exercises";
+import { useExercises } from "@stores/useExerciseStore";
 const SimpleSelectionExercise = ({ content }) => {
   const { userAnswer, isAnswerCorrect, setUserAnswer } = useExercises((state) => state);
   useEffect(() => {

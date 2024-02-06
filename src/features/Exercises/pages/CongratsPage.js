@@ -10,14 +10,15 @@ import { createWorldCompletedMutation } from "@utils/graphql/mutations/worldsCom
 import { useAuthContext } from "@contexts/auth.context";
 import useUserStats from "@hooks/useUserStats";
 import { useLessonModal } from "@stores/lesson-modal";
+import useAuthStore from "@stores/useAuthStore";
 
 const CongratsPage = ({ route }) => {
-  const { user } = useAuthContext();
+  const { user } = useAuthStore();
   const navigation = useNavigation();
   const { lessonId, elapsedTime, errorCount, errorExercises } = route.params;
   const { isLastLesson } = useLessonModal((state) => state);
 
-  const { increaseStreak, updateLastCompletedLessonDate, decreaseMoney } = useUserStats();
+  const { increaseStreak, updateLastCompletedLessonDate, decreaseMoney, increaseMoney } = useUserStats();
   const { mutate } = useCustomMutation("lessonsCompleted", createLessonCompletedMutation);
   const { mutate: mutateWorld } = useCustomMutation("worldsCompleted", createWorldCompletedMutation);
   useEffect(() => {
@@ -48,6 +49,7 @@ const CongratsPage = ({ route }) => {
     updateLastCompletedLessonDate();
     increaseStreak();
     decreaseMoney(10);
+    increaseMoney(30 - errorCount * 2);
   };
 
   return (
@@ -58,8 +60,9 @@ const CongratsPage = ({ route }) => {
         <View style={styles.textsContainer}>
           <Text style={styles.congratsText}>¡Completaste la lección!</Text>
           <Text style={[styles.congratsText, { fontSize: 18, fontFamily: "Sora-Medium" }]}>¡Lo hiciste muy bien!</Text>
-          <View>
+          <View style={{ flexDirection: "column", gap: 8 }}>
             <Text style={[styles.congratsText, { fontSize: 18, fontFamily: "Sora-Medium" }]}>{elapsedTime}</Text>
+            <Text style={[styles.congratsText, { fontSize: 18, fontFamily: "Sora-Medium" }]}>Has ganado {30 - errorCount * 2} monedas</Text>
           </View>
         </View>
         <View style={styles.buttonContainer}>
@@ -87,7 +90,7 @@ const styles = StyleSheet.create({
   congratsText: {
     fontFamily: "Sora-Bold",
     color: Colors.gray_600,
-    fontSize: 44,
+    fontSize: 32,
 
     textAlign: "center",
   },

@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Button } from "@components";
-import { useExercises } from "@stores/exercises";
+import { useExercises } from "@stores/useExerciseStore";
 const WordSelection = ({ combinedWords, handleSelectedWords }) => {
   const { userAnswer } = useExercises((state) => state);
   return (

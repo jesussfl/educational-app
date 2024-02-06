@@ -4,9 +4,10 @@ import { Heart, DollarCircle, Flash } from "iconsax-react-native";
 import RemixIcon from "react-native-remix-icon";
 import { Colors } from "@utils/Theme";
 import { useAuthContext } from "@contexts/auth.context";
+import useAuthStore from "@stores/useAuthStore";
 
 const UserStats = ({ statusToShow, style = {} }) => {
-  const { user } = useAuthContext();
+  const { user } = useAuthStore();
   if (!user) {
     return <Text>Cargando...</Text>;
   }

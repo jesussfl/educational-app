@@ -1,16 +1,18 @@
 // import React from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Home, Weight, Signpost, Notification, UserOctagon } from "iconsax-react-native";
+import { Home, Weight, Signpost, Notification, UserOctagon, ShoppingCart, DollarCircle } from "iconsax-react-native";
 
 import { SemanticColors, Colors } from "@utils/Theme";
 import * as Screens from "../index";
 import StoreScreen from "@features/Store/pages/store-screen";
 import { getFocusedRouteNameFromRoute, useNavigation } from "@react-navigation/native";
 import WorldStackNavigator from "../World/navigation/WorldStack.navigator";
+import useAuthStore from "@stores/useAuthStore";
 const BottomNavStack = createBottomTabNavigator();
 
 export const BottomNavStackNavigator = () => {
+  const { user } = useAuthStore();
   const navigation = useNavigation();
   return (
     <BottomNavStack.Navigator
@@ -71,9 +73,16 @@ export const BottomNavStackNavigator = () => {
             fontFamily: "Sora-SemiBold",
             fontSize: 18,
           },
+          headerRight: () => (
+            <View style={{ flexDirection: "row", gap: 4, marginRight: 16 }}>
+              <Text style={{ color: Colors.success_600, fontFamily: "Sora-SemiBold", fontSize: 18 }}>{user.money}</Text>
+              <DollarCircle size={28} color={Colors.success_500} variant="Bold" />
+            </View>
+          ),
+
           tabBarIcon: ({ focused }) => (
             <View style={{ alignItems: "center", justifyContent: "center", backgroundColor: focused ? "#FFF4D3" : "#fff", padding: 8, borderRadius: 100 }}>
-              <Weight size={28} variant="Bold" color={focused ? Colors.primary_500 : SemanticColors.elevation.secondary_normal} />
+              <ShoppingCart size={28} variant="Bold" color={focused ? Colors.primary_500 : SemanticColors.elevation.secondary_normal} />
             </View>
           ),
         }}

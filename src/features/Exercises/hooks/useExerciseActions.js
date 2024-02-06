@@ -1,5 +1,5 @@
 import useUserStats from "@hooks/useUserStats";
-import { useExercises } from "@stores/exercises";
+import { useExercises } from "@stores/useExerciseStore";
 import { useState } from "react";
 import useExerciseSound from "./useExerciseSound";
 import { getExercisesByLesson } from "../data/getExercises";
@@ -20,7 +20,7 @@ export const useExerciseActions = () => {
   const currentExerciseData = state.exercises[state.currentExerciseIndex];
   const isLastExercise = state.currentExerciseIndex === state.exercises.length - 1;
   const currentExerciseView = renderExercise(currentExerciseData);
-  const percentage = ((state.currentExerciseIndex + 1) * 100) / state.exercises.length;
+  const percentage = (state.correctAnswers * 100) / (state.exercises.length - state.mistakes.length);
 
   const checkAnswer = async () => {
     const exerciseType = currentExerciseData.attributes.type;
@@ -34,6 +34,7 @@ export const useExerciseActions = () => {
     }
     await playSound();
     state.setIsAnswerCorrect(true);
+    state.sumCorrectAnswer();
   };
   const punishUser = () => {
     state.setIsAnswerCorrect(false);

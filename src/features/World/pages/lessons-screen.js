@@ -9,11 +9,10 @@ import Spinner from "react-native-loading-spinner-overlay";
 import WorldSections from "../components/world-sections";
 import LessonBottomsheet from "../components/Lesson-bottomsheet";
 //Hooks
+import useAuthStore from "@stores/useAuthStore";
 import useSocketStore from "@stores/useSocketStore";
 import LivesModal from "../components/lives-modal";
 import { useSections } from "../hooks/useSections";
-import { useAuthContext } from "@contexts/auth.context";
-import useAuthStore from "@stores/useAuthStore";
 
 const WorldScreen = () => {
   const {

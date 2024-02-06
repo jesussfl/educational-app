@@ -10,7 +10,7 @@ import { calculateTimeSpent, exercisesChecker } from "../helpers";
 import { SimpleSelectionExercise, CompletionExercise } from "../components";
 import TheoryExercise from "../components/theory-exercise";
 import { useCountdownTimer, useExerciseSound } from "../hooks";
-import { useExercises } from "@stores/exercises";
+import { useExercises } from "@stores/useExerciseStore";
 const initialCountdownValue = 10;
 const EXERCISE_TYPES = {
   simpleSelection: (content, key) => {
