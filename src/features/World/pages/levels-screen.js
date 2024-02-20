@@ -15,13 +15,14 @@ const LevelsScreen = () => {
   const { mutate } = useCustomMutation("user", updateUserMutation);
   const navigation = useNavigation();
 
-  const { isLoading, worlds, completedWorlds } = useWorldData();
+  const { isLoading, worlds, completedWorlds, completedLessons } = useWorldData();
 
   if (isLoading) {
     return <Spinner visible={isLoading} />;
   }
 
   const completedWorldsIds = completedWorlds.length > 0 && completedWorlds.map((world) => world.attributes.world.data.id);
+
   const updateCurrentWorld = (worldId) => {
     mutate(
       {
@@ -56,6 +57,10 @@ const LevelsScreen = () => {
             const isWorldCurrent = user.currentWorld === world.id;
             const isWorldCompleted = completedWorldsIds.length > 0 && completedWorldsIds.includes(world.id);
             const isPrevWorldCompleted = checkIfPrevWorldIsCompleted(index);
+            const lessonsCompletedByWorldId = completedLessons.filter(
+              (lesson) => lesson.attributes.lesson.data.attributes.section.data.attributes.world.data.id === world.id
+            );
+
             return (
               <WorldCard
                 key={world.id}
@@ -73,7 +78,7 @@ const LevelsScreen = () => {
                 isCompleted={isWorldCompleted}
                 isLocked={!isPrevWorldCompleted}
                 isCurrent={user.currentWorld === world.id}
-                worldsCompleted={completedWorlds.length}
+                worldsCompleted={lessonsCompletedByWorldId.length}
               />
             );
           })}

@@ -67,7 +67,6 @@ const useUserStats = () => {
             last_completed_lesson_date: now,
           },
         });
-        console.log("aumentar racha");
         updateUser({ streak_days: 1, streak_start_date: now, last_completed_lesson_date: now });
       } else {
         mutate({
@@ -149,19 +148,12 @@ const useUserStats = () => {
       return;
     }
     if (user.lives + quantity < ECONOMY.MAX_USER_LIVES) {
-      mutate(
-        {
-          id: user.id,
-          data: {
-            lives: user.lives + quantity,
-          },
+      mutate({
+        id: user.id,
+        data: {
+          lives: user.lives + quantity,
         },
-        {
-          onSuccess: () => {
-            console.log("success");
-          },
-        }
-      );
+      });
       setLastLifeRegenerationTime(new Date().getTime());
 
       setTimeout(() => {

@@ -23,7 +23,6 @@ const UserStats = () => {
           size="small"
           onPress={() => {
             addLessonType("lives");
-            console.log("lives");
           }}
           leftIcon={<Heart size={24} variant="Bold" color={Colors.error_400} />}
         />
