@@ -20,6 +20,7 @@ module.exports = function (api) {
             "@contexts": "./src/contexts",
             "@features": "./src/features",
             "@stores": "./src/stores",
+            "@config": "./src/config",
             "@": "./src",
           },
           // extensions: [".ios.js", ".android.js", ".js", ".jsx", ".json", ".tsx", ".ts", ".native.js"],

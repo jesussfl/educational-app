@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "@components";
 import { Colors } from "@utils/Theme";
 import useModalStore from "@stores/useModalStore";
+import { DollarCircle } from "iconsax-react-native";
 const StoreModal = ({ children }) => {
   const { isOpen, config } = useModalStore();
 
@@ -13,6 +14,10 @@ const StoreModal = ({ children }) => {
           <View style={styles.container}>
             <Text style={styles.modalTitle}>{config.title}</Text>
             <Text style={styles.modalText}>{config.description}</Text>
+            <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 8 }}>
+              <Text style={{ fontFamily: "Sora-Bold", fontSize: 24, color: Colors.primary_500 }}>{config.price}</Text>
+              <DollarCircle size={36} color={Colors.primary_500} variant="Bold" />
+            </View>
             {children}
             <View style={styles.actions}>
               {config.cancelAction && <Button text="Cancelar" variant="secondary" onPress={config.cancelAction} style={{ flex: 1 }} />}

@@ -1,17 +1,43 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@components";
 import { Colors } from "@utils/Theme";
 
 import { useAuthContext } from "@contexts/auth.context";
 import { useLessonModal } from "@stores/lesson-modal";
+import { useLivesStore } from "@stores/useLivesStore";
+import useAuthStore from "@stores/useAuthStore";
 
 const LivesModal = () => {
   const { reset, lessonType } = useLessonModal((state) => state);
-  const { user } = useAuthContext();
+  const { regenerationTime } = useLivesStore((state) => state);
+  const { user } = useAuthStore();
+  const [timeLeft, setTimeLeft] = useState(regenerationTime);
+
+  useEffect(() => {
+    setTimeLeft(regenerationTime);
+    if (regenerationTime > 0) {
+      const intervalId = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+
+      return () => clearInterval(intervalId);
+    }
+  }, [regenerationTime]);
+
   if (lessonType !== "lives") {
     return null;
   }
+
+  const formatTime = (timeInSeconds) => {
+    if (timeInSeconds < 0) {
+      return "";
+    }
+    const hours = Math.floor(timeInSeconds / 3600);
+    const minutes = Math.floor((timeInSeconds % 3600) / 60);
+    const seconds = Math.floor(timeInSeconds % 60);
+    return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+  };
 
   return (
     <View
@@ -41,7 +67,9 @@ const LivesModal = () => {
         }}
       >
         <Text style={styles.modalTitle}>Tienes {user.lives} vidas</Text>
-        {/* <Text style={styles.modalText}>Obtienes $10 de regalo</Text> */}
+        <Text style={styles.modalText}>
+          {timeLeft <= 0 ? "Tienes todas tus vidas" : "Tiempo restante"} {formatTime(timeLeft)}
+        </Text>
         <View
           style={{
             flexDirection: "row",

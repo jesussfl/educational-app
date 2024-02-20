@@ -1,16 +1,28 @@
 import useUserStats from "@hooks/useUserStats";
 import { useExercises } from "@stores/useExerciseStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useExerciseSound from "./useExerciseSound";
 import { getExercisesByLesson } from "../data/getExercises";
 import { useRoute } from "@react-navigation/native";
 import { renderExercise } from "../helpers/renderExercises";
+import { ECONOMY } from "@config/economy";
+import { useMutation } from "@tanstack/react-query";
+import { query } from "@utils/graphql";
+import { createLessonCompletedMutation } from "@utils/graphql/mutations/lessonsCompleted.mutations";
+import { calculateTimeSpent } from "../helpers";
+import useAuthStore from "@stores/useAuthStore";
 export const useExerciseActions = () => {
   const state = useExercises((state) => state);
   const route = useRoute();
   const { isLoading, error } = getExercisesByLesson(route.params?.lessonId);
-  const { decreaseLives } = useUserStats();
+  const { user, updateUser } = useAuthStore();
+  const { decreaseLives, decreaseMoney, increaseMoney, increaseStreak } = useUserStats();
   const { playSound } = useExerciseSound();
+  const { mutate: completeLesson } = useMutation((data) => query(createLessonCompletedMutation, data));
+  useEffect(() => {
+    //TODO: Decrease money should be different for each kind of lesson
+    decreaseMoney(ECONOMY.LESSONS_PRICE); //TODO: This should be triggered when user complete an exercise at least
+  }, []);
 
   //TODO: Handle these errors in a better way
   if (isLoading || !state.exercises) {
@@ -42,9 +54,28 @@ export const useExerciseActions = () => {
     state.addNewExercise(currentExerciseData);
     decreaseLives();
   };
-
+  const saveProgress = () => {
+    completeLesson({
+      user: user.id,
+      lesson: route.params?.lessonId,
+      data: {
+        user: user.id,
+        lesson: route.params?.lessonId,
+        timeSpent: calculateTimeSpent(state.startTime),
+        mistakes: state.mistakes.length,
+        errorExercises: state.mistakes,
+      },
+    });
+    increaseStreak();
+    increaseMoney(ECONOMY.LESSONS_PROFIT);
+    updateUser({
+      ...user,
+      money: user.money + ECONOMY.LESSONS_PROFIT,
+    });
+  };
   return {
     checkAnswer,
+    saveProgress,
     currentExerciseData,
     currentExerciseView,
     percentage,

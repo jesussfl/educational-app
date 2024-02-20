@@ -13,7 +13,6 @@ const UserStats = () => {
   const { user } = useAuthStore();
   const { addLessonType } = useLessonModal((state) => state);
   const { currentWorld } = useSections();
-  console.log(currentWorld);
   const navigation = useNavigation();
   return (
     <View style={styles.navContainer}>

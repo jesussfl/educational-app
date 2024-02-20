@@ -6,37 +6,10 @@ import { DollarCircle, HeartAdd } from "iconsax-react-native";
 import useModalStore from "@stores/useModalStore";
 import StoreModal from "../components/storeModal";
 import useAuthStore from "@stores/useAuthStore";
-import { useCustomMutation } from "@utils/useCustomMutation";
-import { useMutation } from "@tanstack/react-query";
-import { updateUserMutation } from "@utils/graphql/mutations/user.mutation";
 import useStoreActions from "../hooks/useStoreActions";
-
-const STORE_ITEMS = [
-  {
-    title: "Vidas",
-    data: [
-      {
-        name: "heartsFiller",
-        label: "Restaurador de Vidas",
-        description: "Vuelve a tener todas tus vidas para seguir aprendiendo.",
-        price: 35.0,
-        icon: <HeartAdd size={20} color={Colors.gray_400} />,
-      },
-    ],
-  },
-  {
-    title: "Racha",
-    data: [
-      {
-        name: "streakRepair",
-        label: "Reparador de Racha",
-        description: "Repara el día de racha que perdiste. Cada compra lo volverá más costoso.",
-        price: 5.0,
-        icon: <DollarCircle size={20} color={Colors.gray_400} />,
-      },
-    ],
-  },
-];
+import { STORE_ITEMS, STORE_ITEM_NAMES } from "../config/store-items";
+import { ECONOMY } from "@config/economy";
+import { Button } from "@components";
 
 const StoreScreen = () => {
   return (
@@ -46,7 +19,9 @@ const StoreScreen = () => {
         style={styles.container}
         sections={STORE_ITEMS}
         keyExtractor={(item, index) => item + index}
-        renderItem={({ item }) => <StoreItem label={item.label} description={item.description} price={item.price} image={item.image} icon={item.icon} />}
+        renderItem={({ item }) => (
+          <StoreItem name={item.name} label={item.label} description={item.description} price={item.price} image={item.image} icon={item.icon} />
+        )}
         renderSectionHeader={({ section: { title } }) => <Text style={{ fontSize: 17, fontFamily: "Sora-SemiBold", color: Colors.gray_400 }}>{title}</Text>}
       />
       <StoreModal />
@@ -54,23 +29,40 @@ const StoreScreen = () => {
   );
 };
 
-const StoreItem = ({ label, description, price, image, icon }) => {
+const StoreItem = ({ name, label, description, price, image, icon }) => {
   const { onOpen, onClose } = useModalStore((state) => state);
   const { user } = useAuthStore();
-  const { buyItem, buyRefillLives } = useStoreActions();
-
+  const { buyItem } = useStoreActions();
   const hasEnoughMoney = user.money >= price;
+
+  const isItemEnabled = () => {
+    if (!hasEnoughMoney) {
+      return false;
+    }
+
+    switch (name) {
+      case STORE_ITEM_NAMES.fullRestorer:
+        return user.lives < ECONOMY.MAX_USER_LIVES - 2;
+      case STORE_ITEM_NAMES.oneLive:
+        return user.lives < ECONOMY.MAX_USER_LIVES;
+      case STORE_ITEM_NAMES.twoLives:
+        return user.lives < ECONOMY.MAX_USER_LIVES - 1;
+      default:
+        return true;
+    }
+  };
+
   const buyConfig = {
     title: `Comprar ${label}`,
-    description: `Estás seguro que quieres comprarlo por: ${price}`,
+    description: `Estás seguro que quieres comprarlo por:`,
+    price,
     cancelAction: onClose,
     confirmActionText: "Comprar",
     confirmAction: () => {
-      buyRefillLives(price);
+      buyItem(price, name);
       onClose();
     },
   };
-
   const noMoneyConfig = {
     title: "No tienes suficiente dinero",
     description: `No tienes suficiente dinero para comprar ${label}.`,
@@ -80,7 +72,7 @@ const StoreItem = ({ label, description, price, image, icon }) => {
 
   return (
     <>
-      <Pressable onPress={() => onOpen(hasEnoughMoney ? buyConfig : noMoneyConfig)} style={styles.itemContainer}>
+      <View style={styles.itemContainer}>
         {icon ? (
           <View style={{ width: 72, height: 72, backgroundColor: Colors.gray_50, borderRadius: 8 }}>{/* <Text> {icon} </Text>{" "} */}</View>
         ) : (
@@ -96,8 +88,15 @@ const StoreItem = ({ label, description, price, image, icon }) => {
             </View>
           </View>
           <Text style={styles.description}>{description}</Text>
+          <Button
+            disabled={!isItemEnabled()}
+            onPress={() => onOpen(hasEnoughMoney ? buyConfig : noMoneyConfig)}
+            variant="primary"
+            size="small"
+            text={`${isItemEnabled() ? "Comprar" : "No disponible"}`}
+          />
         </View>
-      </Pressable>
+      </View>
     </>
   );
 };
@@ -127,15 +126,14 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: Colors.gray_50,
     flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 24,
-    marginTop: 24,
+    marginTop: 8,
     gap: 16,
   },
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    padding: 24,
-
-    paddingVertical: 56,
+    paddingHorizontal: 24,
   },
 });

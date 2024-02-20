@@ -9,10 +9,118 @@ import StoreScreen from "@features/Store/pages/store-screen";
 import { getFocusedRouteNameFromRoute, useNavigation } from "@react-navigation/native";
 import WorldStackNavigator from "../World/navigation/WorldStack.navigator";
 import useAuthStore from "@stores/useAuthStore";
+import { useEffect } from "react";
+import useUserStats from "@hooks/useUserStats";
+import { useLivesStore } from "@stores/useLivesStore";
+import { ECONOMY } from "@config/economy";
 const BottomNavStack = createBottomTabNavigator();
 
+//TODO: Refactor and improve readability of this code
 export const BottomNavStackNavigator = () => {
+  const { increaseLives, restartStreak } = useUserStats();
   const { user } = useAuthStore();
+  const { lastLifeRegenerationTime, setLastLifeRegenerationTime, setRegenerationTime } = useLivesStore();
+  const regenerationInterval = ECONOMY.LIFE_REGENERATION_TIME_HOURS * 60 * 60;
+
+  const getSecondsRemaining = () => {
+    const now = new Date().getTime();
+    const first_life_lost_date = new Date(user.first_life_lost_date).getTime();
+
+    let secondsElapsed = Math.floor((now - first_life_lost_date) / 1000);
+    secondsElapsed = Math.max(secondsElapsed, 0);
+
+    const secondsRemaining = (regenerationInterval - (secondsElapsed % regenerationInterval)) % regenerationInterval;
+
+    return secondsRemaining;
+  };
+
+  const checkLifeRegeneration = () => {
+    if (user.lives === ECONOMY.MAX_USER_LIVES || !user.first_life_lost_date) return;
+    const now = new Date().getTime();
+    const totalLostLives = ECONOMY.MAX_USER_LIVES - user.lives;
+    const first_life_lost_date = new Date(user.first_life_lost_date).getTime();
+
+    if (first_life_lost_date + regenerationInterval * 1000 <= now && !lastLifeRegenerationTime) {
+      let secondsElapsed = Math.floor((now - first_life_lost_date) / 1000);
+      const livesToRegenerate = Math.floor(secondsElapsed / regenerationInterval);
+
+      if (livesToRegenerate > 0) increaseLives(Math.min(livesToRegenerate, totalLostLives));
+    }
+
+    if (lastLifeRegenerationTime) {
+      const elapsedTimeSinceLastRegeneration = now - parseInt(lastLifeRegenerationTime, 10);
+      const livesToRegenerate = Math.floor(elapsedTimeSinceLastRegeneration / (regenerationInterval * 1000));
+
+      if (livesToRegenerate > 0) {
+        increaseLives(Math.min(livesToRegenerate, totalLostLives));
+        setLastLifeRegenerationTime(now);
+      }
+    }
+  };
+
+  const checkStreak = () => {
+    if (user.streak > 0) return;
+
+    const lastCompletedLessonDate = new Date(user.last_completed_lesson_date);
+
+    const now = new Date();
+    const differenceInDays = (now - lastCompletedLessonDate) / (1000 * 60 * 60 * 24);
+
+    if (differenceInDays >= 2) {
+      console.log("reset streak");
+      restartStreak();
+      return;
+    }
+  };
+  useEffect(() => {
+    const secondsRemaining = getSecondsRemaining();
+
+    if (user.lives === ECONOMY.MAX_USER_LIVES) {
+      setRegenerationTime(0);
+      setLastLifeRegenerationTime(null);
+
+      return;
+    }
+    if (secondsRemaining <= 0) return;
+    setRegenerationTime(secondsRemaining);
+
+    let timeoutId = setTimeout(() => {
+      if (user.lives < ECONOMY.MAX_USER_LIVES) {
+        increaseLives(1);
+      }
+    }, secondsRemaining * 1000);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [user.lives, user.first_life_lost_date]);
+
+  useEffect(() => {
+    checkLifeRegeneration();
+    checkStreak();
+
+    const now = new Date();
+    const timeUntilMidnight =
+      new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() + 1, // Next day
+        0, // Midnight hour
+        0, // Minutes
+        0 // Seconds
+      ) - now;
+    // Schedule checkStreak to run every midnight
+    const timer = setTimeout(() => {
+      console.log("CHECKING STREAK");
+      checkStreak();
+
+      // Schedule the next check for the next midnight
+      setInterval(checkStreak, 24 * 60 * 60 * 1000); // 24 hours
+    }, timeUntilMidnight);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const navigation = useNavigation();
   return (
     <BottomNavStack.Navigator

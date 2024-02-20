@@ -30,6 +30,7 @@ export const updateUserMutation = gql`
           registration_date
           next_life_regeneration
           expoPushToken
+          first_life_lost_date
         }
       }
     }
@@ -53,6 +54,7 @@ export const loginUserMutation = gql`
         last_completed_lesson_date
         next_life_regeneration
         expoPushToken
+        first_life_lost_date
       }
     }
   }
@@ -75,6 +77,7 @@ export const registerUserMutation = gql`
         last_completed_lesson_date
         next_life_regeneration
         expoPushToken
+        first_life_lost_date
       }
     }
   }

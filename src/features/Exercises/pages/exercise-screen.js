@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // Components
 import { StyleSheet, View } from "react-native";
@@ -14,11 +14,9 @@ import { Colors } from "@utils/Theme";
 import { useExercises } from "@stores/useExerciseStore";
 import useAuthStore from "@stores/useAuthStore";
 // Hooks
-import { useAuthContext } from "@contexts/auth.context";
 import { useExerciseActions } from "../hooks/useExerciseActions";
 
 const ExercisePage = ({ navigation, route }) => {
-  console.log(route.params?.lessonId);
   const state = useExercises((state) => state);
   const { isLoading, currentExerciseData, isLastExercise, percentage, currentExerciseView, checkAnswer } = useExerciseActions();
   const { user } = useAuthStore();

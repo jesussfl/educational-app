@@ -1,40 +1,36 @@
 import { useEffect } from "react";
-import { useAuthContext } from "@contexts/auth.context";
+
 import { updateUserMutation } from "@utils/graphql/mutations/user.mutation";
-import { useCustomMutation } from "@utils/useCustomMutation";
-import io from "socket.io-client";
+import { useMutation } from "@tanstack/react-query";
+import { query } from "@utils/graphql";
+// import Midnight from "react-native-midnight";
 import useAuthStore from "@stores/useAuthStore";
+import { ECONOMY } from "@config/economy";
+import { useLivesStore } from "@stores/useLivesStore";
 
 const MAX_LIVES = 6;
 const NEXT_REGENERATION_INTERVAL = 4 * 60 * 60 * 1000;
 const useUserStats = () => {
-  const { user, setUser, updateUser } = useAuthStore();
-  const { mutate } = useCustomMutation("user", updateUserMutation);
-  // useEffect(() => {
-  //   const socket = io("http://172.16.0.2:1337");
-  //   socket.on("updateLives", (data) => {
-  //     updateUser({
-  //       ...data,
-  //     });
-  //   });
-  // }, []);
+  const { user, updateUser } = useAuthStore();
+  const { setLastLifeRegenerationTime } = useLivesStore();
+  const { mutate } = useMutation((data) => query(updateUserMutation, data));
+
   const restartStreak = () => {
-    if (user) {
-      mutate(
-        {
-          id: user.id,
-          data: {
-            streak: 0,
-          },
+    mutate(
+      {
+        id: user.id,
+        data: {
+          streak_start_date: null,
+          streak_days: 0,
         },
-        {
-          onSuccess: () => {
-            console.log("success");
-          },
-        }
-      );
-      updateUser({ streak: 0 });
-    }
+      },
+      {
+        onSuccess: () => {
+          console.log("success");
+        },
+      }
+    );
+    updateUser({ streak_days: 0, streak_start_date: null });
   };
   const updateLastCompletedLessonDate = () => {
     if (user) {
@@ -60,7 +56,7 @@ const useUserStats = () => {
       const now = new Date();
 
       // Si la ultima leccion del usuario es hoy no se aumenta la racha pero si no entonces se aumenta la racha
-      if (user.last_completed_lesson_date && isSameDay(user.last_completed_lesson_date, now)) {
+      if (user.last_completed_lesson_date && isSameDay(user.last_completed_lesson_date, now) && user.streak_start_date) {
         return;
       } else if (user.streak_start_date === null) {
         mutate({
@@ -68,20 +64,23 @@ const useUserStats = () => {
           data: {
             streak_days: 1,
             streak_start_date: now,
+            last_completed_lesson_date: now,
           },
         });
-
-        updateUser({ streak_days: 1, streak_start_date: now });
+        console.log("aumentar racha");
+        updateUser({ streak_days: 1, streak_start_date: now, last_completed_lesson_date: now });
       } else {
         mutate({
           id: user.id,
           data: {
             streak_days: user.streak_days + 1,
+            last_completed_lesson_date: now,
           },
         });
 
         updateUser({
           streak_days: user.streak_days + 1,
+          last_completed_lesson_date: now,
         });
       }
     }
@@ -98,24 +97,25 @@ const useUserStats = () => {
       date1Clone.getDate() === date2Clone.getDate() && date1Clone.getMonth() === date2Clone.getMonth() && date1Clone.getFullYear() === date2Clone.getFullYear()
     );
   }
-  const setNextDateRegeneration = () => {
-    if (user.lives === MAX_LIVES) {
-      const next_life_regeneration = new Date(new Date().getTime() + NEXT_REGENERATION_INTERVAL);
 
+  const decreaseLives = () => {
+    if (user.lives === ECONOMY.MAX_USER_LIVES && user.lives > 0) {
       mutate({
         id: user.id,
         data: {
-          next_life_regeneration,
+          lives: user.lives - 1,
+          first_life_lost_date: new Date(),
         },
       });
 
       updateUser({
-        next_life_regeneration,
+        lives: user.lives - 1,
+        first_life_lost_date: new Date(),
       });
+
+      return;
     }
-  };
-  const decreaseLives = () => {
-    setNextDateRegeneration();
+
     if (user.lives > 0) {
       const lives = user.lives - 1;
 
@@ -132,7 +132,23 @@ const useUserStats = () => {
     }
   };
   const increaseLives = (quantity) => {
-    if (user) {
+    if (user.lives + quantity >= ECONOMY.MAX_USER_LIVES) {
+      mutate({
+        id: user.id,
+        data: {
+          lives: user.lives + quantity,
+          first_life_lost_date: null,
+        },
+      });
+
+      updateUser({
+        lives: user.lives + quantity,
+        first_life_lost_date: null,
+      });
+
+      return;
+    }
+    if (user.lives + quantity < ECONOMY.MAX_USER_LIVES) {
       mutate(
         {
           id: user.id,
@@ -146,9 +162,13 @@ const useUserStats = () => {
           },
         }
       );
-      setUser((prev) => {
-        return { ...prev, lives: user.lives + quantity };
-      });
+      setLastLifeRegenerationTime(new Date().getTime());
+
+      setTimeout(() => {
+        updateUser({
+          lives: user.lives + quantity,
+        });
+      }, 1100); // 2000 milisegundos = 2 segundos
     }
   };
   const increaseMoney = (quantity) => {

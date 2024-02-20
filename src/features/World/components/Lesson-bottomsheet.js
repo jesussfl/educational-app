@@ -9,8 +9,7 @@ import useBottomSheet from "@hooks/useBottomSheet";
 import { useAuthContext } from "@contexts/auth.context";
 import { useNavigation } from "@react-navigation/native";
 import useAuthStore from "@stores/useAuthStore";
-
-const DEFAULT_COST = 10;
+import { ECONOMY } from "@config/economy";
 
 const LessonBottomsheet = () => {
   const navigation = useNavigation();
@@ -26,7 +25,7 @@ const LessonBottomsheet = () => {
       return "NO_LIVES";
     }
 
-    if (user.money < DEFAULT_COST) {
+    if (user.money < ECONOMY.LESSONS_PRICE) {
       return "NO_MONEY";
     }
     if (lessonType === "exam" && lessonStatus === "completed") {
@@ -75,7 +74,7 @@ const LessonBottomsheet = () => {
     ),
   };
   return (
-    <CustomBottomSheet description={lessonDescription} costText={"Costo"} cost={DEFAULT_COST}>
+    <CustomBottomSheet description={lessonDescription} costText={"Costo"} cost={ECONOMY.LESSONS_PRICE}>
       {ACTIONS[getActionState()]}
     </CustomBottomSheet>
   );

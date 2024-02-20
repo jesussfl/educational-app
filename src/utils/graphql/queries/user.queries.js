@@ -18,6 +18,7 @@ export const queryUser = gql`
           registration_date
           next_life_regeneration
           expoPushToken
+          first_life_lost_date
         }
       }
     }
