@@ -6,6 +6,7 @@ import { BottomNavStackNavigator } from "./BottomNav.navigator";
 import WalkthroughStackNavigator from "../Walkthrough/navigation/WalkthroughStack.navigator";
 import AuthStackNavigator from "../Auth/navigation/AuthStack.navigator";
 import useAuthStore from "@stores/useAuthStore";
+
 const Stack = createNativeStackNavigator();
 
 const commonScreenOptions = {
@@ -16,7 +17,6 @@ const commonScreenOptions = {
     backgroundColor: SemanticColors.app.bg_normal,
   },
   headerShown: false,
-
   headerShadowVisible: false,
 };
 
@@ -24,7 +24,8 @@ export const IntroductoryStackNavigator = () => {
   const { isNewUser, setIsNewUser, setUser, token } = useAuthStore();
 
   useEffect(() => {
-    const fetchToken = async () => {
+    const checkUserSession = async () => {
+      //TODO: check if token is expired and refresh it, if admin add money to user, session should be expired and database requests cant be after every app launch
       if (token) {
         try {
           const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/users/me`, {
@@ -39,13 +40,13 @@ export const IntroductoryStackNavigator = () => {
       }
     };
 
-    fetchToken();
+    checkUserSession();
   }, []);
 
   return (
     <Stack.Navigator screenOptions={commonScreenOptions}>
       {isNewUser && <Stack.Screen name="Walkthrough" component={WalkthroughStackNavigator} />}
-      <Stack.Screen name="Main" component={BottomNavStackNavigator} />
+      {token && <Stack.Screen name="Main" component={BottomNavStackNavigator} />}
       <Stack.Screen name="Auth" component={AuthStackNavigator} />
     </Stack.Navigator>
   );
