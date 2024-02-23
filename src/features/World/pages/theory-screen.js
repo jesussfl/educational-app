@@ -6,7 +6,7 @@ import { Button } from "@components";
 import { useQuery } from "@tanstack/react-query";
 import { query } from "@utils/graphql/client/GraphQLCLient";
 import { querySectionById } from "@utils/graphql/queries/section.queries";
-import SectionContentHTML from "../components/SectionContentHTML";
+import SectionContentHTML from "../components/section-theory";
 const TheoryScreen = ({ route }) => {
   const { id } = route.params;
   const { data, isLoading } = useQuery([`section-${id}`], () => query(querySectionById, { id: id }));

@@ -1,6 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import WorldScreen from "../pages/lessons-screen";
+import CurrentWorldScreen from "../pages/current-world-screen";
 
 import ExerciseScreen from "../../Exercises/pages/exercise-screen";
 
@@ -13,7 +13,7 @@ const WorldStackNavigator = () => {
     <WorldStack.Navigator initialRouteName="World">
       <WorldStack.Screen
         name="World"
-        component={WorldScreen}
+        component={CurrentWorldScreen}
         options={{
           headerTransparent: true,
           headerShown: true,

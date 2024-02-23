@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { Colors } from "@utils/Theme";
 import React from "react";
 import { useExercises } from "@stores/useExerciseStore";
-import SectionContentHTML from "@features/World/components/SectionContentHTML";
+import SectionContentHTML from "@features/World/components/section-theory";
 const TheoryExercise = ({ content }) => {
   const theory = content.theory.replace(/http:\/\/localhost:1337/g, process.env.EXPO_PUBLIC_API_URL) || "";
 

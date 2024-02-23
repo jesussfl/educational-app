@@ -1,9 +1,9 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 
-import Lesson from "./lesson";
-import Gift from "./gift";
-import Exam from "./exam";
+import Lesson from "./lesson-button";
+import Gift from "./gift-button";
+import Exam from "./exam-button";
 
 const SectionLessons = ({ lessons, completedLessons, firstLessonActive, isLastSection }) => {
   const checkIfLessonCompleted = (lesson) => {

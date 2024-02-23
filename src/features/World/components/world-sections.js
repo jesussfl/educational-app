@@ -1,9 +1,9 @@
 import React, { useRef } from "react";
 import { ScrollView, View, StyleSheet, Image, Text } from "react-native";
 import { Colors } from "@utils/Theme";
-import WorldSectionBanner from "./WorldSectionBanner";
+import WorldSectionBanner from "./world-section-banner";
 
-import SectionLessons from "./section-lessons";
+import SectionLessons from "./world-lessons";
 
 const sectionColors = [Colors.primary_500, "#12B76A", "#9A4CFF", "#F1733D"];
 
@@ -68,7 +68,6 @@ const WorldSections = ({ sections, completedLessons }) => {
             </View>
           );
         })}
-        {/* <Image style={styles.image} source={require("../../../../assets/61844.jpg")} /> */}
       </View>
     </ScrollView>
   );

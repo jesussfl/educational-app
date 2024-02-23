@@ -3,16 +3,16 @@ import React from "react";
 //Components
 import { View, Text } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import GiftModal from "../components/GiftModal";
+import GiftModal from "../components/gift-modal";
 import Spinner from "react-native-loading-spinner-overlay";
 
 import WorldSections from "../components/world-sections";
-import LessonBottomsheet from "../components/Lesson-bottomsheet";
+import LessonBottomsheet from "../components/lesson-bottomsheet";
 //Hooks
 import LivesModal from "../components/lives-modal";
 import { useSections } from "../hooks/useSections";
 
-const WorldScreen = () => {
+const CurrentWorldScreen = () => {
   const { sections, completedLessons, isLoading, error } = useSections();
 
   if (error) {
@@ -41,7 +41,7 @@ const WorldScreen = () => {
   );
 };
 
-export default WorldScreen;
+export default CurrentWorldScreen;
 
 // Enable socket
 // const {

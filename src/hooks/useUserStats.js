@@ -69,6 +69,7 @@ const useUserStats = () => {
         });
         updateUser({ streak_days: 1, streak_start_date: now, last_completed_lesson_date: now });
       } else {
+        console.log("else");
         mutate({
           id: user.id,
           data: {
