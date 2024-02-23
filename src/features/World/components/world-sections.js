@@ -62,7 +62,7 @@ const WorldSections = ({ sections, completedLessons }) => {
                 isDisabled={!isPrevSectionCompleted}
                 backgroundColor={color}
                 description={section.attributes.description}
-                order={section.attributes.order}
+                order={index + 1}
                 id={section.id}
               />
             </View>
