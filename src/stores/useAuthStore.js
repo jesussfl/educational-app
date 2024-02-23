@@ -8,9 +8,11 @@ const useAuthStore = create(
       loggedIn: false,
       user: null,
       token: null,
+      isNewUser: true,
       setUser: (user) => set({ user, loggedIn: true }),
       updateUser: (user) => set((state) => ({ user: { ...state.user, ...user } })),
       setToken: (token) => set({ token }),
+      setIsNewUser: (isNewUser) => set({ isNewUser }),
       logout: () => set({ loggedIn: false, user: null, token: null }),
     }),
     {

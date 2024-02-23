@@ -59,15 +59,14 @@ export const BottomNavStackNavigator = () => {
   };
 
   const checkStreak = () => {
-    if (user.streak > 0) return;
+    if (user.streak_days > 0) return;
 
     const lastCompletedLessonDate = new Date(user.last_completed_lesson_date);
 
     const now = new Date();
     const differenceInDays = (now - lastCompletedLessonDate) / (1000 * 60 * 60 * 24);
 
-    if (differenceInDays >= 2) {
-      console.log("reset streak");
+    if (differenceInDays >= 2 && user.streak_days !== 0) {
       restartStreak();
       return;
     }
