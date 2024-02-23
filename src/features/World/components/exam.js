@@ -5,20 +5,22 @@ import { Key } from "iconsax-react-native";
 import { Button } from "@components";
 import { useLessonModal } from "@stores/lesson-modal";
 import { Colors } from "@utils/Theme";
-const Exam = ({ isLast, id, isCompleted }) => {
-  const { addLessonId, addLessonStatus, onOpen, addIsLastLesson, addLessonType } = useLessonModal((state) => state);
+const Exam = ({ isLast, id, isCompleted, isLocked, description }) => {
+  const { addLessonId, addLessonStatus, onOpen, addIsLastLesson, addLessonType, addLessonDescription } = useLessonModal((state) => state);
 
   return (
     <View style={styles.bottomContainer}>
       <Image source={require("../../../../assets/Door.png")} style={styles.image} />
       <Button
         text={isCompleted ? "Completado" : "Siguiente Sección"}
-        variant={isCompleted ? "success" : "secondary"}
-        rightIcon={<Key size={20} variant="Bold" color={isCompleted ? "#fff" : Colors.gray_300} />}
+        disabled={isLocked}
+        variant={isCompleted ? "success" : isLocked ? "secondary" : "primary"}
+        rightIcon={<Key size={20} variant="Bold" color={isCompleted ? "#fff" : isLocked ? Colors.gray_300 : "#fff"} />}
         onPress={() => {
           addLessonType("exam");
           addLessonId(id);
           addLessonStatus("unlocked");
+          addLessonDescription(description);
           if (isLast) {
             addIsLastLesson(true);
           } else {

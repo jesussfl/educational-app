@@ -6,7 +6,6 @@ import { PlayCircle, Book1, HeartSlash, DollarCircle } from "iconsax-react-nativ
 import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import { useLessonModal } from "@stores/lesson-modal";
 import useBottomSheet from "@hooks/useBottomSheet";
-import { useAuthContext } from "@contexts/auth.context";
 import { useNavigation } from "@react-navigation/native";
 import useAuthStore from "@stores/useAuthStore";
 import { ECONOMY } from "@config/economy";

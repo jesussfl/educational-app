@@ -11,14 +11,18 @@ import { query } from "@utils/graphql";
 import { createLessonCompletedMutation } from "@utils/graphql/mutations/lessonsCompleted.mutations";
 import { calculateTimeSpent } from "../helpers";
 import useAuthStore from "@stores/useAuthStore";
+import { createWorldCompletedMutation } from "@utils/graphql/mutations/worldsCompleted.mutation";
+import { useLessonModal } from "@stores/lesson-modal";
 export const useExerciseActions = () => {
   const state = useExercises((state) => state);
+  const { isLastLesson } = useLessonModal();
   const route = useRoute();
   const { isLoading, error } = getExercisesByLesson(route.params?.lessonId);
   const { user, updateUser } = useAuthStore();
   const { decreaseLives, decreaseMoney, increaseMoney, increaseStreak } = useUserStats();
   const { playSound } = useExerciseSound();
   const { mutate: completeLesson } = useMutation((data) => query(createLessonCompletedMutation, data));
+  const { mutate: completeWorld } = useMutation((data) => query(createWorldCompletedMutation, data));
   useEffect(() => {
     //TODO: Decrease money should be different for each kind of lesson
     decreaseMoney(ECONOMY.LESSONS_PRICE); //TODO: This should be triggered when user complete an exercise at least
@@ -66,6 +70,7 @@ export const useExerciseActions = () => {
         errorExercises: state.mistakes,
       },
     });
+    isLastLesson && completeWorld({ data: { user: user.id, world: user.currentWorld } });
     increaseStreak();
     increaseMoney(ECONOMY.LESSONS_PROFIT);
     updateUser({

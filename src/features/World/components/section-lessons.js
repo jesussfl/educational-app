@@ -42,7 +42,16 @@ const SectionLessons = ({ lessons, completedLessons, firstLessonActive, isLastSe
           return <Gift key={lesson.id} isLessonCompleted={isLessonCompleted} isLocked={isLessonLocked} id={lesson.id} />;
         }
         if (isExam) {
-          return <Exam key={lesson.id} isLast={isLast} id={lesson.id} isCompleted={isLessonCompleted} />;
+          return (
+            <Exam
+              key={lesson.id}
+              isLast={isLast}
+              id={lesson.id}
+              isLocked={!isPrevLessonCompleted}
+              isCompleted={isLessonCompleted}
+              description={lesson.attributes.description}
+            />
+          );
         }
         return (
           <Lesson

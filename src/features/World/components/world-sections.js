@@ -40,7 +40,7 @@ const WorldSections = ({ sections, completedLessons }) => {
         scrollViewRef.current?.scrollToEnd({ animated: false });
       }}
     >
-      <View style={{ backgroundColor: Colors.gray_100 }}>
+      <View style={{ backgroundColor: Colors.gray_50, flexDirection: "column-reverse" }}>
         {sections.map((section, index) => {
           const color = sectionColors[index % sectionColors.length];
           const sectionLessons = section.attributes.lessons.data;
@@ -68,7 +68,7 @@ const WorldSections = ({ sections, completedLessons }) => {
             </View>
           );
         })}
-        <Image style={styles.image} source={require("../../../../assets/61844.jpg")} />
+        {/* <Image style={styles.image} source={require("../../../../assets/61844.jpg")} /> */}
       </View>
     </ScrollView>
   );
