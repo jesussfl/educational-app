@@ -107,7 +107,8 @@ const useStoreActions = () => {
   };
 
   const buyStreakShield = (price) => {
-    if (user.streakShields === ECONOMY.MAX_USER_STREAK_SHIELDS) {
+    console.log(user.streak_shields);
+    if (user.streak_shields === ECONOMY.MAX_USER_STREAK_SHIELDS) {
       return;
     }
 
@@ -116,11 +117,13 @@ const useStoreActions = () => {
         id: user.id,
         data: {
           money: user.money - price,
+          streak_shields: user.streak_shields + 1,
         },
       },
       {
         onSuccess: () => {
-          updateUser({ money: user.money - price });
+          updateUser({ money: user.money - price, streak_shields: user.streak_shields + 1 });
+          ToastAndroid.show(`Has comprado un escudo de racha`, ToastAndroid.LONG);
         },
       }
     );

@@ -34,7 +34,7 @@ const StoreItem = ({ name, label, description, price, image, icon }) => {
   const { user } = useAuthStore();
   const { buyItem } = useStoreActions();
   const hasEnoughMoney = user.money >= price;
-
+  console.log(user.streak_shields);
   const isItemEnabled = () => {
     if (!hasEnoughMoney) {
       return false;
@@ -47,6 +47,8 @@ const StoreItem = ({ name, label, description, price, image, icon }) => {
         return user.lives < ECONOMY.MAX_USER_LIVES;
       case STORE_ITEM_NAMES.twoLives:
         return user.lives < ECONOMY.MAX_USER_LIVES - 1;
+      case STORE_ITEM_NAMES.streakShield:
+        return user.streak_shields !== ECONOMY.MAX_USER_STREAK_SHIELDS;
       default:
         return true;
     }

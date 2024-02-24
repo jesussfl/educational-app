@@ -14,7 +14,16 @@ const useUserStats = () => {
   const { user, updateUser } = useAuthStore();
   const { setLastLifeRegenerationTime } = useLivesStore();
   const { mutate } = useMutation((data) => query(updateUserMutation, data));
+  const decreaseStreakShields = () => {
+    mutate({
+      id: user.id,
+      data: {
+        streak_shields: user.streak_shields - 1,
+      },
+    });
 
+    updateUser({ streak_shields: user.streak_shields - 1 });
+  };
   const restartStreak = () => {
     mutate(
       {
@@ -202,6 +211,7 @@ const useUserStats = () => {
     increaseMoney,
     decreaseMoney,
     updateLastCompletedLessonDate,
+    decreaseStreakShields,
   };
 };
 

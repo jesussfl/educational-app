@@ -31,6 +31,7 @@ export const updateUserMutation = gql`
           next_life_regeneration
           expoPushToken
           first_life_lost_date
+          streak_shields
         }
       }
     }
@@ -55,6 +56,7 @@ export const loginUserMutation = gql`
         next_life_regeneration
         expoPushToken
         first_life_lost_date
+        streak_shields
       }
     }
   }
@@ -78,6 +80,7 @@ export const registerUserMutation = gql`
         next_life_regeneration
         expoPushToken
         first_life_lost_date
+        streak_shields
       }
     }
   }

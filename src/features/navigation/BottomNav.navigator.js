@@ -17,7 +17,7 @@ const BottomNavStack = createBottomTabNavigator();
 
 //TODO: Refactor and improve readability of this code
 export const BottomNavStackNavigator = () => {
-  const { increaseLives, restartStreak } = useUserStats();
+  const { increaseLives, restartStreak, decreaseStreakShields } = useUserStats();
   const { user } = useAuthStore();
   const { lastLifeRegenerationTime, setLastLifeRegenerationTime, setRegenerationTime } = useLivesStore();
   const regenerationInterval = ECONOMY.LIFE_REGENERATION_TIME_HOURS * 60 * 60;
@@ -67,6 +67,11 @@ export const BottomNavStackNavigator = () => {
     const differenceInDays = (now - lastCompletedLessonDate) / (1000 * 60 * 60 * 24);
 
     if (differenceInDays >= 2 && user.streak_days !== 0) {
+      if (user.streak_shields > 0) {
+        decreaseStreakShields();
+        return;
+      }
+
       restartStreak();
       return;
     }

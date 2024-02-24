@@ -19,6 +19,7 @@ export const queryUser = gql`
           next_life_regeneration
           expoPushToken
           first_life_lost_date
+          streak_shields
         }
       }
     }
