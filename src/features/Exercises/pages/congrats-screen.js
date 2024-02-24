@@ -13,14 +13,14 @@ import { Clock, Coin, Coin1, HeartSlash } from "iconsax-react-native";
 const CongratsPage = ({ route }) => {
   const navigation = useNavigation();
   const state = useExercises();
-  const { lessonStatus } = useLessonStore();
+  const { lessonStatus, isLastLesson } = useLessonStore();
   const { elapsedTime, errorCount } = route.params;
   const { saveProgress } = useExerciseActions();
   const profit =
     lessonStatus === "completed"
       ? ECONOMY.COMPLETED_LESSONS_PROFIT
-      : (ECONOMY.LESSONS_PROFIT - ECONOMY.LESSONS_PRICE) / (state.correctAnswers / (state.exercises.length - state.mistakes.length));
-
+      : (ECONOMY.LESSONS_PROFIT - ECONOMY.LESSONS_PRICE) / (state.exercises.length / (state.exercises.length - state.mistakes.length));
+  console.log(profit);
   useEffect(() => {
     saveProgress();
   }, []);
@@ -58,7 +58,18 @@ const CongratsPage = ({ route }) => {
           </View>
         </View>
         <View style={styles.buttonContainer}>
-          <Button text="Continuar" variant="primary" style={{ flex: 1 }} onPress={() => navigation.replace("Main", { screen: "Lessons" })} />
+          <Button
+            text="Continuar"
+            variant="primary"
+            style={{ flex: 1 }}
+            onPress={() => {
+              if (isLastLesson) {
+                navigation.navigate("WorldCompleted");
+                return;
+              }
+              navigation.replace("Main", { screen: "Lessons" });
+            }}
+          />
         </View>
       </View>
     </>

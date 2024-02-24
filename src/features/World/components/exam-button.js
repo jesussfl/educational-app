@@ -19,7 +19,7 @@ const Exam = ({ isLast, id, isCompleted, isLocked, description }) => {
         onPress={() => {
           addLessonType("exam");
           addLessonId(id);
-          addLessonStatus("unlocked");
+          addLessonStatus(isLocked ? "locked" : isCompleted ? "completed" : "unlocked");
           addLessonDescription(description);
           if (isLast) {
             addIsLastLesson(true);

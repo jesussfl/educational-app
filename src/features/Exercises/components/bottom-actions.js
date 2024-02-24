@@ -8,6 +8,7 @@ import { Colors } from "@utils/Theme";
 import { useExercises } from "@stores/useExerciseStore";
 import { useNavigation } from "@react-navigation/native";
 import { calculateTimeSpent } from "../helpers";
+import { useLessonStore } from "@stores/useLessonStore";
 const BottomActions = ({ checkAnswer, isLastExercise, exerciseType, lessonId }) => {
   const { isAnswerCorrect, nextExercise, userAnswer, startTime, mistakes, reset } = useExercises();
   const navigation = useNavigation();

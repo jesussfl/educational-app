@@ -62,8 +62,7 @@ export const useExerciseActions = () => {
     const profit =
       lessonStatus === "completed"
         ? ECONOMY.COMPLETED_LESSONS_PROFIT
-        : (ECONOMY.LESSONS_PROFIT - ECONOMY.LESSONS_PRICE) / (state.correctAnswers / (state.exercises.length - state.mistakes.length));
-
+        : (ECONOMY.LESSONS_PROFIT - ECONOMY.LESSONS_PRICE) / (state.exercises.length / (state.exercises.length - state.mistakes.length));
     completeLesson({
       user: user.id,
       lesson: route.params?.lessonId,
