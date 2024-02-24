@@ -58,7 +58,7 @@ const ExercisePage = ({ navigation, route }) => {
       {isAboutToLeave && (
         <Modal
           title="¿Estás seguro que deseas dejar el ejercicio?"
-          description="Si sales se perderá tu progreso"
+          description="Si sales se perderá tu progreso y tu dinero no será regresado"
           cancelAction={() => setIsAboutToLeave(false)}
           actionText={"Si, salir"}
           action={() => {

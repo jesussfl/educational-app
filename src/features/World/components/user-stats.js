@@ -4,14 +4,14 @@ import { DollarCircle, Heart } from "iconsax-react-native";
 import RemixIcon from "react-native-remix-icon";
 import { Colors } from "@utils/Theme";
 import { Button } from "@components";
-import { useLessonModal } from "@stores/lesson-modal";
+import { useLessonStore } from "@stores/useLessonStore";
 import { useNavigation } from "@react-navigation/native";
 import useAuthStore from "@stores/useAuthStore";
 import { useSections } from "../hooks/useSections";
 
 const UserStats = () => {
   const { user } = useAuthStore();
-  const { addLessonType } = useLessonModal((state) => state);
+  const { addLessonType } = useLessonStore((state) => state);
   const { currentWorld } = useSections();
   const navigation = useNavigation();
   return (

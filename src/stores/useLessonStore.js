@@ -1,5 +1,4 @@
 import { create } from "zustand";
-// import useBottomSheet from "@hooks/useBottomSheet";
 
 const initialState = {
   isOpen: false,
@@ -10,7 +9,7 @@ const initialState = {
   lessonDescription: null,
 };
 
-export const useLessonModal = create((set) => {
+export const useLessonStore = create((set) => {
   return {
     ...initialState,
 

@@ -4,7 +4,7 @@ import { Button } from "@components";
 import { Colors } from "@utils/Theme";
 import { PlayCircle, Book1, HeartSlash, DollarCircle } from "iconsax-react-native";
 import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
-import { useLessonModal } from "@stores/lesson-modal";
+import { useLessonStore } from "@stores/useLessonStore";
 import useBottomSheet from "@hooks/useBottomSheet";
 import { useNavigation } from "@react-navigation/native";
 import useAuthStore from "@stores/useAuthStore";
@@ -13,7 +13,7 @@ import { ECONOMY } from "@config/economy";
 const LessonBottomsheet = () => {
   const navigation = useNavigation();
   const { bottomSheetModalRef } = useBottomSheet();
-  const { lessonId, lessonType, lessonStatus, lessonDescription } = useLessonModal((state) => state);
+  const { lessonId, lessonType, lessonStatus, lessonDescription } = useLessonStore();
   const { user } = useAuthStore();
   const goToExercises = async () => {
     await bottomSheetModalRef.current?.close();
@@ -73,7 +73,7 @@ const LessonBottomsheet = () => {
     ),
   };
   return (
-    <CustomBottomSheet description={lessonDescription} costText={"Costo"} cost={ECONOMY.LESSONS_PRICE}>
+    <CustomBottomSheet description={lessonDescription} costText={"Costo"} cost={lessonStatus === "completed" ? "Adquirida" : ECONOMY.LESSONS_PRICE}>
       {ACTIONS[getActionState()]}
     </CustomBottomSheet>
   );
@@ -81,7 +81,7 @@ const LessonBottomsheet = () => {
 
 const CustomBottomSheet = ({ children, description, costText, cost }) => {
   const { bottomSheetModalRef, snapPoints, handlePresentModalPress } = useBottomSheet();
-  const { isOpen, lessonId, reset } = useLessonModal((state) => state);
+  const { isOpen, lessonId, reset } = useLessonStore((state) => state);
 
   useEffect(() => {
     if (isOpen) {

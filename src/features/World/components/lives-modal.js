@@ -4,12 +4,12 @@ import { Button } from "@components";
 import { Colors } from "@utils/Theme";
 
 import { useAuthContext } from "@contexts/auth.context";
-import { useLessonModal } from "@stores/lesson-modal";
+import { useLessonStore } from "@stores/useLessonStore";
 import { useLivesStore } from "@stores/useLivesStore";
 import useAuthStore from "@stores/useAuthStore";
 
 const LivesModal = () => {
-  const { reset, lessonType } = useLessonModal((state) => state);
+  const { reset, lessonType } = useLessonStore((state) => state);
   const { regenerationTime } = useLivesStore((state) => state);
   const { user } = useAuthStore();
   const [timeLeft, setTimeLeft] = useState(regenerationTime);

@@ -3,10 +3,10 @@ import { StyleSheet, View, Image } from "react-native";
 import { Key } from "iconsax-react-native";
 
 import { Button } from "@components";
-import { useLessonModal } from "@stores/lesson-modal";
+import { useLessonStore } from "@stores/useLessonStore";
 import { Colors } from "@utils/Theme";
 const Exam = ({ isLast, id, isCompleted, isLocked, description }) => {
-  const { addLessonId, addLessonStatus, onOpen, addIsLastLesson, addLessonType, addLessonDescription } = useLessonModal((state) => state);
+  const { addLessonId, addLessonStatus, onOpen, addIsLastLesson, addLessonType, addLessonDescription } = useLessonStore((state) => state);
 
   return (
     <View style={styles.bottomContainer}>

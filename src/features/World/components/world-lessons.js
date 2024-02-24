@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 
-import Lesson from "./lesson-button";
+import LessonWrapper from "./lesson-button-wrapper";
 import Gift from "./gift-button";
 import Exam from "./exam-button";
 
@@ -34,11 +34,11 @@ const SectionLessons = ({ lessons, completedLessons, firstLessonActive, isLastSe
         const isLessonLocked = checkIfLessonLocked(lesson, index);
         const isPrevLessonCompleted = checkPrevLessonIsCompleted(index);
 
-        const isLessonAGift = lesson.attributes.type === "gift";
+        const isGift = lesson.attributes.type === "gift";
         const isExam = lesson.attributes.type === "exam";
         const isLast = index === lessons.length - 1 && isLastSection;
 
-        if (isLessonAGift) {
+        if (isGift) {
           return <Gift key={lesson.id} isLessonCompleted={isLessonCompleted} isLocked={isLessonLocked} id={lesson.id} />;
         }
         if (isExam) {
@@ -54,7 +54,7 @@ const SectionLessons = ({ lessons, completedLessons, firstLessonActive, isLastSe
           );
         }
         return (
-          <Lesson
+          <LessonWrapper
             key={lesson.id}
             index={index}
             isLessonLocked={isPrevLessonCompleted ? false : isLessonLocked}

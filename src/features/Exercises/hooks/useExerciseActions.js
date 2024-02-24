@@ -12,10 +12,10 @@ import { createLessonCompletedMutation } from "@utils/graphql/mutations/lessonsC
 import { calculateTimeSpent } from "../helpers";
 import useAuthStore from "@stores/useAuthStore";
 import { createWorldCompletedMutation } from "@utils/graphql/mutations/worldsCompleted.mutation";
-import { useLessonModal } from "@stores/lesson-modal";
+import { useLessonStore } from "@stores/useLessonStore";
 export const useExerciseActions = () => {
   const state = useExercises((state) => state);
-  const { isLastLesson } = useLessonModal();
+  const { isLastLesson, lessonStatus } = useLessonStore();
   const route = useRoute();
   const { isLoading, error } = getExercisesByLesson(route.params?.lessonId);
   const { user, updateUser } = useAuthStore();
@@ -25,7 +25,7 @@ export const useExerciseActions = () => {
   const { mutate: completeWorld } = useMutation((data) => query(createWorldCompletedMutation, data));
   useEffect(() => {
     //TODO: Decrease money should be different for each kind of lesson
-    decreaseMoney(ECONOMY.LESSONS_PRICE); //TODO: This should be triggered when user complete an exercise at least
+    lessonStatus !== "completed" && decreaseMoney(ECONOMY.LESSONS_PRICE); //TODO: This should be triggered when user complete an exercise at least
   }, []);
 
   //TODO: Handle these errors in a better way
@@ -59,6 +59,11 @@ export const useExerciseActions = () => {
     decreaseLives();
   };
   const saveProgress = () => {
+    const profit =
+      lessonStatus === "completed"
+        ? ECONOMY.COMPLETED_LESSONS_PROFIT
+        : (ECONOMY.LESSONS_PROFIT - ECONOMY.LESSONS_PRICE) / (state.correctAnswers / (state.exercises.length - state.mistakes.length));
+
     completeLesson({
       user: user.id,
       lesson: route.params?.lessonId,
@@ -72,10 +77,10 @@ export const useExerciseActions = () => {
     });
     isLastLesson && completeWorld({ data: { user: user.id, world: user.currentWorld } });
     increaseStreak();
-    increaseMoney(ECONOMY.LESSONS_PROFIT);
+    increaseMoney(profit);
     updateUser({
       ...user,
-      money: user.money + ECONOMY.LESSONS_PROFIT,
+      money: user.money + profit,
     });
   };
   return {

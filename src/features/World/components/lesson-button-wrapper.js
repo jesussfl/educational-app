@@ -4,13 +4,13 @@ import { Svg, Line } from "react-native-svg";
 import * as Animatable from "react-native-animatable";
 
 import { LessonButton, Button } from "@components";
-import { useLessonModal } from "@stores/lesson-modal";
+import { useLessonStore } from "@stores/useLessonStore";
 import { calculateLeftPosition } from "../utils/calculateLessonsPosition";
 import { Colors } from "@utils/Theme";
 
-export function Lesson({ index, isLessonLocked, isLessonCompleted, lesson }) {
-  const { addLessonId, addLessonStatus, onOpen, addIsLastLesson, addLessonType, addLessonDescription } = useLessonModal((state) => state);
-
+export function LessonWrapper({ index, isLessonLocked, isLessonCompleted, lesson }) {
+  const { addLessonId, addLessonStatus, onOpen, addIsLastLesson, addLessonType, addLessonDescription } = useLessonStore((state) => state);
+  const isLessonCurrent = !isLessonCompleted && !isLessonLocked;
   return (
     <View>
       <Svg width="100" height="160" style={{ marginBottom: -36, marginTop: -106 }}>
@@ -18,7 +18,7 @@ export function Lesson({ index, isLessonLocked, isLessonCompleted, lesson }) {
         <Line x1="55%" y1="0" x2="55%" y2="100%" stroke={isLessonCompleted ? Colors.success_500 : Colors.gray_200} strokeWidth="15" />
       </Svg>
 
-      {!isLessonCompleted && !isLessonLocked ? (
+      {isLessonCurrent ? (
         <Animatable.View animation="pulse" easing="ease-out" iterationCount="infinite">
           <View style={styles.unlockedLessonContainer}>
             <LessonButton
@@ -74,4 +74,4 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
 });
-export default Lesson;
+export default LessonWrapper;

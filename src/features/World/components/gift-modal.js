@@ -7,10 +7,10 @@ import { useCustomMutation } from "@utils/useCustomMutation";
 import { createLessonCompletedMutation } from "@utils/graphql/mutations/lessonsCompleted.mutations";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useAuthContext } from "@contexts/auth.context";
-import { useLessonModal } from "@stores/lesson-modal";
+import { useLessonStore } from "@stores/useLessonStore";
 
 const GiftModal = () => {
-  const { lessonId, reset, lessonType } = useLessonModal((state) => state);
+  const { lessonId, reset, lessonType } = useLessonStore((state) => state);
 
   if (lessonType !== "gift") {
     return null;

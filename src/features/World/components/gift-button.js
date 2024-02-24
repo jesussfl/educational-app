@@ -2,7 +2,7 @@ import React from "react";
 import { Image, TouchableWithoutFeedback, View, StyleSheet } from "react-native";
 import { Svg, Line } from "react-native-svg";
 import * as Animatable from "react-native-animatable";
-import { useLessonModal } from "@stores/lesson-modal";
+import { useLessonStore } from "@stores/useLessonStore";
 
 import { Colors } from "@utils/Theme";
 
@@ -10,7 +10,7 @@ import CompletedGift from "../../../../assets/giftCompleted.png";
 import UnlockedGift from "../../../../assets/giftUnlocked.png";
 import LockedGift from "../../../../assets/Gift.png";
 function Gift({ isLessonCompleted, isLocked, id }) {
-  const { addLessonId, addLessonStatus, onOpen, addIsLastLesson, addLessonType } = useLessonModal((state) => state);
+  const { addLessonId, addLessonStatus, onOpen, addIsLastLesson, addLessonType } = useLessonStore((state) => state);
   let source;
   if (isLessonCompleted) {
     source = Image.resolveAssetSource(CompletedGift).uri;
