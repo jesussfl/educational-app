@@ -1,6 +1,7 @@
 import React from "react";
 import PurchaseHeartsFiller from "../data/purchase-hearts-filler";
 import { DollarCircle, HeartAdd } from "iconsax-react-native";
+import Chest from "../../../../assets/icons/chest.svg";
 import { Colors } from "@utils/Theme";
 
 export const STORE_ITEMS = [
@@ -12,7 +13,7 @@ export const STORE_ITEMS = [
         label: "Restaurador de Vidas",
         description: "Vuelve a tener todas tus vidas para seguir aprendiendo.",
         price: 300,
-        icon: <HeartAdd size={20} color={Colors.gray_400} />,
+        image: require("../../../../assets/icons/potion.png"),
       },
 
       {
@@ -20,7 +21,7 @@ export const STORE_ITEMS = [
         label: "Una vida",
         description: "Recarga una de tus vidas.",
         price: 100,
-        icon: <HeartAdd size={20} color={Colors.gray_400} />,
+        image: require("../../../../assets/icons/live.png"),
       },
     ],
   },
@@ -32,7 +33,7 @@ export const STORE_ITEMS = [
         label: "Escudo de Racha",
         description: "Protege tu racha si estarás ausente un diá. Puedes llevar maximo 3 escudos de racha.",
         price: 700,
-        icon: <DollarCircle size={20} color={Colors.gray_400} />,
+        image: require("../../../../assets/icons/chest.png"),
       },
     ],
   },

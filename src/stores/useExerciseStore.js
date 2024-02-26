@@ -8,6 +8,7 @@ const initialState = {
   userAnswer: [],
   mistakes: [],
   isAnswerCorrect: null,
+  isCheckingAnswer: false,
   startTime: null,
   endTime: null,
   correctAnswers: 0,
@@ -55,6 +56,9 @@ export const useExercises = create((set) => ({
     set((state) => ({
       correctAnswers: state.correctAnswers + 1,
     }));
+  },
+  setIsCheckingAnswer: (value) => {
+    set({ isCheckingAnswer: value });
   },
   reset: () => {
     set(initialState);

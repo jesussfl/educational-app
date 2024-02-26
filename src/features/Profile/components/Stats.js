@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
 import { Colors } from "@utils/Theme";
 import { Heart, DollarCircle } from "iconsax-react-native";
@@ -9,11 +9,11 @@ const Stats = () => {
   return (
     <View style={{ flexDirection: "row", gap: 12 }}>
       <View style={styles.wrapper}>
-        <Heart size={36} color={Colors.error_500} variant="Bold" />
+        <Image source={require("@assets/icons/live.png")} style={{ width: 36, height: 36, resizeMode: "contain" }} />
         <Text style={styles.text}>{user.lives} vidas</Text>
       </View>
       <View style={styles.wrapper}>
-        <DollarCircle size={36} color={Colors.success_500} variant="Bold" />
+        <Image source={require("@assets/icons/coin.png")} style={{ width: 36, height: 36, resizeMode: "contain" }} />
         <Text style={styles.text}>{user.money} Monedas</Text>
       </View>
     </View>
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: "Sora-Medium",
-    fontSize: 18,
+    fontSize: 15,
     color: Colors.gray_600,
   },
 });

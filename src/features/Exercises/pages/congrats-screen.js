@@ -31,37 +31,28 @@ const CongratsPage = ({ route }) => {
       <View style={styles.pageContainer}>
         <Image style={styles.image} source={require("../../../../assets/papelillos.png")}></Image>
         <View style={styles.textsContainer}>
-          <Text style={styles.congratsText}>¡Completaste la lección!</Text>
-          <Text style={[styles.congratsText, { fontSize: 18, fontFamily: "Sora-Medium" }]}>¡Lo hiciste muy bien!</Text>
-          <View style={{ flexDirection: "column", gap: 8 }}>
-            <View style={styles.resultContainer}>
-              <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
-                <Clock size={36} color={Colors.success_600} variant="Bold" />
-                <Text style={[styles.congratsText, { fontSize: 18, fontFamily: "Sora-Medium" }]}>Tu tiempo:</Text>
-              </View>
-              <Text style={[styles.congratsText, { fontSize: 20, fontFamily: "Sora-Bold" }]}>{elapsedTime}</Text>
-            </View>
-            <View style={styles.resultContainer}>
-              <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
-                <Coin1 size={36} color={Colors.primary_600} variant="Bold" />
-                <Text style={[styles.congratsText, { fontSize: 18, fontFamily: "Sora-Medium" }]}>Monedas conseguidas:</Text>
-              </View>
-              <Text style={[styles.congratsText, { fontSize: 22, fontFamily: "Sora-Bold" }]}> {profit}</Text>
-            </View>
-            <View style={styles.resultContainer}>
-              <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
-                <HeartSlash size={32} color={Colors.error_500} variant="Bold" />
-                <Text style={[styles.congratsText, { fontSize: 18, fontFamily: "Sora-Medium" }]}>Vidas perdidas:</Text>
-              </View>
-              <Text style={[styles.congratsText, { fontSize: 22, fontFamily: "Sora-Bold" }]}> {errorCount}</Text>
-            </View>
-          </View>
+          <Image source={require("@assets/icons/coin.png")} style={{ width: 124, height: 124, resizeMode: "contain" }} />
+
+          <Text style={styles.congratsText}>Has obtenido {profit} monedas!</Text>
+          <Text style={[styles.congratsText, { fontSize: 18, fontFamily: "Sora-Medium" }]}>¡Has hecho un excelente trabajo!</Text>
+          <View style={{ flexDirection: "column", gap: 8 }}></View>
         </View>
         <View style={styles.buttonContainer}>
+          <View style={styles.resultContainer}>
+            <View style={{ flexDirection: "column", gap: 8, alignItems: "flex-start" }}>
+              <Text style={[styles.congratsText, { fontSize: 14, fontFamily: "Sora-Medium", textAlign: "left" }]}>Tu tiempo: {elapsedTime}</Text>
+              <Text style={[styles.congratsText, { fontSize: 14, fontFamily: "Sora-Medium", textAlign: "left" }]}>
+                Respuestas Correctas: {state.exercises.length - state.mistakes.length}
+              </Text>
+            </View>
+            <View style={{ flexDirection: "column", gap: 8, alignItems: "center" }}>
+              <Text style={[styles.congratsText, { fontSize: 14, fontFamily: "Sora-Bold" }]}>Correcciones</Text>
+              <Text style={[styles.congratsText, { fontSize: 28, fontFamily: "Sora-Medium" }]}>{errorCount}</Text>
+            </View>
+          </View>
           <Button
             text="Continuar"
             variant="primary"
-            style={{ flex: 1 }}
             onPress={() => {
               if (isLastLesson) {
                 navigation.navigate("WorldCompleted");
@@ -82,7 +73,7 @@ const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: Colors.gray_50,
+    backgroundColor: "#fff",
   },
   resultContainer: {
     flexDirection: "row",
@@ -95,14 +86,15 @@ const styles = StyleSheet.create({
     borderColor: Colors.gray_100,
     borderWidth: 3,
     borderBottomWidth: 8,
-    padding: 24,
+    padding: 12,
   },
   textsContainer: {
     flex: 1,
 
     padding: 24,
     gap: 16,
-    justifyContent: "flex-end",
+    justifyContent: "center",
+    alignItems: "center",
   },
   congratsText: {
     fontFamily: "Sora-Bold",
@@ -113,8 +105,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     gap: 16,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: "column",
     padding: 24,
   },
   image: {

@@ -31,14 +31,13 @@ const ProfileScreen = () => {
       <View style={{ gap: 32 }}>
         <Avatar email={user.email} username={user.username} />
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 24 }}>
-          <Text style={{ fontSize: 18, fontFamily: "Sora-SemiBold", color: "#9A4CFF" }}>Plan Premium</Text>
-          <Text style={{ fontSize: 16, fontFamily: "Sora-SemiBold" }}>Vencimiento: </Text>
+          {/* <Text style={{ fontSize: 18, fontFamily: "Sora-SemiBold", color: "#9A4CFF" }}>Plan Premium</Text>
+          <Text style={{ fontSize: 16, fontFamily: "Sora-SemiBold" }}>Vencimiento: </Text> */}
         </View>
         <Stats />
         <CardStreak />
-        <CardReferrals />
+        {/* <CardReferrals /> */}
         <View style={styles.options}>
-          <Button text="Configurar Notificaciones" variant="ghost" size="medium" leftIcon={<Notification size={24} variant="Bold" color={Colors.gray_300} />} />
           <Button
             text="Cerrar sesión"
             onPress={handleLogout}

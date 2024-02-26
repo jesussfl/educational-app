@@ -1,12 +1,12 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Button } from "@components";
 import { Colors } from "@utils/Theme";
 
-import { useAuthContext } from "@contexts/auth.context";
 import { useLessonStore } from "@stores/useLessonStore";
 import { useLivesStore } from "@stores/useLivesStore";
 import useAuthStore from "@stores/useAuthStore";
+import { Heart } from "iconsax-react-native";
 
 const LivesModal = () => {
   const { reset, lessonType } = useLessonStore((state) => state);
@@ -40,43 +40,26 @@ const LivesModal = () => {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        position: "absolute",
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        width: "100%",
-        height: "100%",
-        backgroundColor: "rgba(0,0,0,0.5)",
-        zIndex: 99,
-        padding: 24,
-      }}
-    >
-      <View
-        style={{
-          backgroundColor: "#fff",
-          padding: 24,
-          borderRadius: 24,
-          gap: 24,
-          borderWidth: 4,
-          borderColor: Colors.gray_300,
-        }}
-      >
+    <View style={styles.popover}>
+      <View style={styles.modalContainer}>
+        <View style={{ flexDirection: "row", justifyContent: "center", gap: 3 }}>
+          {
+            //map hearts here based on lives
+
+            Array.from({ length: user.lives }).map((_, index) => (
+              <Image key={index} source={require("@assets/icons/live.png")} style={{ width: 24, height: 24, resizeMode: "contain" }} />
+            ))
+          }
+        </View>
         <Text style={styles.modalTitle}>Tienes {user.lives} vidas</Text>
-        <Text style={styles.modalText}>
-          {timeLeft <= 0 ? "Tienes todas tus vidas" : "Tiempo restante"} {formatTime(timeLeft)}
-        </Text>
+        <Text style={styles.modalText}>{timeLeft <= 0 ? "" : "Tiempo restante: " + formatTime(timeLeft)}</Text>
         <View
           style={{
             flexDirection: "row",
             gap: 16,
           }}
         >
-          <Button text="Tomar" variant="primary" onPress={reset} style={{ flex: 1 }} />
+          <Button text="Cerrar" variant="primary" onPress={reset} style={{ flex: 1 }} />
         </View>
       </View>
     </View>
@@ -86,6 +69,28 @@ const LivesModal = () => {
 export default LivesModal;
 
 const styles = StyleSheet.create({
+  popover: {
+    flex: 1,
+    justifyContent: "center",
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0,0,0,0.5)",
+    zIndex: 99,
+    padding: 24,
+  },
+  modalContainer: {
+    backgroundColor: "#fff",
+    padding: 24,
+    borderRadius: 24,
+    gap: 24,
+    borderWidth: 4,
+    borderColor: Colors.gray_300,
+  },
   modalTitle: {
     fontSize: 24,
     marginBottom: 8,

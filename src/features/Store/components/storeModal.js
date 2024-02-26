@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
 import { Button } from "@components";
 import { Colors } from "@utils/Theme";
@@ -6,7 +6,6 @@ import useModalStore from "@stores/useModalStore";
 import { DollarCircle } from "iconsax-react-native";
 const StoreModal = ({ children }) => {
   const { isOpen, config } = useModalStore();
-
   return (
     <>
       {isOpen && (
@@ -45,7 +44,7 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: "rgba(0,0,0,0.5)",
     zIndex: 99,
-    padding: 24,
+    padding: 8,
   },
   container: {
     backgroundColor: "#fff",

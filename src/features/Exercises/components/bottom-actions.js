@@ -10,7 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import { calculateTimeSpent } from "../helpers";
 import { useLessonStore } from "@stores/useLessonStore";
 const BottomActions = ({ checkAnswer, isLastExercise, exerciseType, lessonId }) => {
-  const { isAnswerCorrect, nextExercise, userAnswer, startTime, mistakes, reset } = useExercises();
+  const { isAnswerCorrect, nextExercise, userAnswer, startTime, mistakes, isCheckingAnswer, reset } = useExercises();
   const navigation = useNavigation();
 
   if (exerciseType === "theory") {
@@ -51,6 +51,7 @@ const BottomActions = ({ checkAnswer, isLastExercise, exerciseType, lessonId }) 
           <Button
             text="Continuar"
             variant={isAnswerCorrect ? "success" : "wrong"}
+            disabled={isCheckingAnswer}
             rightIcon={isAnswerCorrect ? <ArrowRight size={24} color={"#fff"} variant="Bold" /> : <InfoCircle size={24} color={"#fff"} variant="Bold" />}
             onPress={
               !isLastExercise
@@ -69,16 +70,13 @@ const BottomActions = ({ checkAnswer, isLastExercise, exerciseType, lessonId }) 
         </View>
       ) : (
         <View>
-          {/* {isCountdownActive ? (
-            <View style={{ height: 10, width: `${(timeRemaining * 100) / initialCountdownValue}%`, backgroundColor: Colors.primary_600 }}></View>
-          ) : null} */}
           <View style={styles.buttonContainer}>
             <UserStats statusToShow={"lives"} style={{ transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }] }} />
 
             <Button
               text="Comprobar"
               variant="primary"
-              disabled={userAnswer == null || userAnswer.length === 0}
+              disabled={userAnswer == null || userAnswer.length === 0 || isCheckingAnswer}
               rightIcon={<ArrowRight size={24} color={"#fff"} variant="Bold" />}
               style={{ flex: 1 }}
               onPress={checkAnswer}

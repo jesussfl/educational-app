@@ -17,7 +17,7 @@ const Modal = ({ title, description, cancelAction, actionText, action, children 
         height: "100%",
         backgroundColor: "rgba(0,0,0,0.5)",
         zIndex: 99,
-        padding: 24,
+        padding: 8,
       }}
     >
       <View

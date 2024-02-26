@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, StatusBar } from "react-native";
+import { View, Text, StyleSheet, StatusBar, Image } from "react-native";
 import React from "react";
 import { DollarCircle, Heart } from "iconsax-react-native";
 import RemixIcon from "react-native-remix-icon";
@@ -24,16 +24,22 @@ const UserStats = () => {
           onPress={() => {
             addLessonType("lives");
           }}
-          leftIcon={<Heart size={24} variant="Bold" color={Colors.error_400} />}
+          leftIcon={<Image source={require("@assets/icons/live.png")} style={{ width: 24, height: 24, resizeMode: "contain" }} />}
         />
         <Button
           variant={"secondary"}
           text={user?.money || 0}
           size="small"
           onPress={() => navigation.navigate("Store")}
-          leftIcon={<DollarCircle size={24} variant="Bold" color={Colors.success_500} />}
+          // leftIcon={<DollarCircle size={24} variant="Bold" color={Colors.success_500} />}
+          leftIcon={<Image source={require("@assets/icons/coin.png")} style={{ width: 24, height: 24, resizeMode: "contain" }} />}
         />
-        <Button variant={"secondary"} text={user?.streak_days || 0} size="small" leftIcon={<RemixIcon name="fire-fill" size={24} color={"#E17512"} />} />
+        <Button
+          variant={"secondary"}
+          text={user?.streak_days || 0}
+          size="small"
+          leftIcon={<Image source={require("@assets/icons/streak.png")} style={{ width: 24, height: 24, resizeMode: "contain" }} />}
+        />
       </View>
       <View style={styles.worldName}>
         <Text style={styles.worldTitle}>{currentWorld?.name}</Text>

@@ -17,7 +17,7 @@ const Modal = ({ cancel, close }) => {
         height: "100%",
         backgroundColor: "rgba(0,0,0,0.5)",
         zIndex: 99,
-        padding: 24,
+        padding: 8,
       }}
     >
       <View
@@ -38,18 +38,8 @@ const Modal = ({ cancel, close }) => {
             gap: 16,
           }}
         >
-          <Button
-            text="Cancelar"
-            variant="secondary"
-            onPress={cancel}
-            style={{ flex: 1 }}
-          />
-          <Button
-            text="Salir"
-            variant="primary"
-            onPress={close}
-            style={{ flex: 1 }}
-          />
+          <Button text="Cancelar" variant="secondary" onPress={cancel} style={{ flex: 1 }} />
+          <Button text="Salir" variant="primary" onPress={close} style={{ flex: 1 }} />
         </View>
       </View>
     </View>

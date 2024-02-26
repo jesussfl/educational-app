@@ -19,9 +19,7 @@ const StoreScreen = () => {
         style={styles.container}
         sections={STORE_ITEMS}
         keyExtractor={(item, index) => item + index}
-        renderItem={({ item }) => (
-          <StoreItem name={item.name} label={item.label} description={item.description} price={item.price} image={item.image} icon={item.icon} />
-        )}
+        renderItem={({ item }) => <StoreItem name={item.name} label={item.label} description={item.description} price={item.price} image={item.image} />}
         renderSectionHeader={({ section: { title } }) => <Text style={{ fontSize: 17, fontFamily: "Sora-SemiBold", color: Colors.gray_400 }}>{title}</Text>}
       />
       <StoreModal />
@@ -29,12 +27,12 @@ const StoreScreen = () => {
   );
 };
 
-const StoreItem = ({ name, label, description, price, image, icon }) => {
+const StoreItem = ({ name, label, description, price, image }) => {
+  console.log(image);
   const { onOpen, onClose } = useModalStore((state) => state);
   const { user } = useAuthStore();
   const { buyItem } = useStoreActions();
   const hasEnoughMoney = user.money >= price;
-  console.log(user.streak_shields);
   const isItemEnabled = () => {
     if (!hasEnoughMoney) {
       return false;
@@ -58,6 +56,7 @@ const StoreItem = ({ name, label, description, price, image, icon }) => {
     title: `Comprar ${label}`,
     description: `Estás seguro que quieres comprarlo por:`,
     price,
+    image,
     cancelAction: onClose,
     confirmActionText: "Comprar",
     confirmAction: () => {
@@ -75,10 +74,10 @@ const StoreItem = ({ name, label, description, price, image, icon }) => {
   return (
     <>
       <View style={styles.itemContainer}>
-        {icon ? (
-          <View style={{ width: 72, height: 72, backgroundColor: Colors.gray_50, borderRadius: 8 }}>{/* <Text> {icon} </Text>{" "} */}</View>
+        {image ? (
+          <Image style={{ height: 72, width: 72, resizeMode: "contain" }} source={image} />
         ) : (
-          <Image style={{ width: 72, height: 72 }} source={image} />
+          <View style={{ width: 72, height: 72, backgroundColor: Colors.gray_50, borderRadius: 8 }}></View>
         )}
 
         <View style={{ flex: 1, gap: 4 }}>

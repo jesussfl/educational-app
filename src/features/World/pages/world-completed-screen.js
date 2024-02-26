@@ -4,11 +4,7 @@ import React, { useEffect } from "react";
 import { Button } from "@components";
 import { useNavigation } from "@react-navigation/native";
 import { Colors } from "@utils/Theme";
-import { useExerciseActions } from "../../Exercises/hooks/useExerciseActions";
-import { ECONOMY } from "@config/economy";
-import { useLessonStore } from "@stores/useLessonStore";
-import { useExercises } from "@stores/useExerciseStore";
-import { Clock, Coin, Coin1, HeartSlash } from "iconsax-react-native";
+
 import { useMutation } from "@tanstack/react-query";
 import { query } from "@utils/graphql";
 import { updateUserMutation } from "@utils/graphql/mutations/user.mutation";
@@ -40,12 +36,13 @@ const WorldCompletedScreen = () => {
     <>
       <StatusBar style="dark" translucent={true} />
       <View style={styles.pageContainer}>
-        <Image
-          style={{ width: 124, height: 124, resizeMode: "stretch" }}
-          src={`${process.env.EXPO_PUBLIC_API_URL}${getNextWorld().attributes.image?.data?.attributes?.url}`}
-        ></Image>
-
         <View style={styles.textsContainer}>
+          <View style={{ alignItems: "center", padding: 24, borderWidth: 4, borderColor: Colors.primary_500, borderRadius: 9999 }}>
+            <Image
+              style={{ width: 156, height: 156, resizeMode: "contain" }}
+              src={`${process.env.EXPO_PUBLIC_API_URL}${getNextWorld().attributes.image?.data?.attributes?.url}`}
+            />
+          </View>
           <Text style={styles.congratsText}>¡Felicidades!</Text>
           <Text style={[styles.congratsText, { fontSize: 18, fontFamily: "Sora-Medium" }]}>¡Has avanzado al siguiente mundo!</Text>
         </View>
@@ -71,8 +68,9 @@ export default WorldCompletedScreen;
 const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
-    justifyContent: "flex-end",
-    backgroundColor: Colors.gray_50,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
   },
   resultContainer: {
     flexDirection: "row",
@@ -93,6 +91,7 @@ const styles = StyleSheet.create({
     padding: 24,
     gap: 16,
     justifyContent: "center",
+    alignItems: "center",
   },
   congratsText: {
     fontFamily: "Sora-Bold",

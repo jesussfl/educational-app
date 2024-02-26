@@ -159,7 +159,7 @@ export const BottomNavStackNavigator = () => {
           headerShown: false,
           tabBarStyle: ((route) => {
             const routeName = getFocusedRouteNameFromRoute(route) ?? "";
-            if (routeName === "Exercise" || routeName === "Congrats" || routeName === "TheoryScreen") {
+            if (routeName === "Exercise" || routeName === "Congrats" || routeName === "TheoryScreen" || routeName === "WorldCompleted") {
               return { display: "none" };
             }
 

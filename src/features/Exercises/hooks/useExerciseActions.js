@@ -39,6 +39,7 @@ export const useExerciseActions = () => {
   const percentage = (state.correctAnswers * 100) / (state.exercises.length - state.mistakes.length);
 
   const checkAnswer = async () => {
+    state.setIsCheckingAnswer(true);
     const exerciseType = currentExerciseData.attributes.type;
     const answerChecker = exercisesChecker[exerciseType];
 
@@ -51,6 +52,7 @@ export const useExerciseActions = () => {
     await playSound();
     state.setIsAnswerCorrect(true);
     state.sumCorrectAnswer();
+    state.setIsCheckingAnswer(false);
   };
   const punishUser = () => {
     state.setIsAnswerCorrect(false);
@@ -74,7 +76,7 @@ export const useExerciseActions = () => {
         errorExercises: state.mistakes,
       },
     });
-    isLastLesson && completeWorld({ data: { user: user.id, world: user.currentWorld } });
+    isLastLesson && completeWorld({ user: user.id, world: user.currentWorld, data: { user: user.id, world: user.currentWorld } });
     increaseStreak();
     increaseMoney(profit);
     updateUser({
