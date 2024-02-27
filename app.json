@@ -11,7 +11,7 @@
       "slug": "client",
       "version": "1.0.0",
       "orientation": "portrait",
-      "icon": "./assets/finex-logo.png",
+      "icon": "./assets/finex-icon.png",
       "userInterfaceStyle": "light",
       "splash": {
          "image": "./assets/finex-splash.png",
@@ -26,7 +26,7 @@
          "package": "dev.jeflr.educationalApp",
          "googleServicesFile": "./google-services.json",
          "adaptiveIcon": {
-            "foregroundImage": "./assets/finex-logo.png",
+            "foregroundImage": "./assets/finex-icon.png",
             "backgroundColor": "#ffffff"
          }
       },

@@ -38,6 +38,7 @@ yarn-error.*
 yarn.lock
 
 # .gitignore
+android/
 android/.gradle/
 android/app/build/
 

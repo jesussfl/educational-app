@@ -8,7 +8,6 @@ import SectionLessons from "./world-lessons";
 const sectionColors = [Colors.primary_500, "#12B76A", "#9A4CFF", "#F1733D"];
 
 const WorldSections = ({ sections, completedLessons }) => {
-  const isSectionsEmpty = sections.length === 0;
   const scrollViewRef = useRef(null);
 
   const completedLessonsIds = completedLessons.map((lesson) => lesson.attributes.lesson.data.id);
@@ -24,14 +23,6 @@ const WorldSections = ({ sections, completedLessons }) => {
     const lessons = sections[index - 1].attributes.lessons.data;
     return lessons.every((lesson) => completedLessonsIds.includes(lesson.id));
   };
-
-  if (isSectionsEmpty) {
-    return (
-      <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>Este mundo está vacío</Text>
-      </View>
-    );
-  }
 
   return (
     <ScrollView

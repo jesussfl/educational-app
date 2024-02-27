@@ -28,7 +28,6 @@ const StoreScreen = () => {
 };
 
 const StoreItem = ({ name, label, description, price, image }) => {
-  console.log(image);
   const { onOpen, onClose } = useModalStore((state) => state);
   const { user } = useAuthStore();
   const { buyItem } = useStoreActions();

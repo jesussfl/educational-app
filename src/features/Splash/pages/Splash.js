@@ -63,7 +63,7 @@ export function Splash({ isAppReady }) {
   return (
     <Animated.View collapsable={false} style={[style.container, { opacity: containerOpacity }]}>
       <Animated.Image
-        source={require("../../../../assets/CF.png")}
+        source={require("../../../../assets/finex-splash.png")}
         fadeDuration={0}
         onLoad={() => {
           setState(FADE_IN_IMAGE);
@@ -83,7 +83,8 @@ const style = StyleSheet.create({
     justifyContent: "center",
   },
   image: {
-    width: 250,
-    height: 250,
+    width: "100%",
+    height: "100%",
+    resizeMode: "contain",
   },
 });

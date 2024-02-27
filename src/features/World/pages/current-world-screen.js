@@ -27,7 +27,7 @@ const CurrentWorldScreen = () => {
     <>
       <StatusBar style="dark" translucent={true} />
 
-      {isLoading ? (
+      {isLoading || !sections ? (
         <Spinner visible={isLoading} />
       ) : (
         <>
