@@ -14,13 +14,9 @@ const CongratsPage = ({ route }) => {
   const navigation = useNavigation();
   const state = useExercises();
   const { lessonStatus, isLastLesson } = useLessonStore();
-  const { elapsedTime, errorCount } = route.params;
+  const { elapsedTime, errorCount, profit, correctAnswers } = route.params;
   const { saveProgress } = useExerciseActions();
-  const profit =
-    lessonStatus === "completed"
-      ? ECONOMY.COMPLETED_LESSONS_PROFIT
-      : (ECONOMY.LESSONS_PROFIT - ECONOMY.LESSONS_PRICE) / (state.exercises.length / (state.exercises.length - state.mistakes.length));
-  console.log(profit);
+
   useEffect(() => {
     saveProgress();
   }, []);
@@ -41,9 +37,7 @@ const CongratsPage = ({ route }) => {
           <View style={styles.resultContainer}>
             <View style={{ flexDirection: "column", gap: 8, alignItems: "flex-start" }}>
               <Text style={[styles.congratsText, { fontSize: 14, fontFamily: "Sora-Medium", textAlign: "left" }]}>Tu tiempo: {elapsedTime}</Text>
-              <Text style={[styles.congratsText, { fontSize: 14, fontFamily: "Sora-Medium", textAlign: "left" }]}>
-                Respuestas Correctas: {state.exercises.length - state.mistakes.length}
-              </Text>
+              <Text style={[styles.congratsText, { fontSize: 14, fontFamily: "Sora-Medium", textAlign: "left" }]}>Respuestas Correctas: {correctAnswers}</Text>
             </View>
             <View style={{ flexDirection: "column", gap: 8, alignItems: "center" }}>
               <Text style={[styles.congratsText, { fontSize: 14, fontFamily: "Sora-Bold" }]}>Correcciones</Text>

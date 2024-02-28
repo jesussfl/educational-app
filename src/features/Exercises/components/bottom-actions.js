@@ -9,8 +9,12 @@ import { useExercises } from "@stores/useExerciseStore";
 import { useNavigation } from "@react-navigation/native";
 import { calculateTimeSpent } from "../helpers";
 import { useLessonStore } from "@stores/useLessonStore";
+import { ECONOMY } from "@config/economy";
+import { useExerciseActions } from "../hooks/useExerciseActions";
 const BottomActions = ({ checkAnswer, isLastExercise, exerciseType, lessonId }) => {
-  const { isAnswerCorrect, nextExercise, userAnswer, startTime, mistakes, isCheckingAnswer, reset } = useExercises();
+  const { exercises, isAnswerCorrect, nextExercise, userAnswer, startTime, mistakes, isCheckingAnswer, reset } = useExercises();
+  const { profit } = useExerciseActions();
+
   const navigation = useNavigation();
 
   if (exerciseType === "theory") {
@@ -62,8 +66,9 @@ const BottomActions = ({ checkAnswer, isLastExercise, exerciseType, lessonId }) 
                       elapsedTime: calculateTimeSpent(startTime),
                       errorCount: mistakes.length,
                       errorExercises: mistakes,
+                      profit,
+                      correctAnswers: exercises.length - mistakes.length,
                     });
-                    reset();
                   }
             }
           />

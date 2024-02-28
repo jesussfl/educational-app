@@ -52,6 +52,11 @@ export const useExercises = create((set) => ({
       exercises: [...state.exercises, value],
     }));
   },
+  addMistake: (value) => {
+    set((state) => ({
+      mistakes: [...state.mistakes, value],
+    }));
+  },
   sumCorrectAnswer: () => {
     set((state) => ({
       correctAnswers: state.correctAnswers + 1,

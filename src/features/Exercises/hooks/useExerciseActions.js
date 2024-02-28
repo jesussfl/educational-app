@@ -17,16 +17,19 @@ export const useExerciseActions = () => {
   const state = useExercises((state) => state);
   const { isLastLesson, lessonStatus } = useLessonStore();
   const route = useRoute();
-  const { isLoading, error } = getExercisesByLesson(route.params?.lessonId);
+  const { isLoading, error, data } = getExercisesByLesson(route.params?.lessonId);
   const { user, updateUser } = useAuthStore();
   const { decreaseLives, decreaseMoney, increaseMoney, increaseStreak } = useUserStats();
   const { playSound } = useExerciseSound();
   const { mutate: completeLesson } = useMutation((data) => query(createLessonCompletedMutation, data));
   const { mutate: completeWorld } = useMutation((data) => query(createWorldCompletedMutation, data));
+
   useEffect(() => {
-    //TODO: Decrease money should be different for each kind of lesson
-    lessonStatus !== "completed" && decreaseMoney(ECONOMY.LESSONS_PRICE); //TODO: This should be triggered when user complete an exercise at least
-  }, []);
+    // decrease money if user complete an exercise
+    if (state.currentExerciseIndex === 1) {
+      lessonStatus !== "completed" && decreaseMoney(ECONOMY.LESSONS_PRICE);
+    }
+  }, [state.currentExerciseIndex]);
 
   //TODO: Handle these errors in a better way
   if (isLoading || !state.exercises) {
@@ -37,7 +40,10 @@ export const useExerciseActions = () => {
   const isLastExercise = state.currentExerciseIndex === state.exercises.length - 1;
   const currentExerciseView = renderExercise(currentExerciseData);
   const percentage = (state.correctAnswers * 100) / (state.exercises.length - state.mistakes.length);
-
+  const profit =
+    lessonStatus === "completed"
+      ? ECONOMY.COMPLETED_LESSONS_PROFIT
+      : (ECONOMY.LESSONS_PROFIT - ECONOMY.LESSONS_PRICE) / (state.exercises.length / (state.exercises.length - state.mistakes.length));
   const checkAnswer = async () => {
     state.setIsCheckingAnswer(true);
     const exerciseType = currentExerciseData.attributes.type;
@@ -47,6 +53,7 @@ export const useExerciseActions = () => {
 
     if (!isCorrect) {
       punishUser();
+      state.setIsCheckingAnswer(false);
       return;
     }
     await playSound();
@@ -56,15 +63,11 @@ export const useExerciseActions = () => {
   };
   const punishUser = () => {
     state.setIsAnswerCorrect(false);
-    state.setMistakes(currentExerciseData.id);
+    state.addMistake(currentExerciseData.id);
     state.addNewExercise(currentExerciseData);
     decreaseLives();
   };
   const saveProgress = () => {
-    const profit =
-      lessonStatus === "completed"
-        ? ECONOMY.COMPLETED_LESSONS_PROFIT
-        : (ECONOMY.LESSONS_PROFIT - ECONOMY.LESSONS_PRICE) / (state.exercises.length / (state.exercises.length - state.mistakes.length));
     completeLesson({
       user: user.id,
       lesson: route.params?.lessonId,
@@ -83,8 +86,10 @@ export const useExerciseActions = () => {
       ...user,
       money: user.money + profit,
     });
+    state.reset();
   };
   return {
+    profit,
     checkAnswer,
     saveProgress,
     currentExerciseData,
