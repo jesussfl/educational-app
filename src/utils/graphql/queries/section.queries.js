@@ -7,6 +7,7 @@ export const querySectionById = gql`
         id
         attributes {
           content
+          contentTitle
         }
       }
     }

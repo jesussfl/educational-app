@@ -5,7 +5,14 @@ import LessonWrapper from "./lesson-button-wrapper";
 import Gift from "./gift-button";
 import Exam from "./exam-button";
 
-const SectionLessons = ({ lessons, completedLessons, firstLessonActive, isLastSection }) => {
+const WorldLessons = ({
+  lessons,
+  completedLessons,
+  firstLessonActive,
+  isLastSection,
+
+  sectionIndex,
+}) => {
   const checkIfLessonCompleted = (lesson) => {
     if (!completedLessons || firstLessonActive) {
       return false;
@@ -50,6 +57,7 @@ const SectionLessons = ({ lessons, completedLessons, firstLessonActive, isLastSe
               isLocked={!isPrevLessonCompleted}
               isCompleted={isLessonCompleted}
               description={lesson.attributes.description}
+              sectionIndex={sectionIndex}
             />
           );
         }
@@ -74,4 +82,4 @@ const styles = StyleSheet.create({
     flexDirection: "column-reverse",
   },
 });
-export default SectionLessons;
+export default WorldLessons;

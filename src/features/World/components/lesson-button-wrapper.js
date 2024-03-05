@@ -7,12 +7,22 @@ import { LessonButton, Button } from "@components";
 import { useLessonStore } from "@stores/useLessonStore";
 import { calculateLeftPosition } from "../utils/calculateLessonsPosition";
 import { Colors } from "@utils/Theme";
+import { useScrollStore } from "@stores/useScrollStore";
 
 export function LessonWrapper({ index, isLessonLocked, isLessonCompleted, lesson }) {
   const { addLessonId, addLessonStatus, onOpen, addIsLastLesson, addLessonType, addLessonDescription } = useLessonStore((state) => state);
+  const { addCurrentCoords } = useScrollStore((state) => state);
   const isLessonCurrent = !isLessonCompleted && !isLessonLocked;
+
   return (
-    <View>
+    <View
+      onLayout={(event) => {
+        if (isLessonCurrent) {
+          const layout = event.nativeEvent.layout;
+          addCurrentCoords(layout.y);
+        }
+      }}
+    >
       <Svg width="100" height="160" style={{ marginBottom: -36, marginTop: -106 }}>
         <Line x1="55%" y1="0" x2="55%" y2="100%" stroke={Colors.gray_50} strokeWidth="80" />
         <Line x1="55%" y1="0" x2="55%" y2="100%" stroke={isLessonCompleted ? Colors.success_500 : Colors.gray_200} strokeWidth="15" />

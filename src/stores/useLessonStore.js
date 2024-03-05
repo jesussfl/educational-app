@@ -7,6 +7,10 @@ const initialState = {
   lessonStatus: null,
   isLastLesson: false,
   lessonDescription: null,
+  sectionIndex: null,
+  currentCoords: null,
+  sectionCoords: null,
+  ref: null,
 };
 
 export const useLessonStore = create((set) => {
@@ -31,6 +35,13 @@ export const useLessonStore = create((set) => {
     addLessonDescription: (lessonDescription) => set({ lessonDescription }),
     removeLessonDescription: () => set({ lessonDescription: null }),
 
+    addSectionIndex: (sectionIndex) => set({ sectionIndex }),
+    addRef: (ref) => set({ ref }),
+    removeRef: () => set({ ref: null }),
+
+    addCurrentCoords: (currentCoords) => set({ currentCoords }),
+    addSectionCoords: (sectionCoords) => set({ sectionCoords }),
+    removeCurrentCoords: () => set({ currentCoords: null }),
     reset: () => {
       set(initialState);
     },

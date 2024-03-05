@@ -1,14 +1,26 @@
-import React, { useRef } from "react";
-import { ScrollView, View, StyleSheet, Image, Text } from "react-native";
+import React, { useEffect, useState } from "react";
+import { ScrollView, View, StyleSheet } from "react-native";
 import { Colors } from "@utils/Theme";
 import WorldSectionBanner from "./world-section-banner";
 
-import SectionLessons from "./world-lessons";
+import WorldLessons from "./world-lessons";
+import { useScrollStore } from "@stores/useScrollStore";
 
 const sectionColors = [Colors.primary_500, "#12B76A", "#9A4CFF", "#F1733D"];
 
 const WorldSections = ({ sections, completedLessons }) => {
-  const scrollViewRef = useRef(null);
+  const { currentCoords, sectionCoords, addSectionCoords, sectionHeight, addSectionHeight, reset } = useScrollStore();
+  const [ref, setRef] = useState(null);
+
+  useEffect(() => {
+    if (ref && currentCoords && sectionCoords && sectionHeight) {
+      ref.scrollTo({
+        x: 0,
+        y: sectionCoords + currentCoords - sectionHeight / 3,
+        animated: true,
+      });
+    }
+  }, [currentCoords, sectionCoords, sectionHeight]);
 
   const completedLessonsIds = completedLessons.map((lesson) => lesson.attributes.lesson.data.id);
 
@@ -16,6 +28,7 @@ const WorldSections = ({ sections, completedLessons }) => {
     const lessons = section.attributes.lessons.data;
     return lessons.every((lesson) => !completedLessonsIds.includes(lesson.id));
   };
+
   const checkIfPrevSectionCompleted = (index) => {
     if (index === 0) {
       return true;
@@ -26,29 +39,32 @@ const WorldSections = ({ sections, completedLessons }) => {
 
   return (
     <ScrollView
-      ref={scrollViewRef}
-      onContentSizeChange={() => {
-        scrollViewRef.current?.scrollToEnd({ animated: false });
+      ref={(ref) => {
+        setRef(ref);
       }}
     >
-      <View style={{ backgroundColor: Colors.gray_50, flexDirection: "column-reverse" }}>
+      <View style={{ backgroundColor: Colors.gray_50, flexDirection: "column-reverse", paddingTop: 124, paddingBottom: 48 }}>
         {sections.map((section, index) => {
           const color = sectionColors[index % sectionColors.length];
           const sectionLessons = section.attributes.lessons.data;
-
+          const isSectionCompleted = sectionLessons.every((lesson) => completedLessonsIds.includes(lesson.id));
           const isSectionLocked = checkIfSectionIsLocked(section);
           const isPrevSectionCompleted = checkIfPrevSectionCompleted(index);
           const firstLessonActive = isPrevSectionCompleted && isSectionLocked;
-
           const isLastSection = index === sections.length - 1;
           return (
-            <View key={section.id} style={styles.sectionContainer}>
-              <SectionLessons
-                lessons={sectionLessons}
-                completedLessons={completedLessons}
-                firstLessonActive={firstLessonActive}
-                isLastSection={isLastSection}
-              />
+            <View
+              key={section.id}
+              style={styles.sectionContainer}
+              onLayout={(event) => {
+                if ((!isSectionLocked && !isSectionCompleted) || firstLessonActive) {
+                  const layout = event.nativeEvent.layout;
+                  addSectionCoords(layout.y);
+                  addSectionHeight(layout.height);
+                }
+              }}
+            >
+              <WorldLessons lessons={sectionLessons} completedLessons={completedLessons} firstLessonActive={firstLessonActive} isLastSection={isLastSection} />
               <WorldSectionBanner
                 isDisabled={!isPrevSectionCompleted}
                 backgroundColor={color}

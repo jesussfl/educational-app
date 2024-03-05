@@ -5,11 +5,22 @@ import { Key } from "iconsax-react-native";
 import { Button } from "@components";
 import { useLessonStore } from "@stores/useLessonStore";
 import { Colors } from "@utils/Theme";
-const Exam = ({ isLast, id, isCompleted, isLocked, description }) => {
+import { useScrollStore } from "@stores/useScrollStore";
+const Exam = ({ isLast, id, isCompleted, isLocked, description, scrollHandler, sectionIndex }) => {
   const { addLessonId, addLessonStatus, onOpen, addIsLastLesson, addLessonType, addLessonDescription } = useLessonStore((state) => state);
+  const { addCurrentCoords } = useScrollStore();
 
+  const isCurrent = !isCompleted && !isLocked;
   return (
-    <View style={styles.bottomContainer}>
+    <View
+      style={styles.bottomContainer}
+      onLayout={(event) => {
+        if (isCurrent) {
+          const layout = event.nativeEvent.layout;
+          addCurrentCoords(layout.y + 20);
+        }
+      }}
+    >
       <Image source={require("../../../../assets/Door.png")} style={styles.image} />
       <Button
         text={isCompleted ? "Completado" : "Siguiente Sección"}

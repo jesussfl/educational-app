@@ -17,7 +17,7 @@ const SignupScreen = ({ navigation }) => {
 
       <KeyboardAwareScrollView ref={scrollRef} style={{ padding: 24 }}>
         <Headings title="¡Crea tu cuenta!" description="Completa la información para comenzar a aprender"></Headings>
-        <SignupForm currentRef={scrollRef}></SignupForm>
+        <SignupForm currentRef={scrollRef} />
       </KeyboardAwareScrollView>
     </View>
   );

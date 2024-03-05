@@ -2,36 +2,36 @@ import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { Colors } from "@utils/Theme";
-import { Button } from "@components";
 import { useQuery } from "@tanstack/react-query";
 import { query } from "@utils/graphql/client/GraphQLCLient";
 import { querySectionById } from "@utils/graphql/queries/section.queries";
 import SectionContentHTML from "../components/section-theory";
+import Spinner from "react-native-loading-spinner-overlay";
 const TheoryScreen = ({ route }) => {
   const { id } = route.params;
   const { data, isLoading } = useQuery([`section-${id}`], () => query(querySectionById, { id: id }));
 
-  const content = data?.crefinexSection?.data?.attributes?.content.replace(/http:\/\/localhost:1337/g, process.env.EXPO_PUBLIC_API_URL) || "";
+  if (isLoading) return <Spinner visible={isLoading} />;
 
+  const content = data?.crefinexSection?.data?.attributes?.content.replace(/http:\/\/localhost:1337/g, process.env.EXPO_PUBLIC_API_URL) || "";
   return (
     <>
       <StatusBar style="auto" />
-      <ScrollView style={styles.PageContainer}>
-        <View style={styles.header}>
-          <Text style={styles.headline}>Sección</Text>
-          <Text style={styles.title}>Teoria de los principios del ahorro</Text>
-          <Text style={styles.description}>Explora y prueba las distintas guias de diseño usadas para asegurar una excelente experiencia de usuario</Text>
-          <View style={styles.detailsContainer}>
-            <Text style={styles.details}>El ahorro -</Text>
-            <Text style={styles.details}>7 min</Text>
-          </View>
-          <View style={styles.actions}>
-            <Button text="Comenzar" variant="primary" size="small" onPress={() => {}} style={{ paddingVertical: 8 }} />
-          </View>
-        </View>
 
-        <View style={styles.content}>{isLoading ? <Text>Cargando...</Text> : <SectionContentHTML html={content || ""} />}</View>
-      </ScrollView>
+      {isLoading ? (
+        <Spinner visible={isLoading} />
+      ) : (
+        <ScrollView style={styles.PageContainer}>
+          <View style={styles.header}>
+            <Text style={styles.headline}>Sección</Text>
+            <Text style={styles.title}>{data.crefinexSection.data.attributes.contentTitle}</Text>
+          </View>
+
+          <View style={styles.content}>
+            <SectionContentHTML html={content || ""} />
+          </View>
+        </ScrollView>
+      )}
     </>
   );
 };

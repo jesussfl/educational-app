@@ -9,8 +9,12 @@ import { Colors } from "@utils/Theme";
 import CompletedGift from "../../../../assets/giftCompleted.png";
 import UnlockedGift from "../../../../assets/giftUnlocked.png";
 import LockedGift from "../../../../assets/Gift.png";
+import { useScrollStore } from "@stores/useScrollStore";
 function Gift({ isLessonCompleted, isLocked, id }) {
   const { addLessonId, addLessonStatus, onOpen, addIsLastLesson, addLessonType } = useLessonStore((state) => state);
+  const { addCurrentCoords } = useScrollStore();
+
+  const isLessonCurrent = !isLessonCompleted && !isLocked;
   let source;
   if (isLessonCompleted) {
     source = Image.resolveAssetSource(CompletedGift).uri;
@@ -20,7 +24,7 @@ function Gift({ isLessonCompleted, isLocked, id }) {
     source = Image.resolveAssetSource(LockedGift).uri;
   }
   return (
-    <View style={{ alignItems: "center" }}>
+    <View style={{ alignItems: "center" }} onLayout={(event) => isLessonCurrent && addCurrentCoords(event.nativeEvent.layout.y)}>
       <Svg width="100" height="180" style={{ marginBottom: -36, marginTop: -106 }}>
         <Line x1="50%" y1="0" x2="50%" y2="100%" stroke={Colors.gray_50} strokeWidth="80" />
         <Line x1="50%" y1="0" x2="50%" y2="100%" stroke={Colors.gray_200} strokeWidth="15" />
