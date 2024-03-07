@@ -24,7 +24,7 @@ const LessonBottomsheet = () => {
       return "NO_LIVES";
     }
 
-    if (user.money < ECONOMY.LESSONS_PRICE) {
+    if (user.money < ECONOMY.LESSONS_PRICE && lessonStatus !== "completed") {
       return "NO_MONEY";
     }
     if (lessonType === "exam" && lessonStatus === "completed") {

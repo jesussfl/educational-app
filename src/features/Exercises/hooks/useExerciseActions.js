@@ -82,10 +82,7 @@ export const useExerciseActions = () => {
     isLastLesson && completeWorld({ user: user.id, world: user.currentWorld, data: { user: user.id, world: user.currentWorld } });
     increaseStreak();
     increaseMoney(profit);
-    updateUser({
-      ...user,
-      money: user.money + profit,
-    });
+
     state.reset();
   };
   return {

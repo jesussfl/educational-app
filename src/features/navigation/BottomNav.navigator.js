@@ -14,7 +14,7 @@ import useUserStats from "@hooks/useUserStats";
 import { useLivesStore } from "@stores/useLivesStore";
 import { ECONOMY } from "@config/economy";
 const BottomNavStack = createBottomTabNavigator();
-
+import { differenceInCalendarDays } from "date-fns";
 //TODO: Refactor and improve readability of this code
 export const BottomNavStackNavigator = () => {
   const { increaseLives, restartStreak, decreaseStreakShields } = useUserStats();
@@ -59,23 +59,30 @@ export const BottomNavStackNavigator = () => {
   };
 
   const checkStreak = () => {
-    if (user.streak_days > 0) return;
-
     const lastCompletedLessonDate = new Date(user.last_completed_lesson_date);
-
     const now = new Date();
-    const differenceInDays = (now - lastCompletedLessonDate) / (1000 * 60 * 60 * 24);
 
-    if (differenceInDays >= 2 && user.streak_days !== 0) {
-      if (user.streak_shields > 0) {
-        decreaseStreakShields();
-        return;
-      }
-
-      restartStreak();
+    if (!user.last_completed_lesson_date || !user.streak_start_date) {
+      console.log("No last completed lesson date");
       return;
     }
+
+    if (differenceInCalendarDays(now, lastCompletedLessonDate) <= 1) {
+      console.log("Less than 1 day since last completed lesson");
+      return;
+    }
+
+    if (user.streak_shields > 0 && differenceInCalendarDays(now, lastCompletedLessonDate) <= user.streak_shields) {
+      console.log("User has streak shields");
+      decreaseStreakShields(Number(differenceInCalendarDays(now, lastCompletedLessonDate) - 1));
+      return;
+    }
+
+    console.log("Restarting streak. User has no streak shields");
+    restartStreak();
+    return;
   };
+
   useEffect(() => {
     const secondsRemaining = getSecondsRemaining();
 
@@ -101,9 +108,11 @@ export const BottomNavStackNavigator = () => {
 
   useEffect(() => {
     checkLifeRegeneration();
+
     checkStreak();
 
     const now = new Date();
+
     const timeUntilMidnight =
       new Date(
         now.getFullYear(),
@@ -123,7 +132,7 @@ export const BottomNavStackNavigator = () => {
     }, timeUntilMidnight);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [user.last_completed_lesson_date, user.streak_start_date]);
 
   const navigation = useNavigation();
   return (

@@ -31,7 +31,6 @@ const UserStats = () => {
           text={user?.money || 0}
           size="small"
           onPress={() => navigation.navigate("Store")}
-          // leftIcon={<DollarCircle size={24} variant="Bold" color={Colors.success_500} />}
           leftIcon={<Image source={require("@assets/icons/coin.png")} style={{ width: 24, height: 24, resizeMode: "contain" }} />}
         />
         <Button
@@ -40,9 +39,15 @@ const UserStats = () => {
           size="small"
           leftIcon={<Image source={require("@assets/icons/streak.png")} style={{ width: 24, height: 24, resizeMode: "contain" }} />}
         />
+        <Button
+          variant={"secondary"}
+          text={user?.streak_shields || 0}
+          size="small"
+          leftIcon={<Image source={require("@assets/icons/shield.png")} style={{ width: 24, height: 24, resizeMode: "contain" }} />}
+        />
       </View>
       <View style={styles.worldName}>
-        <Text style={styles.worldTitle}>{currentWorld?.name}</Text>
+        <Text style={styles.worldTitle}>{`Mundo: ${currentWorld?.name}`}</Text>
       </View>
     </View>
   );
@@ -51,7 +56,7 @@ const UserStats = () => {
 const styles = StyleSheet.create({
   navContainer: {
     backgroundColor: "#fff",
-    marginHorizontal: 24,
+    marginHorizontal: 8,
     marginTop: StatusBar.currentHeight,
     borderRadius: 16,
   },
@@ -67,7 +72,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   actionsContainer: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 8,
     paddingTop: 0,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -75,10 +80,10 @@ const styles = StyleSheet.create({
   buttonStat: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
+    gap: 2,
     justifyContent: "center",
     backgroundColor: Colors.gray_50,
-    padding: 8,
+    padding: 4,
   },
 });
 export default UserStats;

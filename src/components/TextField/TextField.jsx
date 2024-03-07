@@ -17,6 +17,7 @@ const TextField = ({
    onFocus,
    ref,
    defaultValue,
+   type,
    isError = "",
 }) => {
    const [secureText, setSecureText] = useState(secureTextEntry);
@@ -36,6 +37,7 @@ const TextField = ({
                         {leftIcon}
                         <TextInput
                            style={styles.input}
+                           type={type}
                            placeholder={placeholder}
                            value={value}
                            onChangeText={onChange}
@@ -43,6 +45,7 @@ const TextField = ({
                            onFocus={onFocus}
                            secureTextEntry={secureText}
                            ref={ref}
+                           keyboardType={ type === 'email'?Platform.OS === 'android' ? 'visible-password' : 'ascii-capable' : 'default'}
                         />
                      </View>
                      {secureTextEntry && <ViewPasswordButton isPasswordHided={secureText} onPress={() => setSecureText(!secureText)} />}

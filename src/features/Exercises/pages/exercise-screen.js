@@ -47,7 +47,7 @@ const ExercisePage = ({ navigation, route }) => {
       {user.lives === 0 && (
         <Modal
           title="Perdiste todas tus vidas"
-          description="Prueba repasar lecciones para recuperar vidas"
+          description="Ve a la tienda para comprar vidas o espera a que tus vidas se regeneren."
           actionText={"Ir al inicio"}
           action={() => {
             navigation.replace("Main", { screen: "Lessons" });

@@ -8,38 +8,34 @@ import useAuthStore from "@stores/useAuthStore";
 import { ECONOMY } from "@config/economy";
 import { useLivesStore } from "@stores/useLivesStore";
 
-const MAX_LIVES = 6;
-const NEXT_REGENERATION_INTERVAL = 4 * 60 * 60 * 1000;
 const useUserStats = () => {
   const { user, updateUser } = useAuthStore();
   const { setLastLifeRegenerationTime } = useLivesStore();
   const { mutate } = useMutation((data) => query(updateUserMutation, data));
-  const decreaseStreakShields = () => {
+  const decreaseStreakShields = (quantity) => {
+    console.log(user.streak_shields, quantity);
+    if (user.streak_shields - quantity < 0) {
+      return;
+    }
+    updateUser({ streak_shields: user.streak_shields - quantity, last_completed_lesson_date: new Date() });
     mutate({
       id: user.id,
       data: {
-        streak_shields: user.streak_shields - 1,
+        streak_shields: user.streak_shields - quantity,
+        last_completed_lesson_date: new Date(),
       },
     });
-
-    updateUser({ streak_shields: user.streak_shields - 1 });
   };
   const restartStreak = () => {
-    mutate(
-      {
-        id: user.id,
-        data: {
-          streak_start_date: null,
-          streak_days: 0,
-        },
+    mutate({
+      id: user.id,
+      data: {
+        streak_start_date: null,
+        streak_days: 0,
+        streak_shields: 0,
       },
-      {
-        onSuccess: () => {
-          console.log("success");
-        },
-      }
-    );
-    updateUser({ streak_days: 0, streak_start_date: null });
+    });
+    updateUser({ streak_days: 0, streak_start_date: null, streak_shields: 0 });
   };
   const updateLastCompletedLessonDate = () => {
     if (user) {
@@ -67,7 +63,8 @@ const useUserStats = () => {
       // Si la ultima leccion del usuario es hoy no se aumenta la racha pero si no entonces se aumenta la racha
       if (user.last_completed_lesson_date && isSameDay(user.last_completed_lesson_date, now) && user.streak_start_date) {
         return;
-      } else if (user.streak_start_date === null) {
+      } else if (!user.streak_start_date) {
+        updateUser({ streak_days: 1, streak_start_date: now, last_completed_lesson_date: now });
         mutate({
           id: user.id,
           data: {
@@ -76,9 +73,7 @@ const useUserStats = () => {
             last_completed_lesson_date: now,
           },
         });
-        updateUser({ streak_days: 1, streak_start_date: now, last_completed_lesson_date: now });
       } else {
-        console.log("else");
         mutate({
           id: user.id,
           data: {

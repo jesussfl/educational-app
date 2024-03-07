@@ -66,7 +66,11 @@ const LoginForm = () => {
             ToastAndroid.show("Email o contraseña incorrecta", ToastAndroid.SHORT);
             return;
           }
-
+          if (error.message.includes("Email must be a valid email")) {
+            setError("Email no valido");
+            ToastAndroid.show("Email no valido", ToastAndroid.SHORT);
+            return;
+          }
           if (error.message.includes("Aborted")) {
             setError("Parece que hubo un problema de red");
             ToastAndroid.show("Parece que hubo un problema de red", ToastAndroid.SHORT);

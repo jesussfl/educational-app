@@ -39,13 +39,13 @@ const StoreItem = ({ name, label, description, price, image }) => {
 
     switch (name) {
       case STORE_ITEM_NAMES.fullRestorer:
-        return user.lives < ECONOMY.MAX_USER_LIVES - 2;
+        return { value: user.lives < ECONOMY.MAX_USER_LIVES - 2, text: "Ya tienes todas tus vidas" };
       case STORE_ITEM_NAMES.oneLive:
-        return user.lives < ECONOMY.MAX_USER_LIVES;
+        return { value: user.lives < ECONOMY.MAX_USER_LIVES, text: "Ya tienes todas tus vidas" };
       case STORE_ITEM_NAMES.twoLives:
-        return user.lives < ECONOMY.MAX_USER_LIVES - 1;
+        return { value: user.lives < ECONOMY.MAX_USER_LIVES - 1, text: "Ya tienes todas tus vidas" };
       case STORE_ITEM_NAMES.streakShield:
-        return user.streak_shields !== ECONOMY.MAX_USER_STREAK_SHIELDS;
+        return { value: user.streak_shields !== ECONOMY.MAX_USER_STREAK_SHIELDS, text: "Ya tienes 3 escudos" };
       default:
         return true;
     }
@@ -89,11 +89,11 @@ const StoreItem = ({ name, label, description, price, image }) => {
           </View>
           <Text style={styles.description}>{description}</Text>
           <Button
-            disabled={!isItemEnabled()}
+            disabled={!isItemEnabled().value}
             onPress={() => onOpen(hasEnoughMoney ? buyConfig : noMoneyConfig)}
             variant="primary"
             size="small"
-            text={`${isItemEnabled() ? "Comprar" : "No disponible"}`}
+            text={`${isItemEnabled().value ? "Comprar" : isItemEnabled().text}`}
           />
         </View>
       </View>
