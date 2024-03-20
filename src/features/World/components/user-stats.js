@@ -1,18 +1,15 @@
 import { View, Text, StyleSheet, StatusBar, Image } from "react-native";
 import React from "react";
-import { DollarCircle, Heart } from "iconsax-react-native";
-import RemixIcon from "react-native-remix-icon";
+
 import { Colors } from "@utils/Theme";
 import { Button } from "@components";
 import { useLessonStore } from "@stores/useLessonStore";
 import { useNavigation } from "@react-navigation/native";
 import useAuthStore from "@stores/useAuthStore";
-import { useSections } from "../hooks/useSections";
 
 const UserStats = () => {
   const { user } = useAuthStore();
   const { addLessonType } = useLessonStore((state) => state);
-  const { currentWorld } = useSections();
   const navigation = useNavigation();
   return (
     <View style={styles.navContainer}>
@@ -47,7 +44,7 @@ const UserStats = () => {
         />
       </View>
       <View style={styles.worldName}>
-        <Text style={styles.worldTitle}>{`Mundo: ${currentWorld?.name}`}</Text>
+        <Text style={styles.worldTitle}>{`Mundo: ${user.current_world?.data?.attributes?.name}`}</Text>
       </View>
     </View>
   );

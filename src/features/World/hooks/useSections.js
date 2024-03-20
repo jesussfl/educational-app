@@ -16,8 +16,8 @@ export const useSections = () => {
   const [sectionsData, completedLessonsData] = useQueries({
     queries: [
       {
-        queryKey: ["sections", user.currentWorld],
-        queryFn: () => query(querySectionsByWorldId, { id: user.currentWorld, start: 1, limit: 100 }),
+        queryKey: ["sections", user.current_world?.data?.id],
+        queryFn: () => query(querySectionsByWorldId, { id: user.current_world?.data?.id, start: 1, limit: 100 }),
       },
       {
         queryKey: ["lessons_completed", user.id],

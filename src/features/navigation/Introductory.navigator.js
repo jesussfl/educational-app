@@ -28,7 +28,7 @@ export const IntroductoryStackNavigator = () => {
       //TODO: check if token is expired and refresh it, if admin add money to user, session should be expired and database requests cant be after every app launch
       if (token) {
         try {
-          const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/users/me`, {
+          const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/users/me?populate=*`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           const data = await response.json();

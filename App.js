@@ -7,10 +7,20 @@ import * as WebBrowser from "expo-web-browser";
 import useCustomFonts from "@hooks/customFonts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import * as Linking from "expo-linking";
 
 const queryClient = new QueryClient();
 WebBrowser.maybeCompleteAuthSession();
 
+const prefix = Linking.createURL("https://finex.com");
+const linking = {
+  prefixes: [prefix],
+  config: {
+    screens: {
+      NotFound: "*",
+    },
+  },
+};
 export default function App() {
   const [isAppReady, setIsAppReady] = useState(false);
   const isFontsLoaded = useCustomFonts();
@@ -26,7 +36,7 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <WithSplashScreen isAppReady={isAppReady}>
-          <NavigationContainer>
+          <NavigationContainer linking={linking}>
             <IntroductoryStackNavigator />
           </NavigationContainer>
         </WithSplashScreen>

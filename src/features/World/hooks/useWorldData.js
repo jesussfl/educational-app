@@ -39,7 +39,6 @@ export const useWorldData = () => {
   const error = results.some((result) => result.error);
   const completedLessons = results[0].data?.lessonsCompletedByUser?.lessonsCompleted;
   const completedWorlds = results[1].data?.worldsCompletedByUser?.worldsCompleted;
-  const worlds = results[2].data?.crefinexWorlds.data;
-
+  const worlds = results[2].data?.crefinexWorlds.data.sort((a, b) => a.attributes.order - b.attributes.order);
   return { isLoading, error, completedLessons, completedWorlds, worlds };
 };

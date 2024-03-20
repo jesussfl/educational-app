@@ -28,7 +28,22 @@
          "adaptiveIcon": {
             "foregroundImage": "./assets/finex-icon.png",
             "backgroundColor": "#ffffff"
-         }
+         },
+         "intentFilters": [
+            {
+            "action": "VIEW",
+            "autoVerify": true,
+            "data": [
+                {
+                "scheme": "https",
+
+                "host": "finex.com",
+                "pathPrefix": "/records"
+                }
+            ],
+            "category": ["BROWSABLE", "DEFAULT"]
+            }
+        ]
       },
       "web": {
          "favicon": "./assets/favicon.png"
@@ -38,6 +53,6 @@
             "projectId": "9a6eb660-a6a5-4a3b-9b07-ec33c628a04c"
          }
       },
-      "scheme": "navigation-test"
+      "scheme": "finex"
    }
 }

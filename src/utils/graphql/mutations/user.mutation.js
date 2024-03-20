@@ -21,7 +21,6 @@ export const updateUserMutation = gql`
           username
           email
           blocked
-          currentWorld
           money
           lives
           streak_start_date
@@ -29,9 +28,18 @@ export const updateUserMutation = gql`
           last_completed_lesson_date
           registration_date
           next_life_regeneration
-          expoPushToken
           first_life_lost_date
           streak_shields
+          current_world {
+            data {
+              id
+              attributes {
+                name
+                description
+                order
+              }
+            }
+          }
         }
       }
     }
@@ -47,16 +55,24 @@ export const loginUserMutation = gql`
         email
         username
         blocked
-        currentWorld
         money
         lives
         streak_start_date
         streak_days
         last_completed_lesson_date
         next_life_regeneration
-        expoPushToken
         first_life_lost_date
         streak_shields
+        current_world {
+          data {
+            id
+            attributes {
+              name
+              description
+              order
+            }
+          }
+        }
       }
     }
   }
@@ -71,16 +87,24 @@ export const registerUserMutation = gql`
         email
         username
         blocked
-        currentWorld
         money
         lives
         streak_start_date
         streak_days
         last_completed_lesson_date
         next_life_regeneration
-        expoPushToken
         first_life_lost_date
         streak_shields
+        current_world {
+          data {
+            id
+            attributes {
+              name
+              description
+              order
+            }
+          }
+        }
       }
     }
   }

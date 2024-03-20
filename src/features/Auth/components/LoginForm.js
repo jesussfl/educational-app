@@ -46,6 +46,7 @@ const LoginForm = () => {
       { input },
       {
         onSuccess: (data) => {
+          console.log(data.login.user, "dataaaaaaaaaaa");
           setUser(data.login.user);
           setToken(data.login.jwt);
           ToastAndroid.show("Login exitoso", ToastAndroid.SHORT);

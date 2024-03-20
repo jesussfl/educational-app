@@ -79,10 +79,9 @@ export const useExerciseActions = () => {
         errorExercises: state.mistakes,
       },
     });
-    isLastLesson && completeWorld({ user: user.id, world: user.currentWorld, data: { user: user.id, world: user.currentWorld } });
+    isLastLesson && completeWorld({ user: user.id, world: user.current_world.data.id, data: { user: user.id, world: user.current_world.data.id } });
     increaseStreak();
     increaseMoney(profit);
-
     state.reset();
   };
   return {

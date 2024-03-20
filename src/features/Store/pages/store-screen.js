@@ -39,11 +39,11 @@ const StoreItem = ({ name, label, description, price, image }) => {
 
     switch (name) {
       case STORE_ITEM_NAMES.fullRestorer:
-        return { value: user.lives < ECONOMY.MAX_USER_LIVES - 2, text: "Ya tienes todas tus vidas" };
+        return { value: user.lives < ECONOMY.MAX_USER_LIVES - 2, text: "Vidas completas" };
       case STORE_ITEM_NAMES.oneLive:
-        return { value: user.lives < ECONOMY.MAX_USER_LIVES, text: "Ya tienes todas tus vidas" };
+        return { value: user.lives < ECONOMY.MAX_USER_LIVES, text: "Vidas completas" };
       case STORE_ITEM_NAMES.twoLives:
-        return { value: user.lives < ECONOMY.MAX_USER_LIVES - 1, text: "Ya tienes todas tus vidas" };
+        return { value: user.lives < ECONOMY.MAX_USER_LIVES - 1, text: "Vidas completas" };
       case STORE_ITEM_NAMES.streakShield:
         return { value: user.streak_shields !== ECONOMY.MAX_USER_STREAK_SHIELDS, text: "Ya tienes 3 escudos" };
       default:
@@ -93,7 +93,7 @@ const StoreItem = ({ name, label, description, price, image }) => {
             onPress={() => onOpen(hasEnoughMoney ? buyConfig : noMoneyConfig)}
             variant="primary"
             size="small"
-            text={`${isItemEnabled().value ? "Comprar" : isItemEnabled().text}`}
+            text={`${isItemEnabled().value ? "Comprar" : isItemEnabled().text || "Dinero insuficiente"}`}
           />
         </View>
       </View>

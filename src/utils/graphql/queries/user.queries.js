@@ -9,7 +9,6 @@ export const queryUser = gql`
           email
           username
           blocked
-          currentWorld
           money
           lives
           streak_start_date
@@ -17,9 +16,18 @@ export const queryUser = gql`
           last_completed_lesson_date
           registration_date
           next_life_regeneration
-          expoPushToken
           first_life_lost_date
           streak_shields
+          current_world {
+            data {
+              id
+              attributes {
+                name
+                description
+                order
+              }
+            }
+          }
         }
       }
     }

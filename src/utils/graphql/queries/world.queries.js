@@ -8,6 +8,7 @@ export const queryWorlds = gql`
         attributes {
           name
           description
+          order
           image {
             data {
               attributes {

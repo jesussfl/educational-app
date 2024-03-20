@@ -27,9 +27,9 @@ const SignupForm = ({ currentRef }) => {
   const navigation = useNavigation();
 
   const { setUser, setToken } = useAuthStore();
-  const { data: worlds } = useQuery(["worlds"], () => query(queryWorlds, { start: 1, limit: 1 }));
+  const { data: worlds } = useQuery(["worlds"], () => query(queryWorlds, { start: 1, limit: 100 }));
   const { mutate: register } = useMutation((data) => query(registerUserMutation, data));
-  const currentWorld = worlds?.crefinexWorlds?.data[0].id;
+  const currentWorld = worlds?.crefinexWorlds?.data.sort((a, b) => a.attributes.order - b.attributes.order)[0].id;
 
   const onSubmit = async (values) => {
     setError(null);
@@ -45,7 +45,7 @@ const SignupForm = ({ currentRef }) => {
       username: values.username,
       email: values.email,
       password: values.password,
-      currentWorld: parseInt(currentWorld),
+      current_world: currentWorld,
     };
 
     register(

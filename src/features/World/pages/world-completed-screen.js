@@ -52,8 +52,15 @@ const WorldCompletedScreen = () => {
             variant="primary"
             style={{ flex: 1 }}
             onPress={() => {
-              mutate({ id: user.id, data: { currentWorld: Number(getNextWorld().id) } });
-              updateUser({ currentWorld: Number(getNextWorld().id) });
+              console.log("next world", getNextWorld());
+              mutate(
+                { id: user.id, data: { current_world: getNextWorld().id } },
+                {
+                  onSuccess: (data) =>
+                    updateUser((prev) => ({ ...prev, current_world: { data: { id: getNextWorld().id, attributes: getNextWorld().attributes } } })),
+                }
+              );
+              console.log(user.current_world.data.attributes);
               navigation.replace("Main", { screen: "Lessons" });
             }}
           />

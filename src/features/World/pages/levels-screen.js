@@ -1,9 +1,8 @@
 import React from "react";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import { StyleSheet, View, ScrollView } from "react-native";
 
-import { Card, WorldCard } from "@components";
+import { WorldCard } from "@components";
 
-import { useCustomMutation } from "@utils/useCustomMutation";
 import { updateUserMutation } from "@utils/graphql/mutations/user.mutation";
 import { useNavigation } from "@react-navigation/native";
 import Spinner from "react-native-loading-spinner-overlay";
@@ -15,7 +14,6 @@ import { query } from "@utils/graphql";
 const LevelsScreen = () => {
   const { updateUser, user } = useAuthStore();
   const { mutate } = useMutation((data) => query(updateUserMutation, data));
-  // const { mutate } = useCustomMutation("user", updateUserMutation);
   const navigation = useNavigation();
 
   const { isLoading, worlds, completedWorlds, completedLessons } = useWorldData();
@@ -29,17 +27,20 @@ const LevelsScreen = () => {
       {
         id: user.id,
         data: {
-          currentWorld: Number(worldId),
+          current_world: worldId,
         },
       },
       {
-        onSuccess: () => {
-          updateUser({ currentWorld: Number(worldId) });
+        onSuccess: (data) => {
+          updateUser({
+            current_world: { data: { id: worldId, attributes: data.updateUsersPermissionsUser.data.attributes.current_world.data.attributes } },
+          });
           navigation.navigate("Main", { screen: "Lessons" });
         },
       }
     );
   };
+
   const checkIfPrevWorldIsCompleted = (index) => {
     if (index === 0) {
       return true;
@@ -55,7 +56,7 @@ const LevelsScreen = () => {
       ) : (
         <View style={{ marginBottom: 56 }}>
           {worlds.map((world, index) => {
-            const isWorldCurrent = user.currentWorld === world.id;
+            const isWorldCurrent = user.current_world.data.id === world.id;
             const isWorldCompleted = completedWorldsIds.length > 0 && completedWorldsIds.includes(world.id);
             const isPrevWorldCompleted = checkIfPrevWorldIsCompleted(index);
             const lessonsCompletedByWorldId = completedLessons.filter(
@@ -70,7 +71,7 @@ const LevelsScreen = () => {
                 mainAction={() => {
                   if (!isWorldCurrent) {
                     updateCurrentWorld(world.id);
-                    updateUser({ currentWorld: world.id });
+                    // updateUser({ current_world: { data: { id: world.id } } });
                     return;
                   }
 

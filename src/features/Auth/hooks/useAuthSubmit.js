@@ -14,7 +14,6 @@ export const useAuthSubmit = ({ isRegister }) => {
   const { mutate } = useCustomMutation("user", updateUserMutation);
 
   const fetchURL = `${process.env.EXPO_PUBLIC_API_URL}/api/auth/local${isRegister ? "/register" : ""}`;
-  console.log(expoPushToken);
   const authSubmit = async (values) => {
     try {
       setIsLoading(true);
