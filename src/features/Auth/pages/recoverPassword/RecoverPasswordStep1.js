@@ -16,9 +16,10 @@ const RecoverPasswordStep1 = () => {
   const form = useForm();
 
   const sendOtpCode = async (email) => {
-    fetch("http://172.16.0.2:1337/api/auth/forgot-password-mobile", {
+    fetch(process.env.EXPO_PUBLIC_API_URL + "/api/auth/forgot-password-mobile", {
       method: "POST",
       headers: {
+        Authorization: `${process.env.EXPO_PUBLIC_STRAPI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ email }),
@@ -31,7 +32,7 @@ const RecoverPasswordStep1 = () => {
         navigation.navigate("RecoverPasswordStep2", { email });
       }
       if (!res.ok) {
-        console.log("error");
+        console.log("error", res.status);
       }
     });
   };

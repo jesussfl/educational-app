@@ -29,9 +29,11 @@ const RecoverPasswordStep2 = ({ email }) => {
       return;
     }
 
-    fetch("http://172.16.0.2:1337/api/auth/reset-password", {
+    fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/auth/reset-password`, {
       method: "POST",
       headers: {
+        Authorization: `${process.env.EXPO_PUBLIC_STRAPI_API_KEY}`,
+
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
