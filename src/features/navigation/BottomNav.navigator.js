@@ -196,7 +196,7 @@ export const BottomNavStackNavigator = () => {
           },
           headerRight: () => (
             <View style={{ flexDirection: "row", gap: 4, marginRight: 16 }}>
-              <Text style={{ color: Colors.success_600, fontFamily: "Sora-SemiBold", fontSize: 18 }}>{user.money}</Text>
+              <Text style={{ color: Colors.success_600, fontFamily: "Sora-SemiBold", fontSize: 18 }}>{Math.round(user.money * 100) / 100}</Text>
               <DollarCircle size={28} color={Colors.success_500} variant="Bold" />
             </View>
           ),

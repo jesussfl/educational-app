@@ -13,7 +13,7 @@ const CompletionText = ({ result, userAnswer, wordCounter, removeLastSelectedWor
             <View key={index}>
               {Array.isArray(userAnswer) && userAnswer.includes(userAnswer[wordCounter - 1]) ? (
                 <View style={[styles.borderText, { borderColor: Colors.primary_600, borderBottomWidth: 0, paddingVertical: 0 }]}>
-                  <Button key={index} text={userAnswer[wordCounter - 1]} variant="secondary" size="small" onPress={() => removeLastSelectedWord()} />
+                  <Button key={index} text={userAnswer[wordCounter - 1]} variant="secondary" size="xsmall" onPress={() => removeLastSelectedWord()} />
                 </View>
               ) : (
                 <View style={[styles.borderText, { height: 56 }]} />
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: "Sora-SemiBold",
-    fontSize: 16,
+    fontSize: 14,
     margin: 4,
     color: Colors.gray_600,
   },

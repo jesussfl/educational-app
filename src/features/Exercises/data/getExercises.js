@@ -12,12 +12,13 @@ export const getExercisesByLesson = (lessonId) => {
   const { data, isLoading, error } = useQuery(["exercises", lessonId], () => query(queryExercisesByLessonId, { id: lessonId, start: 1, limit: 100 }));
   const { setExercises, startTime, setStartTime } = useExercises((state) => state);
   useEffect(() => {
-    // console.log(data.exercisesByLesson.exercises);
-    setExercises(data?.exercisesByLesson?.exercises);
+    const sortedExercises = data?.exercisesByLesson?.exercises?.sort((a, b) => a.attributes.order - b.attributes.order);
+
+    setExercises(sortedExercises);
     if (!isLoading && !startTime) {
       setStartTime();
     }
   }, [isLoading, data]);
 
-  return { isLoading, error, data: data?.exercisesByLesson?.exercises };
+  return { isLoading, error, data: data?.exercisesByLesson?.exercises?.sort((a, b) => a.order - b.order) };
 };

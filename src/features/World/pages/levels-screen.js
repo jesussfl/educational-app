@@ -20,7 +20,7 @@ const LevelsScreen = () => {
   if (isLoading) {
     return <Spinner visible={isLoading} />;
   }
-
+  console.log(user.currentWorld);
   const completedWorldsIds = completedWorlds.length > 0 && completedWorlds.map((world) => world.attributes.world.data.id);
   const updateCurrentWorld = (worldId) => {
     mutate(
@@ -50,7 +50,7 @@ const LevelsScreen = () => {
   };
 
   return (
-    <ScrollView style={{ padding: 24, gap: 24 }}>
+    <ScrollView style={{ padding: 16, gap: 24 }}>
       {isLoading ? (
         <Spinner visible={isLoading} />
       ) : (
@@ -62,12 +62,13 @@ const LevelsScreen = () => {
             const lessonsCompletedByWorldId = completedLessons.filter(
               (lesson) => lesson.attributes.lesson.data.attributes.section.data.attributes.world.data.id === world.id
             );
+
             return (
               <WorldCard
                 key={world.id}
                 name={world.attributes.name}
                 description={world.attributes.description}
-                imgSource={`${process.env.EXPO_PUBLIC_API_URL}${world.attributes.image?.data?.attributes?.url}`}
+                imgSource={`${world.attributes.image?.data?.attributes?.url}`}
                 mainAction={() => {
                   if (!isWorldCurrent) {
                     updateCurrentWorld(world.id);

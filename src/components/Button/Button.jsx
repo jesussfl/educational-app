@@ -11,6 +11,7 @@ const buttonVariants = {
 };
 
 const buttonSizes = {
+   XS: "xsmall",
    S: "small",
    M: "medium",
    L: "large",
@@ -47,6 +48,9 @@ const Button = ({ variant, text = "Button", leftIcon, rightIcon, onPress, size =
       let fontSize;
 
       switch (size) {
+         case buttonSizes.XS:
+            fontSize = 12;
+            break;
          case buttonSizes.S:
             fontSize = 14;
             break;
@@ -74,7 +78,7 @@ const Button = ({ variant, text = "Button", leftIcon, rightIcon, onPress, size =
          <Pressable onPress={disabled ? () => {} : onPress} onPressIn={handlePressIn} onPressOut={handlePressOut} style={[getButtonStyles(), styles.button]}>
             <View style={styles.buttonTextContainer}>
                {leftIcon}
-               <Text style={[styles.text, getTextStyles()]}>{text}</Text>
+               {text !== "" && <Text style={[styles.text, getTextStyles()]}>{text}</Text>}
                {rightIcon}
             </View>
          </Pressable>
@@ -107,6 +111,9 @@ const styles = StyleSheet.create({
    },
 });
 const buttonSizeStyles = {
+   [buttonSizes.XS]: {
+      padding: 2,
+   },
    [buttonSizes.S]: {
       padding: 3,
    },

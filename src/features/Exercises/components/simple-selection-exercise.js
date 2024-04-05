@@ -6,14 +6,17 @@ import Select from "../../../components/Select/Select";
 import { Colors } from "@utils/Theme";
 import * as Animatable from "react-native-animatable";
 import { useExercises } from "@stores/useExerciseStore";
+import { speak } from "../helpers/speak";
 const SimpleSelectionExercise = ({ content }) => {
   const { userAnswer, isAnswerCorrect, setUserAnswer } = useExercises((state) => state);
   useEffect(() => {
     slidenIn();
+    speak(content.question);
   }, []);
   const slidenIn = () => {
     this.view.slideInRight(300);
   };
+
   return (
     <KeyboardAwareScrollView>
       <Animatable.View

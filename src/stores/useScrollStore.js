@@ -4,6 +4,7 @@ const initialState = {
   currentCoords: null,
   sectionCoords: null,
   sectionHeight: null,
+  ref: null,
 };
 
 export const useScrollStore = create((set) => {
@@ -13,6 +14,7 @@ export const useScrollStore = create((set) => {
     addCurrentCoords: (currentCoords) => set({ currentCoords }),
     addSectionCoords: (sectionCoords) => set({ sectionCoords }),
     addSectionHeight: (sectionHeight) => set({ sectionHeight }),
+    addRef: (ref) => set({ ref }),
     reset: () => {
       set(initialState);
     },

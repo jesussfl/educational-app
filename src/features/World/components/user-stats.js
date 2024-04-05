@@ -25,7 +25,7 @@ const UserStats = () => {
         />
         <Button
           variant={"secondary"}
-          text={user?.money || 0}
+          text={Math.round(user?.money * 100) / 100 || 0}
           size="small"
           onPress={() => navigation.navigate("Store")}
           leftIcon={<Image source={require("@assets/icons/coin.png")} style={{ width: 24, height: 24, resizeMode: "contain" }} />}
@@ -53,7 +53,7 @@ const UserStats = () => {
 const styles = StyleSheet.create({
   navContainer: {
     backgroundColor: "#fff",
-    marginHorizontal: 8,
+    marginHorizontal: 0,
     marginTop: StatusBar.currentHeight,
     borderRadius: 16,
   },
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   buttonStat: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 2,
+    gap: 0,
     justifyContent: "center",
     backgroundColor: Colors.gray_50,
     padding: 4,

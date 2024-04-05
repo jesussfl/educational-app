@@ -1,10 +1,16 @@
 export const checkSimpleSelectionAnswer = (mainAnswer, userAnswer) => {
-  const correctAnswer = mainAnswer.options.findIndex((option) => option.isCorrect);
-
-  if (userAnswer === correctAnswer) {
-    return true;
+  const correctAnswerIndex = mainAnswer.options.findIndex((option) => option.isCorrect);
+  const correctAnswer = mainAnswer.options.find((option) => option.isCorrect);
+  if (userAnswer === correctAnswerIndex) {
+    return {
+      isCorrect: true,
+      correctAnswer: correctAnswer.text,
+    };
   }
-  return false;
+  return {
+    isCorrect: false,
+    correctAnswer: correctAnswer.text,
+  };
 };
 
 export const checkCompletionAnswer = (mainAnswer, userAnswer) => {
@@ -18,15 +24,24 @@ export const checkCompletionAnswer = (mainAnswer, userAnswer) => {
     });
 
   if (userAnswer.length !== correctWords.length) {
-    return false;
+    return {
+      isCorrect: false,
+      correctAnswer: correctWords,
+    };
   }
   for (let i = 0; i < userAnswer.length; i++) {
     if (correctWords[i] !== userAnswer[i]) {
-      return false;
+      return {
+        isCorrect: false,
+        correctAnswer: correctWords,
+      };
     }
   }
 
-  return true;
+  return {
+    isCorrect: true,
+    correctAnswer: correctWords,
+  };
 };
 
 export default exercisesChecker = {

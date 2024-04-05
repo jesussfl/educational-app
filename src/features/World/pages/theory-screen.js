@@ -1,19 +1,44 @@
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Colors } from "@utils/Theme";
 import { useQuery } from "@tanstack/react-query";
 import { query } from "@utils/graphql/client/GraphQLCLient";
 import { querySectionById } from "@utils/graphql/queries/section.queries";
 import SectionContentHTML from "../components/section-theory";
 import Spinner from "react-native-loading-spinner-overlay";
+// import Tts from "react-native-tts";
+import { Button } from "@components";
+import * as Speech from "expo-speech";
+import { stopSpeak } from "@features/Exercises/helpers/speak";
 const TheoryScreen = ({ route }) => {
   const { id } = route.params;
   const { data, isLoading } = useQuery([`section-${id}`], () => query(querySectionById, { id: id }));
+  const [content, setContent] = useState("");
+  // const content = data?.crefinexSection?.data?.attributes?.content.replace(/http:\/\/localhost:1337/g, process.env.EXPO_PUBLIC_API_URL) || "";
+  const stripHtmlTags = (html) => {
+    // Elimina las etiquetas HTML utilizando regex
 
+    return html.replace(/(<([^>]+)>)/gi, "");
+  };
+  const speak = (text) => {
+    Speech.speak(text, {
+      language: "es-ES",
+    });
+  };
+  useEffect(() => {
+    setContent(data?.crefinexSection?.data?.attributes?.content);
+  }, [data, isLoading]);
+
+  useEffect(() => {
+    if (content) {
+      const textWithoutHtml = stripHtmlTags(content);
+      console.log(textWithoutHtml);
+      console.log(content);
+      speak(textWithoutHtml);
+    }
+  }, [content]);
   if (isLoading) return <Spinner visible={isLoading} />;
-
-  const content = data?.crefinexSection?.data?.attributes?.content.replace(/http:\/\/localhost:1337/g, process.env.EXPO_PUBLIC_API_URL) || "";
   return (
     <>
       <StatusBar style="auto" />
@@ -24,6 +49,8 @@ const TheoryScreen = ({ route }) => {
         <ScrollView style={styles.PageContainer}>
           <View style={styles.header}>
             <Text style={styles.headline}>Sección</Text>
+            <Button variant={"secondary"} text={"Voz"} onPress={() => speak("hola gfgdgdfgdfgdfgdgdfdgfgdfdfgdfg")} />
+            <Button variant={"secondary"} text={"Voz"} onPress={() => stopSpeak()} />
             <Text style={styles.title}>{data.crefinexSection.data.attributes.contentTitle}</Text>
           </View>
 

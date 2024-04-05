@@ -9,7 +9,7 @@ import { ECONOMY } from "@config/economy";
 import { useMutation } from "@tanstack/react-query";
 import { query } from "@utils/graphql";
 import { createLessonCompletedMutation } from "@utils/graphql/mutations/lessonsCompleted.mutations";
-import { calculateTimeSpent } from "../helpers";
+import { calculateTimeSpent, exercisesChecker } from "../helpers";
 import useAuthStore from "@stores/useAuthStore";
 import { createWorldCompletedMutation } from "@utils/graphql/mutations/worldsCompleted.mutation";
 import { useLessonStore } from "@stores/useLessonStore";
@@ -49,10 +49,11 @@ export const useExerciseActions = () => {
     const exerciseType = currentExerciseData.attributes.type;
     const answerChecker = exercisesChecker[exerciseType];
 
-    const isCorrect = answerChecker(currentExerciseData.attributes.content, state.userAnswer);
+    const response = answerChecker(currentExerciseData.attributes.content, state.userAnswer);
 
-    if (!isCorrect) {
+    if (!response.isCorrect) {
       punishUser();
+      state.setCorrectAnswer(response.correctAnswer);
       state.setIsCheckingAnswer(false);
       return;
     }
@@ -81,11 +82,11 @@ export const useExerciseActions = () => {
     });
     isLastLesson && completeWorld({ user: user.id, world: user.current_world.data.id, data: { user: user.id, world: user.current_world.data.id } });
     increaseStreak();
-    increaseMoney(profit);
+    increaseMoney(Math.round(profit * 100) / 100);
     state.reset();
   };
   return {
-    profit,
+    profit: Math.round(profit * 100) / 100,
     checkAnswer,
     saveProgress,
     currentExerciseData,

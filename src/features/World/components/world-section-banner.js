@@ -40,7 +40,7 @@ const WorldSectionBanner = ({ description, backgroundColor, id, order, isDisable
       <Button
         variant="secondary"
         size="small"
-        text={"Teoría"}
+        text={"Leer Teoría"}
         leftIcon={<Book1 size={24} variant="Bold" color={isDisabled ? Colors.gray_500 : backgroundColor} />}
         onPress={() => {
           if (isDisabled) {
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   sectionBanner: {
     alignSelf: "stretch",
     paddingVertical: 24,
-    flexDirection: "row",
+    flexDirection: "column",
     borderRadius: 32,
     paddingHorizontal: 16,
     gap: 12,

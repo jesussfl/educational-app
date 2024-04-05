@@ -5,6 +5,7 @@ import CompletionText from "./CompletionText";
 import WordSelection from "./WordSelection";
 import * as Animatable from "react-native-animatable";
 import { useExercises } from "@stores/useExerciseStore";
+import { speak } from "../helpers/speak";
 // The Completion component accepts props 'content', 'setUserAnswer', and 'userAnswer'.
 const MemoizedWordSelection = React.memo(WordSelection);
 const MemoizedCompletionText = React.memo(CompletionText);
@@ -12,6 +13,7 @@ const CompletionExercise = ({ content }) => {
   const { setUserAnswer, userAnswer } = useExercises((state) => state);
   // Initialize a word counter.
   let wordCounter = 0;
+  let wordCounter2 = 0;
   // Handle the selection of words by updating the user's answer.
   const handleSelectedWords = React.useCallback(
     (selectedWord) => {
@@ -35,6 +37,7 @@ const CompletionExercise = ({ content }) => {
   // Use flatMap to split words within each part of the text
   const result = textParts.flatMap((part) => {
     if (part.startsWith("{") && part.endsWith("}")) {
+      wordCounter2 += 1;
       // If the part is within braces, return it as is
       return [part];
     } else {
@@ -59,12 +62,13 @@ const CompletionExercise = ({ content }) => {
   useEffect(() => {
     // Start the animation when the component mounts.
     slidenIn();
+    speak("Completa los espacios vacíos");
   }, []);
   const slidenIn = () => {
     // You can customize the animation duration and other properties as needed.
     this.view.slideInRight(300);
   };
-
+  console.log(result);
   return (
     <Animatable.View
       style={styles.container}
@@ -79,7 +83,7 @@ const CompletionExercise = ({ content }) => {
       </View>
 
       {/* Render the WordSelection component */}
-      <MemoizedWordSelection combinedWords={randomWords} handleSelectedWords={handleSelectedWords} userAnswer={userAnswer} />
+      <MemoizedWordSelection wordCounter={wordCounter2} combinedWords={randomWords} handleSelectedWords={handleSelectedWords} userAnswer={userAnswer} />
     </Animatable.View>
   );
 };

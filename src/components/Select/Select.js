@@ -1,22 +1,9 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { StyleSheet, Text, View, Image, TouchableWithoutFeedback } from "react-native";
 import React, { useState } from "react";
 import { SemanticColors, Colors } from "@utils/Theme";
 import RemixIcon from "react-native-remix-icon";
 
-const Select = ({
-  text,
-  image,
-  isPressed = false,
-  error = false,
-  success = false,
-  onPress,
-}) => {
+const Select = ({ text, image, isPressed = false, error = false, success = false, onPress }) => {
   const getStyles = () => {
     if (error) {
       return SelectStateStyles.error;
@@ -45,52 +32,22 @@ const Select = ({
 
   const getSelectIcon = () => {
     if (error) {
-      return (
-        <RemixIcon
-          name="close-circle-fill"
-          size={24}
-          color={Colors.error_400}
-        />
-      );
+      return <RemixIcon name="close-circle-fill" size={24} color={Colors.error_400} />;
     }
     if (success) {
-      return (
-        <RemixIcon
-          name="checkbox-circle-fill"
-          size={24}
-          color={Colors.success_400}
-        />
-      );
+      return <RemixIcon name="checkbox-circle-fill" size={24} color={Colors.success_400} />;
     }
     if (isPressed) {
-      return (
-        <RemixIcon
-          name="radio-button-line"
-          size={24}
-          color={SemanticColors.bg.primary_normal}
-        />
-      );
+      return <RemixIcon name="radio-button-line" size={24} color={SemanticColors.bg.primary_normal} />;
     }
-    return (
-      <RemixIcon
-        name="checkbox-blank-circle-line"
-        size={24}
-        color={Colors.gray_300}
-      />
-    );
+    return <RemixIcon name="checkbox-blank-circle-line" size={24} color={Colors.gray_300} />;
   };
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={[styles.container, getStyles()]}>
         {image ? (
           <View style={styles.imageContainer}>
-            <Image
-              src={image.replace(
-                /http:\/\/localhost:1337/g,
-                process.env.EXPO_PUBLIC_API_URL
-              )}
-              style={styles.image}
-            />
+            <Image src={image} style={styles.image} />
           </View>
         ) : (
           getSelectIcon()

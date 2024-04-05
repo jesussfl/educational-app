@@ -1,26 +1,35 @@
+import React, { useEffect } from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { Colors } from "@utils/Theme";
-import React from "react";
-import { useExercises } from "@stores/useExerciseStore";
 import SectionContentHTML from "@features/World/components/section-theory";
+import { speak } from "../helpers/speak";
+
 const TheoryExercise = ({ content }) => {
-  const theory = content.theory.replace(/http:\/\/localhost:1337/g, process.env.EXPO_PUBLIC_API_URL) || "";
+  const theory = content.theory || "";
+  const stripHtmlTags = (html) => {
+    // Elimina las etiquetas HTML utilizando regex
 
+    return html.replace(/(<([^>]+)>)/gi, "");
+  };
+
+  useEffect(() => {
+    const textWithoutHtml = stripHtmlTags(theory);
+    console.log(textWithoutHtml);
+    speak(textWithoutHtml);
+  }, []);
   return (
-    <View>
-      <ScrollView style={styles.PageContainer}>
-        <View style={styles.header}>
-          <Text style={styles.title}>{content.title}</Text>
-          <View style={styles.detailsContainer}>
-            <Text style={styles.details}>Lee detenidamente</Text>
-          </View>
+    <ScrollView style={styles.PageContainer}>
+      <View style={styles.header}>
+        <Text style={styles.title}>{content.title}</Text>
+        <View style={styles.detailsContainer}>
+          <Text style={styles.details}>Lee detenidamente</Text>
         </View>
+      </View>
 
-        <View style={styles.content}>
-          <SectionContentHTML html={theory || ""} />
-        </View>
-      </ScrollView>
-    </View>
+      <View style={styles.content}>
+        <SectionContentHTML html={theory || ""} />
+      </View>
+    </ScrollView>
   );
 };
 

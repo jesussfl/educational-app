@@ -11,8 +11,9 @@ import { calculateTimeSpent } from "../helpers";
 import { useLessonStore } from "@stores/useLessonStore";
 import { ECONOMY } from "@config/economy";
 import { useExerciseActions } from "../hooks/useExerciseActions";
+import { stopSpeak } from "../helpers/speak";
 const BottomActions = ({ checkAnswer, isLastExercise, exerciseType, lessonId }) => {
-  const { exercises, isAnswerCorrect, nextExercise, userAnswer, startTime, mistakes, isCheckingAnswer, reset } = useExercises();
+  const { exercises, isAnswerCorrect, nextExercise, userAnswer, startTime, mistakes, isCheckingAnswer, correctAnswer } = useExercises();
   const { profit } = useExerciseActions();
 
   const navigation = useNavigation();
@@ -21,12 +22,17 @@ const BottomActions = ({ checkAnswer, isLastExercise, exerciseType, lessonId }) 
     return (
       <>
         <View style={styles.buttonContainer}>
+          <UserStats statusToShow={"lives"} style={{ transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }] }} />
+
           <Button
             text="Continuar"
             variant="primary"
             rightIcon={<ArrowRight size={24} color={"#fff"} variant="Bold" />}
             style={{ flex: 1 }}
-            onPress={nextExercise}
+            onPress={() => {
+              stopSpeak();
+              nextExercise();
+            }}
           />
         </View>
       </>
@@ -52,6 +58,17 @@ const BottomActions = ({ checkAnswer, isLastExercise, exerciseType, lessonId }) 
               {isAnswerCorrect ? "Bien Hecho!" : "Incorrecto!"}
             </Text>
           </View>
+          {!isAnswerCorrect && (
+            <Text
+              style={{
+                color: Colors.gray_500,
+                fontSize: 14,
+                fontFamily: "Sora-SemiBold",
+              }}
+            >
+              La respuesta era: {correctAnswer}
+            </Text>
+          )}
           <Button
             text="Continuar"
             variant={isAnswerCorrect ? "success" : "wrong"}
@@ -59,8 +76,12 @@ const BottomActions = ({ checkAnswer, isLastExercise, exerciseType, lessonId }) 
             rightIcon={isAnswerCorrect ? <ArrowRight size={24} color={"#fff"} variant="Bold" /> : <InfoCircle size={24} color={"#fff"} variant="Bold" />}
             onPress={
               !isLastExercise
-                ? nextExercise
+                ? () => {
+                    stopSpeak();
+                    nextExercise();
+                  }
                 : () => {
+                    stopSpeak();
                     navigation.navigate("Congrats", {
                       lessonId,
                       elapsedTime: calculateTimeSpent(startTime),
@@ -84,7 +105,10 @@ const BottomActions = ({ checkAnswer, isLastExercise, exerciseType, lessonId }) 
               disabled={userAnswer == null || userAnswer.length === 0 || isCheckingAnswer}
               rightIcon={<ArrowRight size={24} color={"#fff"} variant="Bold" />}
               style={{ flex: 1 }}
-              onPress={checkAnswer}
+              onPress={() => {
+                stopSpeak();
+                checkAnswer();
+              }}
             />
           </View>
         </View>

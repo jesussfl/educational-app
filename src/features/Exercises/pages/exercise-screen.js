@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 // Components
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { CloseCircle } from "iconsax-react-native";
 import Spinner from "react-native-loading-spinner-overlay";
@@ -26,15 +26,20 @@ const ExercisePage = ({ navigation, route }) => {
     return <Spinner visible={true} />;
   }
 
+  const isMistake = state.mistakes.includes(currentExerciseData?.id) && state.isAnswerCorrect === null;
   return (
     <>
       <StatusBar style="auto" translucent={true} />
 
       <View style={styles.pageContainer}>
-        <View style={styles.topBar}>
-          <CloseCircle size={32} color={Colors.gray_300} onPress={() => setIsAboutToLeave(true)} />
-          {<ProgressBar percentage={`${percentage}%`} />}
+        <View>
+          <View style={styles.topBar}>
+            <CloseCircle size={32} color={Colors.gray_300} onPress={() => setIsAboutToLeave(true)} />
+            {<ProgressBar percentage={`${percentage}%`} />}
+          </View>
+          {isMistake ? <Text style={styles.mistakeText}>Corrigiendo el ejercicio</Text> : null}
         </View>
+
         {currentExerciseView}
 
         <BottomActions
@@ -80,7 +85,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: StatusBar.currentHeight || 24,
   },
-
+  mistakeText: {
+    color: Colors.error_500,
+    fontFamily: "Sora-SemiBold",
+    fontSize: 14,
+    textAlign: "center",
+  },
   topBar: {
     alignItems: "center",
     justifyContent: "center",

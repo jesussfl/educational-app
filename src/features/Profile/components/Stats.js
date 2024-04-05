@@ -14,7 +14,7 @@ const Stats = () => {
       </View>
       <View style={styles.wrapper}>
         <Image source={require("@assets/icons/coin.png")} style={{ width: 36, height: 36, resizeMode: "contain" }} />
-        <Text style={styles.text}>{user.money} Monedas</Text>
+        <Text style={styles.text}>{Math.round(user.money * 100) / 100} Monedas</Text>
       </View>
     </View>
   );
