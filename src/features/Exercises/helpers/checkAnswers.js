@@ -12,6 +12,20 @@ export const checkSimpleSelectionAnswer = (mainAnswer, userAnswer) => {
     correctAnswer: correctAnswer.text,
   };
 };
+export const checkPairsAnswer = (mainAnswer, userAnswer) => {
+  const pairs = mainAnswer.pairs;
+
+  if (userAnswer.length !== pairs.length) {
+    return {
+      isCorrect: false,
+      correctAnswer: "",
+    };
+  }
+  return {
+    isCorrect: true,
+    correctAnswer: "",
+  };
+};
 
 export const checkCompletionAnswer = (mainAnswer, userAnswer) => {
   //get just the words that are correct
@@ -47,4 +61,5 @@ export const checkCompletionAnswer = (mainAnswer, userAnswer) => {
 export default exercisesChecker = {
   simpleSelection: checkSimpleSelectionAnswer,
   completion: checkCompletionAnswer,
+  pairs: checkPairsAnswer,
 };

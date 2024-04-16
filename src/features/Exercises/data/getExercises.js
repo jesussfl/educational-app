@@ -13,7 +13,6 @@ export const getExercisesByLesson = (lessonId) => {
   const { setExercises, startTime, setStartTime } = useExercises((state) => state);
   useEffect(() => {
     const sortedExercises = data?.exercisesByLesson?.exercises?.sort((a, b) => a.attributes.order - b.attributes.order);
-
     setExercises(sortedExercises);
     if (!isLoading && !startTime) {
       setStartTime();

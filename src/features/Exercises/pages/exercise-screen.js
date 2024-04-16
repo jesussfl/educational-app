@@ -21,7 +21,18 @@ const ExercisePage = ({ navigation, route }) => {
   const { isLoading, currentExerciseData, isLastExercise, percentage, currentExerciseView, checkAnswer } = useExerciseActions();
   const { user } = useAuthStore();
   const [isAboutToLeave, setIsAboutToLeave] = useState(false);
-
+  const [action, setAction] = useState();
+  useEffect(
+    () =>
+      navigation.addListener("beforeRemove", (e) => {
+        // Prevent default behavior of leaving the screen
+        e.preventDefault();
+        setIsAboutToLeave(true);
+        setAction(e.data.action);
+        // Prompt the user before leaving the screen
+      }),
+    []
+  );
   if (isLoading || !state.exercises) {
     return <Spinner visible={true} />;
   }
@@ -39,7 +50,7 @@ const ExercisePage = ({ navigation, route }) => {
           </View>
           {isMistake ? <Text style={styles.mistakeText}>Corrigiendo el ejercicio</Text> : null}
         </View>
-
+        {/* <PairsExercise /> */}
         {currentExerciseView}
 
         <BottomActions
@@ -66,8 +77,9 @@ const ExercisePage = ({ navigation, route }) => {
           description="Si sales se perderá tu progreso y tu dinero no será regresado"
           cancelAction={() => setIsAboutToLeave(false)}
           actionText={"Si, salir"}
-          action={() => {
+          action={(e) => {
             setIsAboutToLeave(false);
+            navigation.dispatch(action);
             navigation.replace("Main", { screen: "Lessons" });
             state.reset();
           }}

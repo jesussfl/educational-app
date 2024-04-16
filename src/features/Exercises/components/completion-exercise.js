@@ -62,7 +62,7 @@ const CompletionExercise = ({ content }) => {
   useEffect(() => {
     // Start the animation when the component mounts.
     slidenIn();
-    speak("Completa los espacios vacíos");
+    // speak("Completa los espacios vacíos");
   }, []);
   const slidenIn = () => {
     // You can customize the animation duration and other properties as needed.

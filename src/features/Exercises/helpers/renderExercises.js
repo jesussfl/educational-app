@@ -3,6 +3,7 @@ import { CompletionExercise, SimpleSelectionExercise } from "../components";
 import TheoryExercise from "../components/theory-exercise";
 import { calculateTimeSpent } from "./calculateTimeSpent";
 import { useExercises } from "@stores/useExerciseStore";
+import PairsExercise from "../components/pairs-exercise";
 const EXERCISE_TYPES = {
   simpleSelection: (content, key) => {
     return <SimpleSelectionExercise content={content} key={key} />;
@@ -12,6 +13,9 @@ const EXERCISE_TYPES = {
   },
   theory: (content, key) => {
     return <TheoryExercise content={content} key={key} />;
+  },
+  pairs: (content, key) => {
+    return <PairsExercise content={content} key={key} />;
   },
 };
 export const renderExercise = (currentExercise) => {

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, useMemo } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import UserStats from "../../World/components/UserStats";
 import { ArrowRight, TickCircle, InfoCircle, HeartSlash } from "iconsax-react-native";
@@ -8,8 +8,6 @@ import { Colors } from "@utils/Theme";
 import { useExercises } from "@stores/useExerciseStore";
 import { useNavigation } from "@react-navigation/native";
 import { calculateTimeSpent } from "../helpers";
-import { useLessonStore } from "@stores/useLessonStore";
-import { ECONOMY } from "@config/economy";
 import { useExerciseActions } from "../hooks/useExerciseActions";
 import { stopSpeak } from "../helpers/speak";
 const BottomActions = ({ checkAnswer, isLastExercise, exerciseType, lessonId }) => {
