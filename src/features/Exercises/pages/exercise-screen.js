@@ -15,6 +15,8 @@ import { useExercises } from "@stores/useExerciseStore";
 import useAuthStore from "@stores/useAuthStore";
 // Hooks
 import { useExerciseActions } from "../hooks/useExerciseActions";
+import SpeechExercise from "../components/speech-exercise";
+import MemoryExercise from "../components/memory-exercise";
 
 const ExercisePage = ({ navigation, route }) => {
   const state = useExercises((state) => state);
@@ -22,17 +24,16 @@ const ExercisePage = ({ navigation, route }) => {
   const { user } = useAuthStore();
   const [isAboutToLeave, setIsAboutToLeave] = useState(false);
   const [action, setAction] = useState();
-  useEffect(
-    () =>
-      navigation.addListener("beforeRemove", (e) => {
-        // Prevent default behavior of leaving the screen
-        e.preventDefault();
-        setIsAboutToLeave(true);
-        setAction(e.data.action);
-        // Prompt the user before leaving the screen
-      }),
-    []
-  );
+  useEffect(() => {
+    navigation.addListener("beforeRemove", (e) => {
+      // Prevent default behavior of leaving the screen
+      e.preventDefault();
+      setIsAboutToLeave(true);
+      setAction(e.data.action);
+      // Prompt the user before leaving the screen
+    });
+  }, []);
+
   if (isLoading || !state.exercises) {
     return <Spinner visible={true} />;
   }
@@ -51,7 +52,9 @@ const ExercisePage = ({ navigation, route }) => {
           {isMistake ? <Text style={styles.mistakeText}>Corrigiendo el ejercicio</Text> : null}
         </View>
         {/* <PairsExercise /> */}
-        {currentExerciseView}
+        {/* <SpeechExercise /> */}
+        <MemoryExercise />
+        {/* {currentExerciseView} */}
 
         <BottomActions
           checkAnswer={checkAnswer}

@@ -19,6 +19,9 @@ const CongratsPage = ({ route }) => {
 
   useEffect(() => {
     saveProgress();
+    navigation.addListener("beforeRemove", (e) => {
+      navigation.dispatch(e.data.action);
+    });
   }, []);
 
   return (
@@ -52,7 +55,7 @@ const CongratsPage = ({ route }) => {
                 navigation.navigate("WorldCompleted");
                 return;
               }
-              navigation.replace("Main", { screen: "Lessons" });
+              navigation.replace("Main");
             }}
           />
         </View>
