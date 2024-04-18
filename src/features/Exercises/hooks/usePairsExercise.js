@@ -2,8 +2,11 @@ import useExerciseSound from "./useExerciseSound";
 import { ToastAndroid } from "react-native";
 import { useEffect, useState } from "react";
 import { useExercises } from "@stores/useExerciseStore";
+import useUserStats from "@hooks/useUserStats";
 export const usePairsExercise = (pairsLength) => {
   const { playSound, playErrorSound } = useExerciseSound();
+  const { decreaseLives } = useUserStats();
+
   const { setUserAnswer, userAnswer } = useExercises();
   const [firstItemSelected, setFirstItemSelected] = useState("");
   const [secondItemSelected, setSecondItemSelected] = useState("");
@@ -24,6 +27,7 @@ export const usePairsExercise = (pairsLength) => {
     }
 
     playErrorSound();
+    decreaseLives();
     ToastAndroid.showWithGravity("Marcaste opciones incorrectas", ToastAndroid.SHORT, ToastAndroid.TOP);
     setFirstItemSelected("");
     setSecondItemSelected("");

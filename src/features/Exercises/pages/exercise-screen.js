@@ -23,16 +23,26 @@ const ExercisePage = ({ navigation, route }) => {
   const { isLoading, currentExerciseData, isLastExercise, percentage, currentExerciseView, checkAnswer } = useExerciseActions();
   const { user } = useAuthStore();
   const [isAboutToLeave, setIsAboutToLeave] = useState(false);
+  const [isAllLivesLost, setIsAllLivesLost] = useState(false);
   const [action, setAction] = useState();
   useEffect(() => {
     navigation.addListener("beforeRemove", (e) => {
       // Prevent default behavior of leaving the screen
+      if (isAllLivesLost) {
+        navigation.replace("Main", { screen: "Lessons" });
+        return;
+      }
       e.preventDefault();
+
       setIsAboutToLeave(true);
       setAction(e.data.action);
       // Prompt the user before leaving the screen
     });
-  }, []);
+
+    return () => {
+      navigation.removeListener("beforeRemove", () => {});
+    };
+  }, [setIsAllLivesLost]);
 
   if (isLoading || !state.exercises) {
     return <Spinner visible={true} />;
@@ -46,15 +56,15 @@ const ExercisePage = ({ navigation, route }) => {
       <View style={styles.pageContainer}>
         <View>
           <View style={styles.topBar}>
-            <CloseCircle size={32} color={Colors.gray_300} onPress={() => setIsAboutToLeave(true)} />
+            <CloseCircle size={32} color={Colors.gray_300} onPress={() => navigation.replace("Main", { screen: "Lessons" })} />
             {<ProgressBar percentage={`${percentage}%`} />}
           </View>
           {isMistake ? <Text style={styles.mistakeText}>Corrigiendo el ejercicio</Text> : null}
         </View>
         {/* <PairsExercise /> */}
         {/* <SpeechExercise /> */}
-        <MemoryExercise />
-        {/* {currentExerciseView} */}
+        {/* <MemoryExercise /> */}
+        {currentExerciseView}
 
         <BottomActions
           checkAnswer={checkAnswer}
@@ -69,7 +79,9 @@ const ExercisePage = ({ navigation, route }) => {
           description="Ve a la tienda para comprar vidas o espera a que tus vidas se regeneren."
           actionText={"Ir al inicio"}
           action={() => {
-            navigation.replace("Main", { screen: "Lessons" });
+            setIsAllLivesLost(true);
+            // navigation.replace("Main", { screen: "Lessons" });
+            navigation.dispatch(action);
             state.reset();
           }}
         />

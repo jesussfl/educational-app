@@ -119,8 +119,8 @@ const CustomBottomSheet = ({ children, description, costText, cost }) => {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    padding: 24,
-    gap: 24,
+    padding: 16,
+    gap: 20,
   },
   header: {
     flexDirection: "row",
@@ -128,13 +128,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   description: {
-    fontSize: 24,
+    fontSize: 18,
     fontFamily: "Sora-SemiBold",
     color: Colors.gray_500,
-    textAlign: "center",
+    textAlign: "left",
   },
   costText: {
-    fontSize: 20,
+    fontSize: 16,
     fontFamily: "Sora-Bold",
     color: Colors.gray_500,
     textAlign: "center",

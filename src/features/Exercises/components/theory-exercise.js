@@ -37,21 +37,21 @@ const TheoryExercise = ({ content }) => {
 
   useEffect(() => {
     const textWithoutHtml = content.title + "..............." + stripHtmlTags(theory);
-    // const loadVoices = (counter) => {
-    //   setTimeout(async () => {
-    //     var voices = await Speech.getAvailableVoicesAsync();
+    const loadVoices = (counter) => {
+      setTimeout(async () => {
+        var voices = await Speech.getAvailableVoicesAsync();
 
-    //     if (voices.length > 0) {
-    //       setTextVoices(voices);
-    //       console.log(voices.filter((voice) => voice.language.includes("es")));
-    //     } else {
-    //       console.log("voices not found");
-    //       if (!counter || counter < 10) loadVoices((counter ?? 0) + 1);
-    //     }
-    //   }, (counter ?? 1) * 300);
-    // };
+        if (voices.length > 0) {
+          setTextVoices(voices);
+          console.log(voices.filter((voice) => voice.language.includes("es")));
+        } else {
+          console.log("voices not found");
+          if (!counter || counter < 10) loadVoices((counter ?? 0) + 1);
+        }
+      }, (counter ?? 1) * 300);
+    };
 
-    // loadVoices();
+    loadVoices();
     setText(textWithoutHtml);
     Speech.speak(textWithoutHtml, {
       language: "es-ES",

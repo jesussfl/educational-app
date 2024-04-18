@@ -20,7 +20,10 @@ const BottomActions = ({ checkAnswer, isLastExercise, exerciseType, lessonId }) 
     return (
       <>
         <View style={styles.buttonContainer}>
-          <UserStats statusToShow={"lives"} style={{ transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }] }} />
+          <UserStats
+            statusToShow={"lives"}
+            style={{ padding: 2, borderRadius: 6, backgroundColor: Colors.gray_300, transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }] }}
+          />
 
           <Button
             text="Continuar"
@@ -95,7 +98,7 @@ const BottomActions = ({ checkAnswer, isLastExercise, exerciseType, lessonId }) 
       ) : (
         <View>
           <View style={styles.buttonContainer}>
-            <UserStats statusToShow={"lives"} style={{ transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }] }} />
+            <UserStats statusToShow={"lives"} style={{ padding: 2, borderRadius: 6, backgroundColor: "#fff", transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }] }} />
 
             <Button
               text="Comprobar"
@@ -131,8 +134,8 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   buttonContainer: {
-    borderTopWidth: 2,
-    borderColor: Colors.gray_200,
+    // borderTopWidth: 2,
+    // borderColor: Colors.gray_200,
     gap: 16,
     flexDirection: "row",
     alignItems: "center",

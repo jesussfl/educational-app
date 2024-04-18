@@ -27,6 +27,20 @@ export const checkPairsAnswer = (mainAnswer, userAnswer) => {
   };
 };
 
+export const checkMemoryAnswer = (mainAnswer, userAnswer) => {
+  const options = mainAnswer.options;
+  if (userAnswer.length !== options.length) {
+    return {
+      isCorrect: false,
+      correctAnswer: "",
+    };
+  }
+  return {
+    isCorrect: true,
+    correctAnswer: "",
+  };
+};
+
 export const checkCompletionAnswer = (mainAnswer, userAnswer) => {
   //get just the words that are correct
   const correctWords = mainAnswer.words
@@ -62,4 +76,5 @@ export default exercisesChecker = {
   simpleSelection: checkSimpleSelectionAnswer,
   completion: checkCompletionAnswer,
   pairs: checkPairsAnswer,
+  memory: checkMemoryAnswer,
 };
