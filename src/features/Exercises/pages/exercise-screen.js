@@ -15,21 +15,20 @@ import { useExercises } from "@stores/useExerciseStore";
 import useAuthStore from "@stores/useAuthStore";
 // Hooks
 import { useExerciseActions } from "../hooks/useExerciseActions";
-import SpeechExercise from "../components/speech-exercise";
-import MemoryExercise from "../components/memory-exercise";
 
 const ExercisePage = ({ navigation, route }) => {
   const state = useExercises((state) => state);
   const { isLoading, currentExerciseData, isLastExercise, percentage, currentExerciseView, checkAnswer } = useExerciseActions();
   const { user } = useAuthStore();
   const [isAboutToLeave, setIsAboutToLeave] = useState(false);
-  const [isAllLivesLost, setIsAllLivesLost] = useState(false);
   const [action, setAction] = useState();
   useEffect(() => {
     navigation.addListener("beforeRemove", (e) => {
-      // Prevent default behavior of leaving the screen
-      if (isAllLivesLost) {
-        navigation.replace("Main", { screen: "Lessons" });
+      console.log("livedfgdfgeess", user.lives);
+      if (user.lives === 0) {
+        navigation.dispatch(e.data.action);
+        console.log("lives", user.lives);
+        state.reset();
         return;
       }
       e.preventDefault();
@@ -38,11 +37,7 @@ const ExercisePage = ({ navigation, route }) => {
       setAction(e.data.action);
       // Prompt the user before leaving the screen
     });
-
-    return () => {
-      navigation.removeListener("beforeRemove", () => {});
-    };
-  }, [setIsAllLivesLost]);
+  }, [user.lives]);
 
   if (isLoading || !state.exercises) {
     return <Spinner visible={true} />;
@@ -79,10 +74,9 @@ const ExercisePage = ({ navigation, route }) => {
           description="Ve a la tienda para comprar vidas o espera a que tus vidas se regeneren."
           actionText={"Ir al inicio"}
           action={() => {
-            setIsAllLivesLost(true);
-            // navigation.replace("Main", { screen: "Lessons" });
-            navigation.dispatch(action);
-            state.reset();
+            navigation.replace("Main", { screen: "Lessons" });
+
+            // state.reset();
           }}
         />
       )}
