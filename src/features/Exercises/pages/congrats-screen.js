@@ -9,15 +9,17 @@ import { ECONOMY } from "@config/economy";
 import { useLessonStore } from "@stores/useLessonStore";
 import { useExercises } from "@stores/useExerciseStore";
 import { Clock, Coin, Coin1, HeartSlash } from "iconsax-react-native";
+import * as Speech from "expo-speech";
 
 const CongratsPage = ({ route }) => {
   const navigation = useNavigation();
-  const state = useExercises();
-  const { lessonStatus, isLastLesson } = useLessonStore();
+  const { isLastLesson } = useLessonStore();
   const { elapsedTime, errorCount, profit, correctAnswers } = route.params;
   const { saveProgress } = useExerciseActions();
 
   useEffect(() => {
+    Speech.stop();
+
     saveProgress();
     navigation.addListener("beforeRemove", (e) => {
       navigation.dispatch(e.data.action);
@@ -51,10 +53,13 @@ const CongratsPage = ({ route }) => {
             text="Continuar"
             variant="primary"
             onPress={() => {
+              Speech.stop();
+
               if (isLastLesson) {
                 navigation.navigate("WorldCompleted");
                 return;
               }
+
               navigation.replace("Main");
             }}
           />

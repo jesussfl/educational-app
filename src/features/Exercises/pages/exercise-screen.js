@@ -15,6 +15,7 @@ import { useExercises } from "@stores/useExerciseStore";
 import useAuthStore from "@stores/useAuthStore";
 // Hooks
 import { useExerciseActions } from "../hooks/useExerciseActions";
+import * as Speech from "expo-speech";
 
 const ExercisePage = ({ navigation, route }) => {
   const state = useExercises((state) => state);
@@ -75,6 +76,7 @@ const ExercisePage = ({ navigation, route }) => {
           actionText={"Ir al inicio"}
           action={() => {
             navigation.replace("Main", { screen: "Lessons" });
+            Speech.stop();
 
             // state.reset();
           }}
@@ -91,6 +93,7 @@ const ExercisePage = ({ navigation, route }) => {
             navigation.dispatch(action);
             navigation.replace("Main", { screen: "Lessons" });
             state.reset();
+            Speech.stop();
           }}
         />
       )}

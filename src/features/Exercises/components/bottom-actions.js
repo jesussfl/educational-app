@@ -9,7 +9,8 @@ import { useExercises } from "@stores/useExerciseStore";
 import { useNavigation } from "@react-navigation/native";
 import { calculateTimeSpent } from "../helpers";
 import { useExerciseActions } from "../hooks/useExerciseActions";
-import { stopSpeak } from "../helpers/speak";
+import * as Speech from "expo-speech";
+
 const BottomActions = ({ checkAnswer, isLastExercise, exerciseType, lessonId }) => {
   const { exercises, isAnswerCorrect, nextExercise, userAnswer, startTime, mistakes, isCheckingAnswer, correctAnswer } = useExercises();
   const { profit } = useExerciseActions();
@@ -20,10 +21,7 @@ const BottomActions = ({ checkAnswer, isLastExercise, exerciseType, lessonId }) 
     return (
       <>
         <View style={styles.buttonContainer}>
-          <UserStats
-            statusToShow={"lives"}
-            style={{ padding: 2, borderRadius: 6, backgroundColor: Colors.gray_300, transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }] }}
-          />
+          <UserStats statusToShow={"lives"} style={{ padding: 2, borderRadius: 6, backgroundColor: "#fff", transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }] }} />
 
           <Button
             text="Continuar"
@@ -31,8 +29,20 @@ const BottomActions = ({ checkAnswer, isLastExercise, exerciseType, lessonId }) 
             rightIcon={<ArrowRight size={24} color={"#fff"} variant="Bold" />}
             style={{ flex: 1 }}
             onPress={() => {
-              stopSpeak();
-              nextExercise();
+              Speech.stop();
+              if (!isLastExercise) {
+                nextExercise();
+                return;
+              }
+
+              navigation.navigate("Congrats", {
+                lessonId,
+                elapsedTime: calculateTimeSpent(startTime),
+                errorCount: mistakes.length,
+                errorExercises: mistakes,
+                profit,
+                correctAnswers: exercises.length - mistakes.length,
+              });
             }}
           />
         </View>
@@ -78,11 +88,13 @@ const BottomActions = ({ checkAnswer, isLastExercise, exerciseType, lessonId }) 
             onPress={
               !isLastExercise
                 ? () => {
-                    stopSpeak();
+                    Speech.stop();
+
                     nextExercise();
                   }
                 : () => {
-                    stopSpeak();
+                    Speech.stop();
+
                     navigation.navigate("Congrats", {
                       lessonId,
                       elapsedTime: calculateTimeSpent(startTime),
@@ -107,7 +119,8 @@ const BottomActions = ({ checkAnswer, isLastExercise, exerciseType, lessonId }) 
               rightIcon={<ArrowRight size={24} color={"#fff"} variant="Bold" />}
               style={{ flex: 1 }}
               onPress={() => {
-                stopSpeak();
+                Speech.stop();
+
                 checkAnswer();
               }}
             />

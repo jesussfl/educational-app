@@ -39,7 +39,7 @@ export const useExerciseActions = () => {
   const currentExerciseData = state.exercises[state.currentExerciseIndex];
   const isLastExercise = state.currentExerciseIndex === state.exercises.length - 1;
   const currentExerciseView = renderExercise(currentExerciseData);
-  const percentage = (state.correctAnswers * 100) / (state.exercises.length - state.mistakes.length);
+  const percentage = (state.currentExerciseIndex * 100) / state.exercises.length - state.mistakes;
   const profit = calculateProfit(state.exercises.length, state.mistakes, lessonStatus);
   const checkAnswer = async () => {
     state.setIsCheckingAnswer(true);
